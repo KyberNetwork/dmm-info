@@ -53,21 +53,21 @@ const ETHEREUM_TOKEN_LIST = {
     symbol: 'jEUR',
     name: 'Jarvis Synthetic Euro',
     decimals: 18,
-    logoURI: 'https://i.imgur.com/ZvP634G'
+    logoURI: 'https://i.imgur.com/ZvP634G.png'
   },
   '0x7409856cae628f5d578b285b45669b36e7005283': {
     address: '0x7409856cae628f5d578b285b45669b36e7005283',
     symbol: 'jGBP',
     name: 'Jarvis Synthetic British Pound',
     decimals: 18,
-    logoURI: 'https://i.imgur.com/zOLD6Vf'
+    logoURI: 'https://i.imgur.com/zOLD6Vf.png'
   },
   '0x53dfea0a8cc2a2a2e425e1c174bc162999723ea0': {
     address: '0x53dfea0a8cc2a2a2e425e1c174bc162999723ea0',
     symbol: 'jCHF',
     name: 'Jarvis Synthetic Swiss Franc',
     decimals: 18,
-    logoURI: 'https://i.imgur.com/EknGhAl'
+    logoURI: 'https://i.imgur.com/EknGhAl.png'
   },
 }
 
