@@ -407,16 +407,16 @@ const getPoolChartData = async (poolAddress) => {
   return data
 }
 
-const getHourlyRateData = async (poolAddress, startTime, latestBlock) => {
+const getHourlyRateData = async (poolAddress, startTime, latestBlock, frequency) => {
   try {
     const utcEndTime = dayjs.utc()
     let time = startTime
 
     // create an array of hour start times until we reach current hour
     const timestamps = []
-    while (time <= utcEndTime.unix() - 300) {
+    while (time <= utcEndTime.unix() - frequency) {
       timestamps.push(time)
-      time += 300
+      time += frequency
     }
 
     // backout if invalid timestamp format
@@ -506,7 +506,7 @@ export function Updater() {
   return null
 }
 
-export function useHourlyRateData(poolAddress, timeWindow) {
+export function useHourlyRateData(poolAddress, timeWindow, frequency) {
   const [state, { updateHourlyData }] = usePoolDataContext()
   const chartData = state?.[poolAddress]?.hourlyData?.[timeWindow]
   const [latestBlock] = useLatestBlocks()
@@ -531,13 +531,13 @@ export function useHourlyRateData(poolAddress, timeWindow) {
     }
 
     async function fetch() {
-      let data = await getHourlyRateData(poolAddress, startTime, latestBlock)
+      let data = await getHourlyRateData(poolAddress, startTime, latestBlock, frequency)
       updateHourlyData(poolAddress, data, timeWindow)
     }
     if (!chartData) {
       fetch()
     }
-  }, [chartData, timeWindow, poolAddress, updateHourlyData, latestBlock])
+  }, [chartData, timeWindow, poolAddress, updateHourlyData, latestBlock, frequency])
 
   return chartData
 }
