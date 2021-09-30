@@ -173,15 +173,17 @@ const TokenChart = ({ address, color, base }) => {
             </RowFixed>
             {chartFilter === CHART_VIEW.PRICE && (
               <AutoRow gap="4px">
-                <PriceOption
-                  active={frequency === DATA_FREQUENCY.FIVE_MINUTES}
-                  onClick={() => {
-                    setTimeWindow(timeframeOptions.THERE_DAYS)
-                    setFrequency(DATA_FREQUENCY.FIVE_MINUTES)
-                  }}
-                >
-                  5m
-                </PriceOption>
+                {timeWindow === timeframeOptions.THERE_DAYS && (
+                  <PriceOption
+                    active={frequency === DATA_FREQUENCY.FIVE_MINUTES}
+                    onClick={() => {
+                      setTimeWindow(timeframeOptions.THERE_DAYS)
+                      setFrequency(DATA_FREQUENCY.FIVE_MINUTES)
+                    }}
+                  >
+                    5m
+                  </PriceOption>
+                )}
                 <PriceOption
                   active={frequency === DATA_FREQUENCY.HOUR}
                   onClick={() => setFrequency(DATA_FREQUENCY.HOUR)}
