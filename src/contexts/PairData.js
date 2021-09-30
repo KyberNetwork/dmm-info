@@ -26,7 +26,7 @@ import {
   getTimestampsForChanges,
   splitQuery,
 } from '../utils'
-import { getBlockFromTimestamp, getBlocksFromTimestamps } from '../utils'
+import { getBlocksFromTimestamps } from '../utils'
 // import { getBlockFromTimestamp, getBlocksFromTimestamps } from '../utils/mocks'
 
 import { timeframeOptions } from '../constants'
@@ -201,7 +201,7 @@ export default function Provider({ children }) {
             updateHourlyData,
           },
         ],
-        [state, update, updatePairTxns, updateChartData, updateTopPairs, updateHourlyData]
+        [state, update, updatePairTxns, updateChartData, updateTopPairs, updateHourlyData, updatePairPools]
       )}
     >
       {children}
@@ -291,7 +291,7 @@ function parseData(data, oneDayData, twoDayData, oneWeekData, ethPrice, oneDayBl
     twoDayData?.volumeUSD ? twoDayData.volumeUSD : 0
   )
 
-  const [oneDayFeeUSD, feeChangeUSD] = get2DayPercentChange(
+  const [oneDayFeeUSD] = get2DayPercentChange(
     data?.feeUSD,
     oneDayData?.feeUSD ? oneDayData.feeUSD : 0,
     twoDayData?.feeUSD ? twoDayData.feeUSD : 0
@@ -301,7 +301,7 @@ function parseData(data, oneDayData, twoDayData, oneWeekData, ethPrice, oneDayBl
     oneDayData?.untrackedVolumeUSD ? parseFloat(oneDayData?.untrackedVolumeUSD) : 0,
     twoDayData?.untrackedVolumeUSD ? twoDayData?.untrackedVolumeUSD : 0
   )
-  const [oneDayFeeUntracked, feeChangeUntracked] = get2DayPercentChange(
+  const [oneDayFeeUntracked] = get2DayPercentChange(
     data?.untrackedFeeUSD,
     oneDayData?.untrackedFeeUSD ? parseFloat(oneDayData?.untrackedFeeUSD) : 0,
     twoDayData?.untrackedFeeUSD ? twoDayData?.untrackedFeeUSD : 0
@@ -689,7 +689,7 @@ export function usePairPools(pairAddress) {
       }
     }
     ethPrice && checkForPairPools()
-  }, [pairPools, pairAddress, updatePairPools])
+  }, [pairPools, pairAddress, updatePairPools, ethPrice])
 
   return pairPools
 }

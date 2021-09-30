@@ -88,10 +88,8 @@ const WarningGrouping = styled.div`
 
 function TokenPage({ address, history }) {
   const {
-    id,
     name,
     symbol,
-    decimals,
     priceUSD,
     oneDayVolumeUSD,
     totalLiquidityUSD,

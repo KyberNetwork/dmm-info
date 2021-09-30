@@ -24,7 +24,7 @@ import {
   getTimestampsForChanges,
   splitQuery,
 } from '../utils'
-import { getBlockFromTimestamp, getBlocksFromTimestamps } from '../utils'
+import { getBlocksFromTimestamps } from '../utils'
 // import { getBlockFromTimestamp, getBlocksFromTimestamps } from '../utils/mocks'
 
 import { timeframeOptions, WETH_ADDRESS } from '../constants'
@@ -267,7 +267,7 @@ function parseData(data, oneDayData, twoDayData, oneWeekData, ethPrice, oneDayBl
     twoDayData?.volumeUSD ? twoDayData.volumeUSD : 0
   )
 
-  const [oneDayFeeUSD, feeChangeUSD] = get2DayPercentChange(
+  const [oneDayFeeUSD] = get2DayPercentChange(
     data?.feeUSD,
     oneDayData?.feeUSD ? oneDayData.feeUSD : 0,
     twoDayData?.feeUSD ? twoDayData.feeUSD : 0
@@ -277,7 +277,7 @@ function parseData(data, oneDayData, twoDayData, oneWeekData, ethPrice, oneDayBl
     oneDayData?.untrackedVolumeUSD ? parseFloat(oneDayData?.untrackedVolumeUSD) : 0,
     twoDayData?.untrackedVolumeUSD ? twoDayData?.untrackedVolumeUSD : 0
   )
-  const [oneDayFeeUntracked, feeChangeUntracked] = get2DayPercentChange(
+  const [oneDayFeeUntracked] = get2DayPercentChange(
     data?.untrackedFeeUSD,
     oneDayData?.untrackedFeeUSD ? parseFloat(oneDayData?.untrackedFeeUSD) : 0,
     twoDayData?.untrackedFeeUSD ? twoDayData?.untrackedFeeUSD : 0
