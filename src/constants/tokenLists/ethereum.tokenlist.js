@@ -69,6 +69,12 @@ const ETHEREUM_TOKEN_LIST = {
     decimals: 18,
     logoURI: 'https://i.imgur.com/Fp31dDB.png',
   },
+  '0xd7DCd9B99787C619b4D57979521258D1A7267ad7': {
+    address: '0xd7DCd9B99787C619b4D57979521258D1A7267ad7',
+    symbol: 'EVRY',
+    name: 'Evrynet Token',
+    decimals: 18,
+    logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11458.png',
 }
 
 export default ETHEREUM_TOKEN_LIST
