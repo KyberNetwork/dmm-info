@@ -97,10 +97,10 @@ const CandleStickChart = ({ data, width, height = 300, base, valueFormatter = (v
         },
         grid: {
           vertLines: {
-            color: 'rgba(197, 203, 206, 0.5)',
+            color: darkMode ? '#40505A80' : '#C2C2C280',
           },
           horzLines: {
-            color: 'rgba(197, 203, 206, 0.5)',
+            color: darkMode ? '#40505A80' : '#C2C2C280',
           },
         },
         crosshair: {
@@ -119,12 +119,12 @@ const CandleStickChart = ({ data, width, height = 300, base, valueFormatter = (v
       })
 
       var candleSeries = chart.addCandlestickSeries({
-        upColor: 'green',
-        downColor: 'red',
-        borderDownColor: 'red',
-        borderUpColor: 'green',
-        wickDownColor: 'red',
-        wickUpColor: 'green',
+        upColor: '#31CB9E',
+        downColor: '#FF537B',
+        borderDownColor: '#FF537B',
+        borderUpColor: '#31CB9E',
+        wickDownColor: '#FF537B',
+        wickUpColor: '#31CB9E',
       })
 
       candleSeries.setData(formattedData)
@@ -175,7 +175,7 @@ const CandleStickChart = ({ data, width, height = 300, base, valueFormatter = (v
 
       setChartCreated(chart)
     }
-  }, [chartCreated, formattedData, width, height, valueFormatter, base, textColor])
+  }, [chartCreated, formattedData, width, height, valueFormatter, base, textColor, darkMode])
 
   // responsiveness
   useEffect(() => {

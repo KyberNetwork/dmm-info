@@ -65,7 +65,6 @@ const theme = (darkMode, color) => ({
   bg7: darkMode ? '#303e46' : '#FFFFFF',
   bg8: darkMode ? '#0078b0' : '#b3e5fc',
   bg12: darkMode ? '#11171a' : '#f5f5f5',
-  sidebar: '#303e46',
 
   //specialty colors
   modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
@@ -91,7 +90,7 @@ const theme = (darkMode, color) => ({
   shadow1: darkMode ? '#000' : '#2F80ED',
 
   // border colors
-  border: darkMode ? '#4c5f69' : '#859aa5',
+  // border: darkMode ? '#4c5f69' : '#859aa5',
 
   // table colors
   oddRow: darkMode ? '#283339' : '#f4f4f4',
@@ -109,7 +108,13 @@ const theme = (darkMode, color) => ({
   warningBorder: darkMode ? '#303e46' : '#ffaf01',
   warningTextColor: darkMode ? '#859aa5' : '#1d272b',
 
-  background: darkMode ? 'black' : `radial-gradient(50% 50% at 50% 50%, #08a1e730 0%, #fff 0%)`,
+  // background: darkMode ? 'black' : `radial-gradient(50% 50% at 50% 50%, #08a1e730 0%, #fff 0%)`,
+
+  buttonBlack: darkMode ? '#11171A' : '#F5F5F5',
+  background: darkMode ? '#243036' : '#FFFFFF',
+  text: darkMode ? '#FFFFFF' : '#3A3A3A',
+  subText: darkMode ? '#A7B6BD' : '#5C6468',
+  border: darkMode ? '#40505A' : '#C2C2C2',
 
   // media queries
   mediaWidth: mediaWidthTemplates,
