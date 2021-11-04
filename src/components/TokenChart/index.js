@@ -53,24 +53,17 @@ const TokenChart = ({ address, color, base }) => {
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.THERE_DAYS)
 
-  // hourly and daily price data based on the current time window
-  const data1m4hour = useTokenPriceData(address, timeframeOptions.FOUR_HOURS, 30)
-  const data2m1day = useTokenPriceData(address, timeframeOptions.ONE_DAY, 120)
-  const data5m3days = useTokenPriceData(address, timeframeOptions.THERE_DAYS, 300)
-  // const dataHourly3days = useTokenPriceData(address, timeframeOptions.THERE_DAYS, 3600)
-  const dataHourlyWeek = useTokenPriceData(address, timeframeOptions.WEEK, 3600)
-  const dataHourlyMonth = useTokenPriceData(address, timeframeOptions.MONTH, 3600)
-
-  const priceData =
+  const priceData = useTokenPriceData(
+    address,
+    timeWindow,
     timeWindow === timeframeOptions.FOUR_HOURS
-      ? data1m4hour
+      ? 30
       : timeWindow === timeframeOptions.ONE_DAY
-      ? data2m1day
-      : timeWindow === timeframeOptions.MONTH
-      ? dataHourlyMonth
-      : timeWindow === timeframeOptions.WEEK
-      ? dataHourlyWeek
-      : data5m3days
+      ? 120
+      : timeWindow === timeframeOptions.THERE_DAYS
+      ? 300
+      : 3600
+  )
 
   const below1080 = useMedia('(max-width: 1080px)')
   const below600 = useMedia('(max-width: 600px)')
