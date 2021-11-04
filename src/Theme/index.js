@@ -72,6 +72,8 @@ const theme = (darkMode, color) => ({
   onlyLight: darkMode ? '#222c31' : 'transparent',
   divider: darkMode ? 'rgba(43, 43, 43, 0.435)' : 'rgba(43, 43, 43, 0.035)',
 
+  primary: '#08A1E7',
+
   //primary colors
   primary1: darkMode ? '#2172E5' : '#08a1e7',
   primary2: darkMode ? '#3680E7' : '#FF8CC3',
@@ -97,8 +99,8 @@ const theme = (darkMode, color) => ({
   evenRow: darkMode ? '#303e46' : '#ffffff',
 
   // other
-  red1: '#FF6871',
-  green1: '#27AE60',
+  red1: '#FF537B',
+  green1: '#31CB9E',
   yellow1: '#FFE270',
   yellow2: '#F3841E',
   link: '#2172E5',
@@ -264,12 +266,6 @@ export const GlobalStyle = createGlobalStyle`
 	text-align: left;
 	z-index: 10;
   pointer-events: none;
-}
-
-@media screen and (max-width: 800px) {
-  .three-line-legend {
-    display: none !important;
-  }
 }
 
 .tv-lightweight-charts{
