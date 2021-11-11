@@ -30,6 +30,7 @@ import FormattedName from '../components/FormattedName'
 import { useListedTokens } from '../contexts/Application'
 import bookMark from '../assets/bookmark.svg'
 import bookMarkOutline from '../assets/bookmark_outline.svg'
+import useTheme from '../hooks/useTheme'
 
 const DashboardWrapper = styled.div`
   width: 100%;
@@ -118,8 +119,9 @@ function PairPage({ pairAddress, history }) {
   }, [])
 
   const pools = usePairPools(pairAddress)
+  const theme = useTheme()
 
-  const backgroundColor = '#08a1e7'
+  const backgroundColor = theme.primary
 
   // liquidity
   const formattedLiquidity = reserveUSD ? formattedNum(reserveUSD, true) : formattedNum(trackedReserveUSD, true)
@@ -279,9 +281,7 @@ function PairPage({ pairAddress, history }) {
                   )}
 
                   <LinkScroll to="topPools" spy={true} smooth={true}>
-                    <ButtonOutlined color="#08a1e7" borderColor="#08a1e7" style={{ padding: '11px 22px' }}>
-                      Choose pool to add liquidity
-                    </ButtonOutlined>
+                    <ButtonOutlined style={{ padding: '11px 22px' }}>Choose pool to add liquidity</ButtonOutlined>
                   </LinkScroll>
 
                   <Link external href={getSwapLink(token0?.id, token1?.id)}>

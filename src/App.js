@@ -21,6 +21,7 @@ import { OVERVIEW_TOKEN_BLACKLIST, PAIR_BLACKLIST } from './constants'
 import LocalLoader from './components/LocalLoader'
 import { ButtonDark } from './components/ButtonStyled'
 import { useExchangeClient, useLatestBlocks } from './contexts/Application'
+import useTheme from './hooks/useTheme'
 
 const AppWrapper = styled.div`
   position: relative;
@@ -111,6 +112,7 @@ const BLOCK_DIFFERENCE_THRESHOLD = process.env.REACT_APP_CHAIN_ID === '137' ? 21
 
 function App() {
   const [savedOpen, setSavedOpen] = useState(false)
+  const theme = useTheme()
 
   const globalData = useGlobalData()
   const globalChartData = useGlobalChartData()
@@ -136,7 +138,7 @@ function App() {
               </div>
 
               <CloseButtonWrapper>
-                <ButtonDark color={'#08a1e7'} style={{ minWidth: '140px' }} onClick={() => markAsDismissed(true)}>
+                <ButtonDark color={theme.primary} style={{ minWidth: '140px' }} onClick={() => markAsDismissed(true)}>
                   Close
                 </ButtonDark>
               </CloseButtonWrapper>
@@ -246,7 +248,7 @@ function App() {
             </Switch>
           </BrowserRouter>
         ) : (
-          <LocalLoader fill="true" size="150px" />
+          <LocalLoader fill="true" size="200px" />
         )}
       </AppWrapper>
     </ApolloProvider>

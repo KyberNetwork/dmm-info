@@ -29,6 +29,7 @@ import FormattedName from '../components/FormattedName'
 import { useListedTokens } from '../contexts/Application'
 import bookMark from '../assets/bookmark.svg'
 import bookMarkOutline from '../assets/bookmark_outline.svg'
+import useTheme from '../hooks/useTheme'
 
 const DashboardWrapper = styled.div`
   width: 100%;
@@ -112,8 +113,10 @@ function TokenPage({ address, history }) {
     document.querySelector('body').scrollTo(0, 0)
   }, [])
 
+  const theme = useTheme()
+
   // detect color from token
-  const backgroundColor = '#08a1e7'
+  const backgroundColor = theme.primary
 
   const allPairs = useTokenPairs(address)
 
@@ -269,9 +272,7 @@ function TokenPage({ address, history }) {
                     <></>
                   )}
                   <Link href={getPoolLink(address)} target="_blank">
-                    <ButtonOutlined color="#08a1e7" borderColor="#08a1e7" style={{ padding: '11px 22px' }}>
-                      + Add Liquidity
-                    </ButtonOutlined>
+                    <ButtonOutlined style={{ padding: '11px 22px' }}>+ Add Liquidity</ButtonOutlined>
                   </Link>
                   <Link
                     href={bestPairToken ? getSwapLink(address, bestPairToken) : getSwapLink(address)}

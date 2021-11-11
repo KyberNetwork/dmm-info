@@ -9,6 +9,7 @@ import { RowFixed } from '../Row'
 import { OptionButton } from '../ButtonStyled'
 import { getTimeframe } from '../../utils'
 import { TYPE } from '../../Theme'
+import useTheme from '../../hooks/useTheme'
 
 const CHART_VIEW = {
   VOLUME: 'Volume',
@@ -26,6 +27,7 @@ const GlobalChart = ({ display }) => {
   // time window and window size for chart
   const timeWindow = timeframeOptions.ALL_TIME
   const [volumeWindow, setVolumeWindow] = useState(VOLUME_WINDOW.DAYS)
+  const theme = useTheme()
 
   // global historical data
   const [dailyData, weeklyData] = useGlobalChartData()
@@ -79,7 +81,7 @@ const GlobalChart = ({ display }) => {
   return chartDataFiltered ? (
     <>
       {below800 && (
-        <DropdownSelect options={CHART_VIEW} active={chartView} setActive={setChartView} color={'#08a1e7'} />
+        <DropdownSelect options={CHART_VIEW} active={chartView} setActive={setChartView} color={theme.primary} />
       )}
 
       {chartDataFiltered && chartView === CHART_VIEW.LIQUIDITY && (
@@ -135,8 +137,8 @@ const GlobalChart = ({ display }) => {
       )}
     </>
   ) : (
-      ''
-    )
+    ''
+  )
 }
 
 export default GlobalChart

@@ -37,6 +37,7 @@ import {
 } from '../utils'
 import bookMark from '../assets/bookmark.svg'
 import bookMarkOutline from '../assets/bookmark_outline.svg'
+import useTheme from '../hooks/useTheme'
 
 const DashboardWrapper = styled.div`
   width: 100%;
@@ -155,8 +156,10 @@ function PoolPage({ poolAddress, history }) {
     document.querySelector('body').scrollTo(0, 0)
   }, [])
 
+  const theme = useTheme()
+
   const transactions = usePoolTransactions(poolAddress)
-  const backgroundColor = '#08a1e7'
+  const backgroundColor = theme.primary
 
   // liquidity
   const liquidity = reserveUSD ? formattedNum(reserveUSD, true) : '-'
@@ -307,9 +310,7 @@ function PoolPage({ poolAddress, history }) {
                   )}
 
                   <Link external href={getPoolLink(token0?.id, token1?.id, false, poolAddress)}>
-                    <ButtonOutlined color="#08a1e7" borderColor="#08a1e7" style={{ padding: '11px 22px' }}>
-                      + Add Liquidity
-                    </ButtonOutlined>
+                    <ButtonOutlined style={{ padding: '11px 22px' }}>+ Add Liquidity</ButtonOutlined>
                   </Link>
                   <Link external href={getSwapLink(token0?.id, token1?.id)}>
                     <ButtonDark
@@ -614,7 +615,7 @@ function PoolPage({ poolAddress, history }) {
                       <CopyHelper toCopy={token1?.id} />
                     </AutoRow>
                   </Column>
-                  <ButtonOutlined color="#08a1e7" borderColor="#08a1e7" style={{ padding: '11px 22px' }}>
+                  <ButtonOutlined style={{ padding: '11px 22px' }}>
                     <Link
                       color={backgroundColor}
                       external

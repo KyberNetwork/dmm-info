@@ -21,6 +21,7 @@ import { transparentize } from 'polished'
 import { CustomLink } from '../components/Link'
 
 import { PageWrapper, ContentWrapper } from '../components'
+import useTheme from '../hooks/useTheme'
 
 const ListOptions = styled(AutoRow)`
   height: 40px;
@@ -47,6 +48,7 @@ function GlobalPage() {
   const allPairs = useAllPairData()
   const allTokens = useAllTokenData()
   const transactions = useGlobalTransactions()
+  const theme = useTheme()
 
   // breakpoints
   const below800 = useMedia('(max-width: 800px)')
@@ -62,7 +64,7 @@ function GlobalPage() {
 
   return (
     <PageWrapper>
-      <ThemedBackground backgroundColor={transparentize(0.8, '#08a1e7')} />
+      <ThemedBackground backgroundColor={transparentize(0.8, theme.primary)} />
       <ContentWrapper>
         <div>
           <AutoColumn gap="24px" style={{ paddingBottom: below800 ? '12px' : '24px' }}>

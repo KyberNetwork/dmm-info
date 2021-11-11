@@ -9,7 +9,6 @@ import Link, { BasicLink } from '../Link'
 import { AutoColumn } from '../Column'
 import { RowFixed, AutoRow } from '../Row'
 import SwitchNetworkButton from '../SwitcNetworkButton'
-import Logo from '../../assets/logo.svg'
 import { ApplicationModal, useModalOpen, useToggleMenuModal } from '../../contexts/Application'
 import { useOnClickOutside } from '../../hooks'
 import SocialLinks from '../SocialLinks'
@@ -62,7 +61,7 @@ const StyledMenuButton = styled.button`
   height: 100%;
   border: none;
   background-color: transparent;
-  margin: 0 0 0 24px;
+  margin: 0 0 0 8px;
   padding: 0;
   height: 35px;
   color: ${({ theme }) => theme.menu};
@@ -129,7 +128,7 @@ export default function Title() {
       <Flex alignItems="center" style={{ justifyContent: 'space-between' }}>
         <RowFixed>
           <DMMIcon id="link" onClick={() => history.push('/')}>
-            <img width={below1080 ? '80px' : '120px'} src={Logo} alt="logo" />
+            <img width={below1080 ? '100px' : '160px'} src="/logo.svg?version=v" alt="logo" />
           </DMMIcon>
         </RowFixed>
         {below1080 && (

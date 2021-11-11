@@ -25,7 +25,7 @@ const NetworkWrapper = styled.div`
 
 const NetworkLabel = styled.span`
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   color: ${({ theme }) => theme.primary};
 `
 
