@@ -553,6 +553,7 @@ function PoolPage({ poolAddress, history }) {
               <Panel
                 style={{
                   marginTop: '1.5rem',
+                  padding: 0,
                 }}
               >
                 {transactions ? <TxnList transactions={transactions} /> : <Loader />}
@@ -569,8 +570,10 @@ function PoolPage({ poolAddress, history }) {
               >
                 <TokenDetailsLayout>
                   <Column>
-                    <TYPE.main>Pool Name</TYPE.main>
-                    <TYPE.main style={{ marginTop: '.5rem' }}>
+                    <TYPE.main color={theme.subText} fontSize="12px">
+                      POOL NAME
+                    </TYPE.main>
+                    <TYPE.main style={{ marginTop: '.75rem' }} fontSize="18px">
                       <RowFixed>
                         <FormattedName text={token0?.symbol ?? ''} maxCharacters={8} />
                         -
@@ -579,33 +582,35 @@ function PoolPage({ poolAddress, history }) {
                     </TYPE.main>
                   </Column>
                   <Column>
-                    <TYPE.main>Pool Address</TYPE.main>
+                    <TYPE.main color={theme.subText} fontSize="12px">
+                      POOL ADDRESS
+                    </TYPE.main>
                     <AutoRow align="flex-end">
-                      <TYPE.main style={{ marginTop: '.5rem' }}>
+                      <TYPE.main style={{ marginTop: '.75rem' }} fontSize="18px">
                         {poolAddress.slice(0, 6) + '...' + poolAddress.slice(38, 42)}
                       </TYPE.main>
                       <CopyHelper toCopy={poolAddress} />
                     </AutoRow>
                   </Column>
                   <Column>
-                    <TYPE.main>
+                    <TYPE.main color={theme.subText}>
                       <RowFixed>
-                        <FormattedName text={token0?.symbol ?? ''} maxCharacters={8} />{' '}
-                        <span style={{ marginLeft: '4px' }}>Address</span>
+                        <FormattedName style={{ color: theme.subText }} text={token0?.symbol ?? ''} maxCharacters={8} />{' '}
+                        <span style={{ marginLeft: '4px' }}>ADDRESS</span>
                       </RowFixed>
                     </TYPE.main>
                     <AutoRow align="flex-end">
-                      <TYPE.main style={{ marginTop: '.5rem' }}>
+                      <TYPE.main style={{ marginTop: '.75rem' }} fontSize="18px">
                         {token0 && token0.id.slice(0, 6) + '...' + token0.id.slice(38, 42)}
                       </TYPE.main>
                       <CopyHelper toCopy={token0?.id} />
                     </AutoRow>
                   </Column>
                   <Column>
-                    <TYPE.main>
+                    <TYPE.main color={theme.subText}>
                       <RowFixed>
-                        <FormattedName text={token1?.symbol ?? ''} maxCharacters={8} />{' '}
-                        <span style={{ marginLeft: '4px' }}>Address</span>
+                        <FormattedName style={{ color: theme.subText }} text={token1?.symbol ?? ''} maxCharacters={8} />{' '}
+                        <span style={{ marginLeft: '4px' }}>ADDRESS</span>
                       </RowFixed>
                     </TYPE.main>
                     <AutoRow align="flex-end">
@@ -615,15 +620,11 @@ function PoolPage({ poolAddress, history }) {
                       <CopyHelper toCopy={token1?.id} />
                     </AutoRow>
                   </Column>
-                  <ButtonOutlined style={{ padding: '11px 22px' }}>
-                    <Link
-                      color={backgroundColor}
-                      external
-                      href={`${process.env.REACT_APP_ETHERSCAN_URL}/address/${poolAddress}`}
-                    >
+                  <Link external href={`${process.env.REACT_APP_ETHERSCAN_URL}/address/${poolAddress}`}>
+                    <ButtonDark color={backgroundColor} style={{ padding: '11px 22px' }}>
                       {`View on ${getEtherscanLinkText()}`} ↗
-                    </Link>
-                  </ButtonOutlined>
+                    </ButtonDark>
+                  </Link>
                 </TokenDetailsLayout>
               </Panel>
             </>

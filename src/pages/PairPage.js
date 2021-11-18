@@ -291,7 +291,7 @@ function PairPage({ pairAddress, history }) {
                       color={backgroundColor}
                       style={{ padding: '11px 22px' }}
                     >
-                      Trade
+                      Swap
                     </ButtonDark>
                   </Link>
                 </RowFixed>
@@ -445,8 +445,10 @@ function PairPage({ pairAddress, history }) {
               >
                 <TokenDetailsLayout>
                   <Column>
-                    <TYPE.main>Pair Name</TYPE.main>
-                    <TYPE.main style={{ marginTop: '.5rem' }}>
+                    <TYPE.main color={theme.subText} fontSize="12px">
+                      PAIR NAME
+                    </TYPE.main>
+                    <TYPE.main style={{ marginTop: '18px' }}>
                       <RowFixed>
                         <FormattedName text={token0?.symbol ?? ''} maxCharacters={8} />
                         -
@@ -455,37 +457,39 @@ function PairPage({ pairAddress, history }) {
                     </TYPE.main>
                   </Column>
                   <Column>
-                    <TYPE.main>Pair Address</TYPE.main>
+                    <TYPE.main color={theme.subText} fontSize="12px">
+                      PAIR ADDRESS
+                    </TYPE.main>
                     <AutoRow align="flex-end">
-                      <TYPE.main style={{ marginTop: '.5rem' }}>
+                      <TYPE.main style={{ marginTop: '12px' }} fontSize="18px">
                         {pairAddress.slice(0, 6) + '...' + pairAddress.slice(81, 85)}
                       </TYPE.main>
                       <CopyHelper toCopy={pairAddress} />
                     </AutoRow>
                   </Column>
                   <Column>
-                    <TYPE.main>
+                    <TYPE.main color={theme.subText} fontSize="12px">
                       <RowFixed>
-                        <FormattedName text={token0?.symbol ?? ''} maxCharacters={8} />{' '}
-                        <span style={{ marginLeft: '4px' }}>Address</span>
+                        <FormattedName style={{ color: theme.subText }} text={token0?.symbol ?? ''} maxCharacters={8} />{' '}
+                        <span style={{ marginLeft: '4px' }}>ADDRESS</span>
                       </RowFixed>
                     </TYPE.main>
                     <AutoRow align="flex-end">
-                      <TYPE.main style={{ marginTop: '.5rem' }}>
+                      <TYPE.main style={{ marginTop: '12px' }} fontSize="18px">
                         {token0 && token0.id.slice(0, 6) + '...' + token0.id.slice(38, 42)}
                       </TYPE.main>
                       <CopyHelper toCopy={token0?.id} />
                     </AutoRow>
                   </Column>
                   <Column>
-                    <TYPE.main>
+                    <TYPE.main fontSize="12px" color={theme.subText}>
                       <RowFixed>
-                        <FormattedName text={token1?.symbol ?? ''} maxCharacters={8} />{' '}
-                        <span style={{ marginLeft: '4px' }}>Address</span>
+                        <FormattedName style={{ color: theme.subText }} text={token1?.symbol ?? ''} maxCharacters={8} />{' '}
+                        <span style={{ marginLeft: '4px' }}>ADDRESS</span>
                       </RowFixed>
                     </TYPE.main>
                     <AutoRow align="flex-end">
-                      <TYPE.main style={{ marginTop: '.5rem' }} fontSize={16}>
+                      <TYPE.main style={{ marginTop: '12px' }} fontSize={18}>
                         {token1 && token1.id.slice(0, 6) + '...' + token1.id.slice(38, 42)}
                       </TYPE.main>
                       <CopyHelper toCopy={token1?.id} />

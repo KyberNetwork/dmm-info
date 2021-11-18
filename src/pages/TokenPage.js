@@ -9,7 +9,7 @@ import PairList from '../components/PairList'
 import Loader from '../components/LocalLoader'
 import { AutoRow, RowBetween, RowFixed } from '../components/Row'
 import Column, { AutoColumn } from '../components/Column'
-import { ButtonLight, ButtonDark, ButtonOutlined } from '../components/ButtonStyled'
+import { ButtonDark, ButtonOutlined } from '../components/ButtonStyled'
 import TxnList from '../components/TxnList'
 import TokenChart from '../components/TokenChart'
 import { BasicLink } from '../components/Link'
@@ -65,9 +65,10 @@ const PanelWrapper = styled.div`
 const TokenDetailsLayout = styled.div`
   display: inline-grid;
   width: 100%;
-  grid-template-columns: auto auto auto 1fr;
+  grid-template-columns: auto auto auto auto;
   column-gap: 30px;
   align-items: start;
+  justify-content: space-between;
 
   &:last-child {
     align-items: center;
@@ -284,7 +285,7 @@ function TokenPage({ address, history }) {
                       color={backgroundColor}
                       style={{ padding: '11px 22px' }}
                     >
-                      Trade
+                      Swap
                     </ButtonDark>
                   </Link>
                 </RowFixed>
@@ -367,7 +368,7 @@ function TokenPage({ address, history }) {
               rounded
               style={{
                 marginTop: '1.5rem',
-                padding: '1.125rem 0 ',
+                padding: '0',
               }}
             >
               {address && fetchedPairsList ? (
@@ -377,9 +378,9 @@ function TokenPage({ address, history }) {
               )}
             </Panel>
             <RowBetween mt={40} mb={'1rem'}>
-              <TYPE.main fontSize={'1.125rem'}>Transactions</TYPE.main> <div />
+              <TYPE.main fontSize={'1.125rem'}>Latest Transactions</TYPE.main> <div />
             </RowBetween>
-            <Panel rounded>
+            <Panel rounded style={{ padding: 0 }}>
               {transactions ? <TxnList color={backgroundColor} transactions={transactions} /> : <Loader />}
             </Panel>
             <>
@@ -395,35 +396,29 @@ function TokenPage({ address, history }) {
               >
                 <TokenDetailsLayout>
                   <Column>
-                    <TYPE.main>Symbol</TYPE.main>
-                    <Text style={{ marginTop: '.5rem' }} fontSize={24} fontWeight="500">
+                    <TYPE.main color={theme.subText}>Symbol</TYPE.main>
+                    <Text style={{ marginTop: '.5rem' }} fontSize={18} fontWeight="500">
                       <FormattedName text={symbol} maxCharacters={12} />
                     </Text>
                   </Column>
                   <Column>
-                    <TYPE.main>Name</TYPE.main>
-                    <TYPE.main style={{ marginTop: '.5rem' }} fontSize={24} fontWeight="500">
+                    <TYPE.main color={theme.subText}>Name</TYPE.main>
+                    <TYPE.main style={{ marginTop: '.5rem' }} fontSize={18} fontWeight="500">
                       <FormattedName text={name} maxCharacters={16} />
                     </TYPE.main>
                   </Column>
                   <Column>
-                    <TYPE.main>Address</TYPE.main>
+                    <TYPE.main color={theme.subText}>Address</TYPE.main>
                     <AutoRow align="flex-end">
-                      <TYPE.main style={{ marginTop: '.5rem' }} fontSize={24} fontWeight="500">
+                      <TYPE.main style={{ marginTop: '.5rem' }} fontSize={18} fontWeight="500">
                         {address.slice(0, 8) + '...' + address.slice(36, 42)}
                       </TYPE.main>
                       <CopyHelper toCopy={address} />
                     </AutoRow>
                   </Column>
-                  <ButtonLight color={backgroundColor}>
-                    <Link
-                      color={backgroundColor}
-                      external
-                      href={`${process.env.REACT_APP_ETHERSCAN_URL}/address/${address}`}
-                    >
-                      {`View on ${getEtherscanLinkText()}`} ↗
-                    </Link>
-                  </ButtonLight>
+                  <Link external href={`${process.env.REACT_APP_ETHERSCAN_URL}/address/${address}`}>
+                    <ButtonDark color={backgroundColor}>{`View on ${getEtherscanLinkText()}`} ↗</ButtonDark>
+                  </Link>
                 </TokenDetailsLayout>
               </Panel>
             </>

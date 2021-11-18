@@ -9,6 +9,7 @@ import InfoHelper from '../InfoHelper'
 import Loader from '../LocalLoader'
 import { getHealthFactor } from '../../utils/dmm'
 import ListItem, { ItemCard } from './ListItem'
+import useTheme from '../../hooks/useTheme'
 
 const TableHeader = styled.div`
   display: grid;
@@ -270,8 +271,9 @@ const PoolList = ({ pools, maxItems = 10 }) => {
     }
   }, [ITEMS_PER_PAGE, pools])
 
+  const theme = useTheme()
   return (
-    <div>
+    <div style={{ border: `1px solid ${theme.border}`, borderRadius: '8px' }}>
       {renderHeader()}
       {!poolsList ? (
         <Loader />

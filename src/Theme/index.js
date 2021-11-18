@@ -92,7 +92,7 @@ const theme = (darkMode, color) => ({
   // table colors
   tableHeader: darkMode ? '#303E46' : '#F9F9F9',
   oddRow: darkMode ? '#283339' : '#f4f4f4',
-  evenRow: darkMode ? '#303e46' : '#ffffff',
+  evenRow: darkMode ? '#303e46' : '#F9F9F9',
 
   // other
   red1: '#FF537B',
@@ -109,6 +109,7 @@ const theme = (darkMode, color) => ({
   buttonBlack: darkMode ? '#11171A' : '#F5F5F5',
   background: darkMode ? '#243036' : '#FFFFFF',
   text: darkMode ? '#FFFFFF' : '#3A3A3A',
+  textReverse: !darkMode ? '#FFFFFF' : '#3A3A3A',
   subText: darkMode ? '#A7B6BD' : '#5C6468',
   border: darkMode ? '#40505A' : '#E9E9E9',
 
