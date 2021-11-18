@@ -11,8 +11,8 @@ import DropdownSelect from '../DropdownSelect'
 import { useUserPositionChart } from '../../contexts/User'
 import { useTimeframe } from '../../contexts/Application'
 import LocalLoader from '../LocalLoader'
-import { useColor } from '../../hooks'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
+import useTheme from '../../hooks/useTheme'
 
 const ChartWrapper = styled.div`
   max-height: 420px;
@@ -41,8 +41,6 @@ const PairReturnsChart = ({ account, position }) => {
 
   const below600 = useMedia('(max-width: 600px)')
 
-  const color = useColor(position?.pair.token0.id)
-
   const [chartView, setChartView] = useState(CHART_VIEW.VALUE)
 
   // based on window, get starttime
@@ -54,6 +52,9 @@ const PairReturnsChart = ({ account, position }) => {
   const [darkMode] = useDarkModeManager()
   const textColor = darkMode ? 'white' : 'black'
 
+  const theme = useTheme()
+  const color = theme.primary
+
   return (
     <ChartWrapper>
       {below600 ? (
@@ -63,11 +64,27 @@ const PairReturnsChart = ({ account, position }) => {
         </RowBetween>
       ) : (
         <OptionsRow>
-          <AutoRow gap="6px" style={{ flexWrap: 'nowrap' }}>
-            <OptionButton active={chartView === CHART_VIEW.VALUE} onClick={() => setChartView(CHART_VIEW.VALUE)}>
+          <AutoRow
+            style={{
+              minWidth: 'fit-content',
+              width: 'fit-content',
+              flexWrap: 'nowrap',
+              borderRadius: '999px',
+              background: theme.buttonBlack,
+            }}
+          >
+            <OptionButton
+              active={chartView === CHART_VIEW.VALUE}
+              onClick={() => setChartView(CHART_VIEW.VALUE)}
+              style={{ borderRadius: '999px', padding: '6px 12px' }}
+            >
               Liquidity
             </OptionButton>
-            <OptionButton active={chartView === CHART_VIEW.FEES} onClick={() => setChartView(CHART_VIEW.FEES)}>
+            <OptionButton
+              active={chartView === CHART_VIEW.FEES}
+              onClick={() => setChartView(CHART_VIEW.FEES)}
+              style={{ borderRadius: '999px', padding: '6px 12px' }}
+            >
               Fees
             </OptionButton>
           </AutoRow>
