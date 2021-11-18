@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
-import { TrendingUp, List, PieChart, Disc, Repeat, Monitor, Sun, Moon } from 'react-feather'
+import { TrendingUp, PieChart, Disc, Repeat } from 'react-feather'
 import { useMedia } from 'react-use'
 
 import { AutoRow } from '../Row'
@@ -14,18 +14,25 @@ import SwitchNetworkButton from '../SwitcNetworkButton'
 import { ApplicationModal, useModalOpen, useSessionStart } from '../../contexts/Application'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 import SocialLinks from '../SocialLinks'
-import { getDefaultAddLiquidityUrl, addNetworkIdQueryString } from '../../utils'
+import ThemeToggle from '../ThemeToggle'
+import { addNetworkIdQueryString } from '../../utils'
+import Wallet from '../Icons/Wallet'
+import { Text } from 'rebass'
 
 const Wrapper = styled.div`
   height: ${({ isMobile }) => (isMobile ? 'initial' : '100vh')};
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text1};
-  padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+  padding: 32px 24px 28px;
   position: sticky;
   top: 0px;
-  z-index: 9999;
+  z-index: 999;
   box-sizing: border-box;
   color: ${({ theme }) => theme.bg2};
+
+  @media screen and (max-width: 1072px) {
+    padding: 16px;
+  }
 
   @media screen and (max-width: 800px) {
     grid-template-columns: 1fr;
@@ -40,7 +47,7 @@ const Wrapper = styled.div`
 const Option = styled.div`
   font-weight: ${({ activeText }) => (activeText ? 600 : 500)};
   font-size: 16px;
-  color: ${({ theme, activeText }) => (activeText ? theme.text : theme.subText)};
+  color: ${({ theme, activeText }) => (activeText ? theme.primary : theme.subText)};
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -115,7 +122,7 @@ function SideNav({ history }) {
 
   const seconds = useSessionStart()
 
-  const [isDark, toggleDarkMode] = useDarkModeManager()
+  const [, toggleDarkMode] = useDarkModeManager()
 
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
 
@@ -123,13 +130,13 @@ function SideNav({ history }) {
     <Wrapper isMobile={below1080}>
       {!below1080 ? (
         <DesktopWrapper>
-          <AutoColumn gap="1rem" style={{ marginLeft: '.75rem', marginTop: '1.5rem' }}>
+          <AutoColumn gap="1.5rem">
             <Title />
-            <AutoRow style={{ width: '90%' }}>
+            <AutoRow>
               <SwitchNetworkButton />
             </AutoRow>
             {!below1080 && (
-              <AutoColumn gap="1.25rem" style={{ marginTop: '1rem' }}>
+              <AutoColumn gap="1.25rem">
                 <BasicLink to="/home">
                   <Option activeText={history.location.pathname === '/home' ?? undefined}>
                     <TrendingUp size={16} style={{ marginRight: '.75rem' }} />
@@ -169,62 +176,32 @@ function SideNav({ history }) {
                       undefined
                     }
                   >
-                    <List size={16} style={{ marginRight: '.75rem' }} />
-                    Wallet Data
+                    <Wallet />
+                    <Text marginLeft="0.75rem"> Wallet Analytics</Text>
                   </Option>
                 </BasicLink>
+
+                <Divider />
 
                 <Link href={addNetworkIdQueryString(process.env.REACT_APP_DMM_SWAP_URL)} external>
                   <Option>
                     <Repeat size={16} style={{ marginRight: '.75rem' }} />
-                    Trade
+                    Swap
                   </Option>
                 </Link>
-
-                <Link href={addNetworkIdQueryString(getDefaultAddLiquidityUrl())} external>
-                  <Option>
-                    <Monitor size={16} style={{ marginRight: '.75rem' }} />
-                    Liquidity
-                  </Option>
-                </Link>
-
-                <Divider />
-
-                <Option onClick={toggleDarkMode}>
-                  {!isDark ? (
-                    <Sun size={16} style={{ marginRight: '.75rem' }} />
-                  ) : (
-                    <Moon size={16} style={{ marginRight: '.75rem' }} />
-                  )}
-                  {isDark ? 'Light Theme' : 'Dark Theme'}
-                </Option>
               </AutoColumn>
             )}
           </AutoColumn>
-          <AutoColumn gap="0.5rem" style={{ marginLeft: '.75rem', marginBottom: '3.5rem', marginTop: '1.5rem' }}>
-            <HeaderText>
-              <Link href="https://github.com/dynamic-amm/dmm-info" external>
-                Github
-              </Link>
-            </HeaderText>
-            <HeaderText>
-              <Link href="https://kyber.org/vote" external>
-                KyberDAO
-              </Link>
-            </HeaderText>
-            <HeaderText>
-              <Link href="https://files.kyber.network/DMM-Feb21.pdf" external>
-                DMM Litepaper
-              </Link>
-            </HeaderText>
+          <AutoColumn gap="0.75rem" style={{ marginBottom: '4.5rem', marginTop: '1.5rem' }}>
+            <Option onClick={toggleDarkMode}>
+              <ThemeToggle />
+            </Option>
+
+            <SocialLinks />
             <HeaderText>
               <Link href="https://kyber.network/" external>
                 Kyber Network
               </Link>
-            </HeaderText>
-            <SocialLinks />
-            <HeaderText>
-              <Link>© dmm.exchange</Link>
             </HeaderText>
           </AutoColumn>
           {!below1180 && (

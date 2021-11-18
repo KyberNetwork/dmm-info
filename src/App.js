@@ -22,6 +22,7 @@ import LocalLoader from './components/LocalLoader'
 import { ButtonDark } from './components/ButtonStyled'
 import { useExchangeClient, useLatestBlocks } from './contexts/Application'
 import useTheme from './hooks/useTheme'
+import BottomBar from './components/BottomBar'
 
 const AppWrapper = styled.div`
   position: relative;
@@ -91,6 +92,10 @@ const CloseButtonWrapper = styled.div`
   color: ${({ theme }) => theme.warningTextColor};
 `
 
+const Marginer = styled.div`
+  margin-top: 3rem;
+`
+
 /**
  * Wrap the component with the header and sidebar pinned tab
  */
@@ -99,7 +104,11 @@ const LayoutWrapper = ({ children, savedOpen, setSavedOpen }) => {
     <>
       <ContentWrapper open={savedOpen}>
         <SideNav />
-        <Center id="center">{children}</Center>
+        <BottomBar />
+        <Center id="center">
+          {children}
+          <Marginer />
+        </Center>
         <Right open={savedOpen}>
           <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
         </Right>

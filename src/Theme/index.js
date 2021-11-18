@@ -274,7 +274,7 @@ export const GlobalStyle = createGlobalStyle`
   html {
     font-size: 1rem;
     font-variant: none;
-    color: 'black';
+    color: ${({ theme }) => theme.text};
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
