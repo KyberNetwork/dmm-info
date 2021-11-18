@@ -183,13 +183,13 @@ export const ButtonEmpty = styled(Base)`
   align-items: center;
 
   &:focus {
-    text-decoration: underline;
+    color: ${({ theme }) => darken(0.1, theme.primary1)};
   }
   &:hover {
-    text-decoration: underline;
+    color: ${({ theme }) => darken(0.1, theme.primary1)};
   }
   &:active {
-    text-decoration: underline;
+    color: ${({ theme }) => darken(0.1, theme.primary1)};
   }
   &:disabled {
     opacity: 50%;

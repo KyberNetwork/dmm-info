@@ -90,6 +90,7 @@ const theme = (darkMode, color) => ({
   // border: darkMode ? '#4c5f69' : '#859aa5',
 
   // table colors
+  tableHeader: darkMode ? '#303E46' : '#F9F9F9',
   oddRow: darkMode ? '#283339' : '#f4f4f4',
   evenRow: darkMode ? '#303e46' : '#ffffff',
 
@@ -109,7 +110,7 @@ const theme = (darkMode, color) => ({
   background: darkMode ? '#243036' : '#FFFFFF',
   text: darkMode ? '#FFFFFF' : '#3A3A3A',
   subText: darkMode ? '#A7B6BD' : '#5C6468',
-  border: darkMode ? '#40505A' : '#C2C2C2',
+  border: darkMode ? '#40505A' : '#E9E9E9',
 
   // media queries
   mediaWidth: mediaWidthTemplates,
@@ -198,6 +199,18 @@ export const GlobalStyle = createGlobalStyle`
   @supports (font-variation-settings: normal) {
     html { font-family: 'Inter var', sans-serif; }
   }
+
+  html, input, textarea, button {
+    font-family: 'Work Sans', 'Inter', sans-serif;
+    font-display: fallback;
+  }
+  @supports (font-variation-settings: normal) {
+    html, input, textarea, button {
+      font-family: 'Work Sans', 'Inter var', sans-serif;
+    }
+  }
+
+
 
   html,
   body {

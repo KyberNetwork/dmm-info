@@ -22,6 +22,7 @@ import { CustomLink } from '../components/Link'
 
 import { PageWrapper, ContentWrapper } from '../components'
 import useTheme from '../hooks/useTheme'
+import { Flex } from 'rebass'
 
 const ListOptions = styled(AutoRow)`
   height: 40px;
@@ -38,9 +39,17 @@ const GridRow = styled.div`
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 1fr;
-  column-gap: 6px;
+  gap: 20px;
   align-items: start;
   justify-content: space-between;
+
+  @media screen and (max-width: 1000px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+const WrappedPanel = styled(Panel)`
+  padding: 0;
 `
 
 function GlobalPage() {
@@ -68,54 +77,52 @@ function GlobalPage() {
       <ContentWrapper>
         <div>
           <AutoColumn gap="24px" style={{ paddingBottom: below800 ? '12px' : '24px' }}>
-            {below800 ? null : <TYPE.largeHeader>Dynamic Market Maker Protocol Analytics</TYPE.largeHeader>}
-            <Search />
+            <Flex
+              alignItems={below800 ? 'flex-start' : 'center'}
+              justifyContent="space-between"
+              flexDirection={below800 ? 'column-reverse' : 'row'}
+              sx={{ gap: '20px' }}
+            >
+              <TYPE.largeHeader>Summary</TYPE.largeHeader>
+              <Search />
+            </Flex>
             <GlobalStats />
           </AutoColumn>
-          {!below800 && (
-            <GridRow>
-              <Panel style={{ height: '100%', minHeight: '300px' }}>
-                <GlobalChart display="liquidity" />
-              </Panel>
-              <Panel style={{ height: '100%' }}>
-                <GlobalChart display="volume" />
-              </Panel>
-            </GridRow>
-          )}
-          {below800 && (
-            <AutoColumn style={{ marginTop: '6px' }} gap="24px">
-              <Panel style={{ height: '100%', minHeight: '300px' }}>
-                <GlobalChart display="liquidity" />
-              </Panel>
-            </AutoColumn>
-          )}
+          <GridRow>
+            <Panel style={{ height: '100%', minHeight: '300px' }}>
+              <GlobalChart display="liquidity" />
+            </Panel>
+            <Panel style={{ height: '100%' }}>
+              <GlobalChart display="volume" />
+            </Panel>
+          </GridRow>
           <ListOptions gap="10px" style={{ marginTop: '2rem', marginBottom: '.5rem' }}>
             <RowBetween>
               <TYPE.main fontSize={'1.125rem'}>Top Tokens</TYPE.main>
               <CustomLink to={'/tokens'}>See All</CustomLink>
             </RowBetween>
           </ListOptions>
-          <Panel style={{ marginTop: '6px', padding: '1.125rem 0 ' }}>
+          <WrappedPanel style={{ marginTop: '6px' }}>
             <TopTokenList tokens={allTokens} />
-          </Panel>
+          </WrappedPanel>
           <ListOptions gap="10px" style={{ marginTop: '2rem', marginBottom: '.5rem' }}>
             <RowBetween>
               <TYPE.main fontSize={'1rem'}>Top Pairs</TYPE.main>
               <CustomLink to={'/pairs'}>See All</CustomLink>
             </RowBetween>
           </ListOptions>
-          <Panel style={{ marginTop: '6px', padding: '1.125rem 0 ' }}>
+          <WrappedPanel style={{ marginTop: '6px' }}>
             <PairList pairs={allPairs} />
-          </Panel>
+          </WrappedPanel>
 
           <span>
             <TYPE.main fontSize={'1.125rem'} style={{ marginTop: '2rem' }}>
               Transactions
             </TYPE.main>
           </span>
-          <Panel style={{ margin: '1rem 0' }}>
+          <WrappedPanel style={{ margin: '1rem 0' }}>
             <TxnList transactions={transactions} />
-          </Panel>
+          </WrappedPanel>
         </div>
       </ContentWrapper>
     </PageWrapper>
