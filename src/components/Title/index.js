@@ -8,6 +8,7 @@ import { TrendingUp, Disc, PieChart } from 'react-feather'
 import Link, { BasicLink } from '../Link'
 import { RowFixed } from '../Row'
 import useTheme from '../../hooks/useTheme'
+import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const TitleWrapper = styled.div`
   text-decoration: none;
@@ -48,6 +49,7 @@ export default function Title() {
   const below1080 = useMedia('(max-width: 1080px)')
   const below600 = useMedia('(max-width: 600px)')
   const theme = useTheme()
+  const [isDark] = useDarkModeManager()
 
   return (
     <TitleWrapper>
@@ -56,12 +58,12 @@ export default function Title() {
           <DMMIcon id="link" onClick={() => history.push('/')}>
             <img
               width={below1080 ? '110px' : '160px'}
-              src="/logo.svg?version=v"
+              src={isDark ? '/logo-dark.svg' : '/logo.svg?version=v'}
               alt="logo"
-              style={{ marginTop: '10px' }}
+              style={{ marginTop: '2px' }}
             />
           </DMMIcon>
-          <Text fontSize="12px" color={theme.subText} textAlign="right" marginTop="-4px">
+          <Text fontSize="12px" color={theme.subText} textAlign="right" marginTop="-12px">
             Analytics
           </Text>
         </div>

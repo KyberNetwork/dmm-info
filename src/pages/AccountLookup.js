@@ -43,7 +43,7 @@ function AccountLookup() {
           Top Liquidity Positions
         </TYPE.main>
         <Panel style={{ padding: 0 }}>
-          {topLps && topLps.length > 0 ? <LPList lps={topLps} maxItems={200} /> : <LocalLoader />}
+          {topLps && topLps.length > 0 ? <LPList lps={topLps} maxItems={15} /> : <LocalLoader />}
         </Panel>
       </FullWrapper>
     </PageWrapper>

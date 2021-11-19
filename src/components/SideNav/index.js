@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   height: ${({ isMobile }) => (isMobile ? 'initial' : '100vh')};
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text1};
-  padding: 32px 24px 28px;
+  padding: 28px 24px;
   position: sticky;
   top: 0px;
   z-index: 999;

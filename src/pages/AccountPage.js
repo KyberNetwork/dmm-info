@@ -336,6 +336,7 @@ function AccountPage({ account }) {
           <Panel
             style={{
               marginTop: '1.5rem',
+              padding: 0,
             }}
           >
             <PositionList positions={positions} />

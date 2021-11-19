@@ -195,18 +195,18 @@ function LPList({ lps, disbaleLinks, maxItems = 10 }) {
         {!below600 && (
           <Flex alignItems="center" justifyContent="flexEnd">
             <TYPE.main area="name" color={theme.subText} fontSize="12px">
-              Pair
+              PAIR
             </TYPE.main>
           </Flex>
         )}
         <Flex alignItems="center" justifyContent="flexEnd">
           <TYPE.main area="name" color={theme.subText} fontSize="12px">
-            Pool
+            POOL
           </TYPE.main>
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
           <TYPE.main area="name" color={theme.subText} fontSize="12px">
-            Value
+            VALUE
           </TYPE.main>
         </Flex>
       </TableHeader>
