@@ -130,13 +130,13 @@ function SideNav({ history }) {
     <Wrapper isMobile={below1080}>
       {!below1080 ? (
         <DesktopWrapper>
-          <AutoColumn gap="1.5rem">
+          <AutoColumn gap="2rem">
             <Title />
             <AutoRow>
               <SwitchNetworkButton />
             </AutoRow>
             {!below1080 && (
-              <AutoColumn gap="1.25rem">
+              <AutoColumn gap="2rem">
                 <BasicLink to="/home">
                   <Option activeText={history.location.pathname === '/home' ?? undefined}>
                     <TrendingUp size={16} style={{ marginRight: '.75rem' }} />

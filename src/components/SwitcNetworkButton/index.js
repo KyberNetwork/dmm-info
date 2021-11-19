@@ -17,6 +17,10 @@ const ButtonWrapper = styled(ButtonOutlined)`
   background: ${({ theme }) => theme.buttonBlack};
   border: none;
   z-index: 1000;
+
+  &:hover {
+    box-shadow: none;
+  }
 `
 
 const NetworkWrapper = styled.div`
@@ -28,6 +32,7 @@ const NetworkLabel = styled.div`
   font-size: 16px;
   font-weight: 600;
   color: ${({ theme }) => theme.primary};
+  margin-left: 10px;
 `
 
 const SwitchNetworkButton = () => {
@@ -43,10 +48,10 @@ const SwitchNetworkButton = () => {
   return (
     <ButtonWrapper onClick={toggleNetworkModal}>
       <NetworkWrapper>
-        <img src={NETWORK_ICON[chainId]} alt="Network Icon" style={{ width: '20px', marginRight: '10px' }} />
+        <img src={NETWORK_ICON[chainId]} alt="Network Icon" style={{ width: '20px' }} />
         {!below576 && <NetworkLabel>{NETWORK_LABEL[chainId]}</NetworkLabel>}
       </NetworkWrapper>
-      <img src={SwitchNetworkIcon} alt="Switch Network Icon" />
+      <img src={SwitchNetworkIcon} alt="Switch Network Icon" style={{ marginTop: '4px', marginLeft: '6px' }} />
     </ButtonWrapper>
   )
 }
