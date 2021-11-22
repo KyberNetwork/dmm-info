@@ -38,7 +38,7 @@ const DashboardWrapper = styled.div`
 const PanelWrapper = styled.div`
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: max-content;
-  gap: 12px;
+  gap: 16px;
   display: inline-grid;
   width: 100%;
   align-items: start;
