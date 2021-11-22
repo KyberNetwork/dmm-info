@@ -2,14 +2,11 @@ import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { ResponsiveContainer } from 'recharts'
 import { timeframeOptions } from '../../constants'
 import { useGlobalChartData, useGlobalData } from '../../contexts/GlobalData'
-import { useMedia } from 'react-use'
-import DropdownSelect from '../DropdownSelect'
 import TradingViewChart, { CHART_TYPES } from '../TradingviewChart'
 import { RowFixed } from '../Row'
 import { OptionButton } from '../ButtonStyled'
 import { getTimeframe } from '../../utils'
 import { TYPE } from '../../Theme'
-import useTheme from '../../hooks/useTheme'
 
 const CHART_VIEW = {
   VOLUME: 'Volume',
@@ -21,13 +18,11 @@ const VOLUME_WINDOW = {
   DAYS: 'DAYS',
 }
 const GlobalChart = ({ display }) => {
-  // chart options
-  const [chartView, setChartView] = useState(display === 'volume' ? CHART_VIEW.VOLUME : CHART_VIEW.LIQUIDITY)
+  const chartView = display === 'volume' ? CHART_VIEW.VOLUME : CHART_VIEW.LIQUIDITY
 
   // time window and window size for chart
   const timeWindow = timeframeOptions.ALL_TIME
   const [volumeWindow, setVolumeWindow] = useState(VOLUME_WINDOW.DAYS)
-  const theme = useTheme()
 
   // global historical data
   const [dailyData, weeklyData] = useGlobalChartData()
@@ -61,7 +56,6 @@ const GlobalChart = ({ display }) => {
         })
     )
   }, [dailyData, utcStartTime, volumeWindow, weeklyData])
-  const below800 = useMedia('(max-width: 800px)')
 
   // update the width on a window resize
   const ref = useRef()
@@ -80,10 +74,6 @@ const GlobalChart = ({ display }) => {
 
   return chartDataFiltered ? (
     <>
-      {below800 && (
-        <DropdownSelect options={CHART_VIEW} active={chartView} setActive={setChartView} color={theme.primary} />
-      )}
-
       {chartDataFiltered && chartView === CHART_VIEW.LIQUIDITY && (
         <ResponsiveContainer aspect={60 / 28} ref={ref}>
           <TradingViewChart
