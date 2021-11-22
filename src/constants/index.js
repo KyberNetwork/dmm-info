@@ -86,3 +86,6 @@ export const ChainId = {
 }
 
 export const MAX_ALLOW_APY = 2000
+
+export const AMP_HINT =
+  'Stands for amplification factor. Each pool can have its own AMP. Pools with a higher AMP provide higher capital efficiency within a particular price range'

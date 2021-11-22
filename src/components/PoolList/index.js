@@ -10,6 +10,7 @@ import Loader from '../LocalLoader'
 import { getHealthFactor } from '../../utils/dmm'
 import ListItem, { ItemCard } from './ListItem'
 import useTheme from '../../hooks/useTheme'
+import { AMP_HINT } from '../../constants'
 
 const TableHeader = styled.div`
   display: grid;
@@ -208,11 +209,7 @@ const PoolList = ({ pools, maxItems = 10 }) => {
 
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText>AMP</ClickableText>
-          <InfoHelper
-            text={
-              'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
-            }
-          />
+          <InfoHelper text={AMP_HINT} />
         </Flex>
 
         <Flex alignItems="center" justifyContent="flexEnd">
