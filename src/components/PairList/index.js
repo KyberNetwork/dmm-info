@@ -304,9 +304,9 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
                 setSortDirection(sortedColumn !== SORT_FIELD.APY ? true : !sortDirection)
               }}
             >
-              1y Fees / Liquidity {sortedColumn === SORT_FIELD.APY ? (!sortDirection ? '↑' : '↓') : ''}
+              APR {sortedColumn === SORT_FIELD.APY ? (!sortDirection ? '↑' : '↓') : ''}
             </ClickableText>
-            <QuestionHelper text={'Based on 24H volume annualized'} />
+            <QuestionHelper text={'Estimated return based on yearly fees of the pool'} />
           </Flex>
         )}
       </TableHeader>

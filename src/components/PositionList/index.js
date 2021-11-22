@@ -109,7 +109,7 @@ function PositionList({ positions }) {
   // pagination
   const [page, setPage] = useState(1)
   const [maxPage, setMaxPage] = useState(1)
-  const ITEMS_PER_PAGE = 10
+  const ITEMS_PER_PAGE = 5
 
   // sorting
   const [sortDirection, setSortDirection] = useState(true)

@@ -23,7 +23,7 @@ import { useSavedAccounts } from '../contexts/LocalStorage'
 import { formattedNum, getEtherscanLinkText } from '../utils'
 import { useOnClickOutside } from '../hooks'
 import useTheme from '../hooks/useTheme'
-import { Flex } from 'rebass'
+import { Flex, Text } from 'rebass'
 
 const AccountWrapper = styled.div`
   padding: 6px 16px 6px 0;
@@ -207,7 +207,7 @@ function AccountPage({ account }) {
                 target="_blank"
               >
                 <ButtonDark>
-                  <TYPE.main fontSize={14}>{`View on ${getEtherscanLinkText()}`}↗</TYPE.main>
+                  <Text fontSize={14}>{`View on ${getEtherscanLinkText()}`}↗</Text>
                 </ButtonDark>
               </Link>
             </AccountWrapper>

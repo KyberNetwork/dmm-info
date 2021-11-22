@@ -222,7 +222,7 @@ const PoolList = ({ pools, maxItems = 10 }) => {
               setSortDirection(sortedColumn !== SORT_FIELD.ONE_YEAR_FL ? true : !sortDirection)
             }}
           >
-            APY
+            APR
             {sortedColumn === SORT_FIELD.ONE_YEAR_FL ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />
@@ -233,7 +233,7 @@ const PoolList = ({ pools, maxItems = 10 }) => {
               ''
             )}
           </ClickableText>
-          <InfoHelper text={'1Yr Fees Collected/Liquidity based on 24H volume annualized'} />
+          <InfoHelper text={'Estimated return based on yearly fees of the pool'} />
         </Flex>
 
         <Flex alignItems="center" justifyContent="flexEnd">
