@@ -55,12 +55,14 @@ const PairReturnsChart = ({ account, position }) => {
   const theme = useTheme()
   const color = theme.primary
 
+  const { ONE_DAY, THERE_DAYS, FOUR_HOURS, ...rest } = timeframeOptions
+
   return (
     <ChartWrapper>
       {below600 ? (
         <RowBetween mb={40}>
           <div />
-          <DropdownSelect options={timeframeOptions} active={timeWindow} setActive={setTimeWindow} />
+          <DropdownSelect options={rest} active={timeWindow} setActive={setTimeWindow} />
         </RowBetween>
       ) : (
         <OptionsRow>

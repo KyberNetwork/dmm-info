@@ -40,17 +40,14 @@ const UserChart = ({ account }) => {
   const [darkMode] = useDarkModeManager()
   const textColor = darkMode ? 'white' : 'black'
 
+  const { ONE_DAY, THERE_DAYS, FOUR_HOURS, ...rest } = timeframeOptions
+
   return (
     <ChartWrapper>
       {below600 ? (
         <RowBetween mb={40}>
           <div />
-          <DropdownSelect
-            options={timeframeOptions}
-            active={timeWindow}
-            setActive={setTimeWindow}
-            color={theme.primary}
-          />
+          <DropdownSelect options={rest} active={timeWindow} setActive={setTimeWindow} color={theme.primary} />
         </RowBetween>
       ) : (
         <RowBetween mb={40}>
