@@ -73,15 +73,15 @@ const PanelWrapper = styled.div`
 const TokenDetailsLayout = styled.div`
   display: inline-grid;
   width: 100%;
-  grid-template-columns: auto auto auto auto 1fr;
-  column-gap: 60px;
+  grid-template-columns: auto auto auto auto auto;
+  column-gap: 30px;
   align-items: start;
 
   &:last-child {
     align-items: center;
     justify-items: end;
   }
-  @media screen and (max-width: 1024px) {
+  @media screen and (max-width: 1150px) {
     grid-template-columns: 1fr;
     align-items: stretch;
     > * {

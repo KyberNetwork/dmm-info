@@ -36,15 +36,11 @@ const StyledItemCard = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-column-gap: 4px;
-  border-radius: 10px;
   margin-bottom: 0;
   padding: 8px 20px 4px 20px;
   background-color: ${({ theme }) => theme.bg7};
   font-size: 12px;
-
-  @media screen and (max-width: 960px) {
-    margin-bottom: 20px;
-  }
+  border-bottom: 1px solid ${({ theme }) => theme.border};
 `
 
 const GridItem = styled.div`

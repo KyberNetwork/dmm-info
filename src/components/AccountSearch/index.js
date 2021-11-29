@@ -56,7 +56,7 @@ const DashGrid = styled.div`
   }
 `
 
-function AccountSearch({ history, small }) {
+function AccountSearch({ history, small, shortenAddress }) {
   const [accountValue, setAccountValue] = useState()
   const [savedAccounts, addAccount, removeAccount] = useSavedAccounts()
 
@@ -113,7 +113,9 @@ function AccountSearch({ history, small }) {
                     onClick={() => history.push('/account/' + account)}
                   >
                     <AccountLink>
-                      {small ? `${account?.slice(0, 6) + '...' + account?.slice(38, 42)}` : account?.slice(0, 42)}
+                      {shortenAddress || small
+                        ? `${account?.slice(0, 6) + '...' + account?.slice(38, 42)}`
+                        : account?.slice(0, 42)}
                     </AccountLink>
                     <Hover
                       onClick={(e) => {

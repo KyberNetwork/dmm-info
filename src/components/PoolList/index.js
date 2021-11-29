@@ -270,7 +270,7 @@ const PoolList = ({ pools, maxItems = 10 }) => {
 
   const theme = useTheme()
   return (
-    <div style={{ border: `1px solid ${theme.border}`, borderRadius: '8px' }}>
+    <div style={{ border: `1px solid ${theme.border}`, borderRadius: '8px', overflow: 'hidden' }}>
       {renderHeader()}
       {!poolsList ? (
         <Loader />

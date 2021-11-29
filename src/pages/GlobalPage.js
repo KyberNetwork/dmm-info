@@ -81,9 +81,8 @@ function GlobalPage() {
               alignItems={below800 ? 'flex-start' : 'center'}
               justifyContent="space-between"
               flexDirection={below800 ? 'column-reverse' : 'row'}
-              sx={{ gap: '20px' }}
             >
-              <TYPE.largeHeader>Summary</TYPE.largeHeader>
+              <TYPE.largeHeader style={{ marginTop: below800 ? '20px' : '0' }}>Summary</TYPE.largeHeader>
               <Search />
             </Flex>
             <GlobalStats />
@@ -117,7 +116,7 @@ function GlobalPage() {
 
           <span>
             <TYPE.main fontSize={'1.125rem'} style={{ marginTop: '2rem' }}>
-              Transactions
+              Latest Transactions
             </TYPE.main>
           </span>
           <WrappedPanel style={{ margin: '1rem 0' }}>
