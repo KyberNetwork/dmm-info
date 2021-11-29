@@ -232,7 +232,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
     height: 8px;
   }
 

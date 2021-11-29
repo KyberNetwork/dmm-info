@@ -20,7 +20,6 @@ const RightColumn = styled.div`
   height: 100vh;
   width: ${({ open }) => (open ? '160px' : '23px')};
   padding: 1.25rem;
-  border-left: ${({ theme, open }) => '1px solid ' + theme.bg3};
   background-color: ${({ theme }) => theme.background};
   z-index: 9999;
   overflow: auto;
