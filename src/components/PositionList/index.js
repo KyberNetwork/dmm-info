@@ -62,8 +62,8 @@ const DashGrid = styled.div`
   }
 
   @media screen and (max-width: 740px) {
-    grid-template-columns: 2fr 2fr 2fr;
-    grid-template-areas: 'pool liquidity action';
+    grid-template-columns: 2fr 2fr;
+    grid-template-areas: 'pool liquidity ';
   }
 `
 
@@ -137,43 +137,10 @@ function PositionList({ positions }) {
     const valueUSD = poolOwnership * position.pool.reserveUSD
 
     return (
-      <DashGrid style={{ opacity: poolOwnership > 0 ? 1 : 0.6 }} focus={true}>
-        {!below740 && (
-          <DataText grid-area="pair" justifyContent="flex-start" alignItems="flex-start">
-            <AutoColumn gap="8px" justify="flex-start" align="flex-start">
-              <DoubleTokenLogo size={16} a0={position.pair.token0.id} a1={position.pair.token1.id} margin={!below740} />
-            </AutoColumn>
-            <AutoColumn gap="8px" justify="flex-end" style={{ marginLeft: '8px' }}>
-              <CustomLink to={'/pair/' + position.pair.id}>
-                <TYPE.main style={{ whiteSpace: 'nowrap' }} to={'/pair/'}>
-                  <FormattedName
-                    text={position.pair.token0.symbol + '-' + position.pair.token1.symbol}
-                    maxCharacters={below740 ? 10 : 18}
-                    style={{ color: theme.primary }}
-                  />
-                </TYPE.main>
-              </CustomLink>
-            </AutoColumn>
-          </DataText>
-        )}
-
-        <DataText
-          grid-area="pool"
-          justifyContent="flex-end"
-          alignItems={below740 ? 'flex-start' : 'flex-end'}
-          flexDirection="column"
-        >
-          <CustomLink to={'/pool/' + position.pool.id}>
-            <TYPE.main style={{ whiteSpace: 'nowrap' }} to={'/pair/'}>
-              <FormattedName
-                text={shortenAddress(position.pool.id, 3)}
-                maxCharacters={below740 ? 14 : 18}
-                style={{ color: theme.primary }}
-              />
-            </TYPE.main>
-          </CustomLink>
-          {below740 && (
-            <Flex marginTop="12px">
+      <>
+        <DashGrid style={{ opacity: poolOwnership > 0 ? 1 : 0.6 }} focus={true}>
+          {!below740 && (
+            <DataText grid-area="pair" justifyContent="flex-start" alignItems="flex-start">
               <AutoColumn gap="8px" justify="flex-start" align="flex-start">
                 <DoubleTokenLogo
                   size={16}
@@ -193,103 +160,148 @@ function PositionList({ positions }) {
                   </TYPE.main>
                 </CustomLink>
               </AutoColumn>
-            </Flex>
+            </DataText>
           )}
-        </DataText>
 
-        <DataText grid-area="liquidity" justifyContent="flex-end" alignItems={'flex-end'} flexDirection="column">
-          <TYPE.main>{formattedNum(valueUSD, true, true)}</TYPE.main>
-
-          {below740 && (
-            <AutoColumn justify="flex-end" style={{ marignTop: '12px' }} align="flex-end">
-              <Flex justifyContent="flex-end">
-                <TYPE.main fontWeight={400}>
-                  {formattedNum(poolOwnership * parseFloat(position.pool.reserve1))}{' '}
-                </TYPE.main>
+          <DataText
+            grid-area="pool"
+            justifyContent="flex-end"
+            alignItems={below740 ? 'flex-start' : 'flex-end'}
+            flexDirection="column"
+          >
+            <CustomLink to={'/pool/' + position.pool.id}>
+              <TYPE.main style={{ whiteSpace: 'nowrap' }} to={'/pair/'}>
                 <FormattedName
-                  text={position.pool.token1.symbol}
-                  margin={true}
-                  maxCharacters={below740 ? 10 : 18}
-                  fontSize={'14px'}
+                  text={shortenAddress(position.pool.id, 3)}
+                  maxCharacters={below740 ? 14 : 18}
+                  style={{ color: theme.primary }}
                 />
-              </Flex>
+              </TYPE.main>
+            </CustomLink>
+            {below740 && (
               <Flex marginTop="12px">
-                <TYPE.main fontWeight={400}>
-                  {formattedNum(poolOwnership * parseFloat(position.pool.reserve0))}{' '}
-                </TYPE.main>
-                <FormattedName
-                  text={position.pool.token0.symbol}
-                  maxCharacters={below740 ? 10 : 18}
-                  margin={true}
-                  fontSize={'14px'}
-                />
+                <AutoColumn gap="8px" justify="flex-start" align="flex-start">
+                  <DoubleTokenLogo
+                    size={16}
+                    a0={position.pair.token0.id}
+                    a1={position.pair.token1.id}
+                    margin={!below740}
+                  />
+                </AutoColumn>
+                <AutoColumn gap="8px" justify="flex-end" style={{ marginLeft: '8px' }}>
+                  <CustomLink to={'/pair/' + position.pair.id}>
+                    <TYPE.main style={{ whiteSpace: 'nowrap' }} to={'/pair/'}>
+                      <FormattedName
+                        text={position.pair.token0.symbol + '-' + position.pair.token1.symbol}
+                        maxCharacters={below740 ? 10 : 18}
+                        style={{ color: theme.primary }}
+                      />
+                    </TYPE.main>
+                  </CustomLink>
+                </AutoColumn>
               </Flex>
-            </AutoColumn>
-          )}
-        </DataText>
+            )}
+          </DataText>
 
-        {!below740 && (
-          <DataText grid-area="tokenAmount" justifyContent="flex-end">
-            <AutoColumn justify="flex-end">
-              <Flex justifyContent="flex-end">
-                <TYPE.main fontWeight={400}>
-                  {formattedNum(poolOwnership * parseFloat(position.pool.reserve1))}{' '}
-                </TYPE.main>
-                <FormattedName
-                  text={position.pool.token1.symbol}
-                  margin={true}
-                  maxCharacters={below740 ? 10 : 18}
-                  fontSize={'14px'}
-                />
-              </Flex>
-              {below900 && (
-                <Flex marginTop="12px">
+          <DataText grid-area="liquidity" justifyContent="flex-end" alignItems={'flex-end'} flexDirection="column">
+            <TYPE.main>{formattedNum(valueUSD, true, true)}</TYPE.main>
+          </DataText>
+
+          {!below740 && (
+            <DataText grid-area="tokenAmount" justifyContent="flex-end">
+              <AutoColumn justify="flex-end">
+                <Flex justifyContent="flex-end">
                   <TYPE.main fontWeight={400}>
-                    {formattedNum(poolOwnership * parseFloat(position.pool.reserve0))}{' '}
+                    {formattedNum(poolOwnership * parseFloat(position.pool.reserve1))}{' '}
                   </TYPE.main>
                   <FormattedName
-                    text={position.pool.token0.symbol}
-                    maxCharacters={below740 ? 10 : 18}
+                    text={position.pool.token1.symbol}
                     margin={true}
+                    maxCharacters={below740 ? 10 : 18}
                     fontSize={'14px'}
                   />
                 </Flex>
-              )}
-            </AutoColumn>
-          </DataText>
-        )}
+                {below900 && (
+                  <Flex marginTop="12px">
+                    <TYPE.main fontWeight={400}>
+                      {formattedNum(poolOwnership * parseFloat(position.pool.reserve0))}{' '}
+                    </TYPE.main>
+                    <FormattedName
+                      text={position.pool.token0.symbol}
+                      maxCharacters={below740 ? 10 : 18}
+                      margin={true}
+                      fontSize={'14px'}
+                    />
+                  </Flex>
+                )}
+              </AutoColumn>
+            </DataText>
+          )}
 
-        {!below900 && (
-          <DataText grid-area="tokenAmount2" justifyContent="flex-end">
-            <TYPE.main fontWeight={400}>{formattedNum(poolOwnership * parseFloat(position.pool.reserve0))} </TYPE.main>
-            <FormattedName
-              text={position.pool.token0.symbol}
-              maxCharacters={below740 ? 10 : 18}
-              margin={true}
-              fontSize={'14px'}
-            />
-          </DataText>
-        )}
+          {!below900 && (
+            <DataText grid-area="tokenAmount2" justifyContent="flex-end">
+              <TYPE.main fontWeight={400}>
+                {formattedNum(poolOwnership * parseFloat(position.pool.reserve0))}{' '}
+              </TYPE.main>
+              <FormattedName
+                text={position.pool.token0.symbol}
+                maxCharacters={below740 ? 10 : 18}
+                margin={true}
+                fontSize={'14px'}
+              />
+            </DataText>
+          )}
 
-        <DataText grid-area="action" justifyContent="flex-end">
-          <Flex justify="flex-end" flexDirection={below740 ? 'column' : 'row'} sx={{ gap: '8px' }}>
+          {!below740 && (
+            <DataText grid-area="action" justifyContent="flex-end">
+              <Flex justifyContent="flex-end" flexDirection={below740 ? 'column' : 'row'} sx={{ gap: '6px' }}>
+                <Link
+                  external
+                  href={getPoolLink(position.pool.token0.id, position.pool.token1.id, false, position.pool.id)}
+                >
+                  <ButtonLight style={{ padding: '4px 6px', borderRadius: '4px' }}>+ Add</ButtonLight>
+                </Link>
+                {poolOwnership > 0 && (
+                  <Link
+                    external
+                    href={getPoolLink(position.pool.token0.id, position.pool.token1.id, true, position.pool.id)}
+                  >
+                    <RemoveBtn
+                      style={{
+                        padding: '4px 6px',
+                        borderRadius: '4px',
+                        color: theme.subText,
+                      }}
+                    >
+                      - Remove
+                    </RemoveBtn>
+                  </Link>
+                )}
+              </Flex>
+            </DataText>
+          )}
+        </DashGrid>
+        {below740 && (
+          <Flex sx={{ gap: '8px', paddingX: '20px', marginBottom: '16px' }}>
             <Link
               external
               href={getPoolLink(position.pool.token0.id, position.pool.token1.id, false, position.pool.id)}
-              style={{ marginRight: '.5rem' }}
+              style={{ marginRight: '.5rem', flex: 1 }}
             >
-              <ButtonLight style={{ padding: '4px 6px', borderRadius: '4px' }}>+ Add</ButtonLight>
+              <ButtonLight style={{ padding: '10px', borderRadius: '4px', width: '100%' }}>+ Add</ButtonLight>
             </Link>
             {poolOwnership > 0 && (
               <Link
                 external
                 href={getPoolLink(position.pool.token0.id, position.pool.token1.id, true, position.pool.id)}
+                style={{ flex: 1 }}
               >
                 <RemoveBtn
                   style={{
-                    padding: '4px 6px',
+                    padding: '10px',
                     borderRadius: '4px',
                     color: theme.subText,
+                    width: '100%',
                   }}
                 >
                   - Remove
@@ -297,8 +309,8 @@ function PositionList({ positions }) {
               </Link>
             )}
           </Flex>
-        </DataText>
-      </DashGrid>
+        )}
+      </>
     )
   }
 
@@ -348,7 +360,7 @@ function PositionList({ positions }) {
               setSortDirection(sortedColumn !== SORT_FIELD.VALUE ? true : !sortDirection)
             }}
           >
-            {below740 ? 'Value' : 'Liquidity'} {sortedColumn === SORT_FIELD.VALUE ? (!sortDirection ? '↑' : '↓') : ''}
+            Liquidity {sortedColumn === SORT_FIELD.VALUE ? (!sortDirection ? '↑' : '↓') : ''}
           </ClickableText>
         </Flex>
         {!below740 && (
@@ -361,9 +373,11 @@ function PositionList({ positions }) {
             <Text area="tokenAmount2">Token Amount</Text>
           </Flex>
         )}
-        <Flex alignItems="flex-start" justifyContent="flex-end">
-          <Text area="action">Add/Remove</Text>
-        </Flex>
+        {!below740 && (
+          <Flex alignItems="flex-start" justifyContent="flex-end">
+            <Text area="action">Add/Remove</Text>
+          </Flex>
+        )}
       </TableHeader>
       <Divider />
       <List p={0}>{!positionsSorted ? <LocalLoader /> : positionsSorted}</List>

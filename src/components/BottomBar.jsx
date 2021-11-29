@@ -98,14 +98,14 @@ function BottomBar() {
 
       {menuModalOpen && (
         <MenuFlyout>
-          <BasicLink to="/accounts">
+          <BasicLink to="/accounts" onClick={() => toggleMenuModal()}>
             <Flex color={theme.subText} alignItems="center">
               <Wallet />
               <Text marginLeft="8px"> Wallet Analytics</Text>
             </Flex>
           </BasicLink>
           <Divider />
-          <Link href="https://kyberswap.com/" external>
+          <Link href={process.env.REACT_APP_DMM_SWAP_URL} external onClick={() => toggleMenuModal()}>
             <Flex color={theme.subText} alignItems="center">
               <Repeat size={16} />
               <Text marginLeft="8px">Swap</Text>

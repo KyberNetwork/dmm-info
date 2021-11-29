@@ -128,7 +128,9 @@ export const ItemCard = ({ pool }) => {
           <DataTitle>Pool</DataTitle>
           <DataText grid-area="pool">
             <PoolAddressContainer>
-              {shortenPoolAddress}
+              <CustomLink to={`/pool/${pool.id}`} style={{ cursor: 'pointer' }}>
+                {shortenPoolAddress}
+              </CustomLink>
               <CopyHelper toCopy={pool.id} />
             </PoolAddressContainer>
           </DataText>
@@ -218,14 +220,22 @@ const ListItem = ({ pool, oddRow }) => {
         <div>{`• ${percentToken0.toFixed(2) ?? '.'}% ${pool.token0.symbol}`}</div>
         <div>{`• ${percentToken1.toFixed(2) ?? '.'}% ${pool.token1.symbol}`}</div>
       </DataText>
-      <DataText grid-area="liq">{formatDataText(formattedNum(liquidity, true), pool.trackedReserveUSD)}</DataText>
-      <DataText grid-area="vol">{formatDataText(formattedNum(volume, true), pool.oneDayVolumeUSD)}</DataText>
-      <DataText grid-area="fee">{formatDataText(formattedNum(oneDayFee, true), pool.oneDayFeeUSD)}</DataText>
-      <DataText grid-area="amp">{formattedNum(amp.toPrecision(5))}</DataText>
-      <DataText grid-area="fl" style={{ color: '#0FAAA2' }}>
+      <DataText grid-area="liq" alignItems="flex-end">
+        {formatDataText(formattedNum(liquidity, true), pool.trackedReserveUSD)}
+      </DataText>
+      <DataText grid-area="vol" alignItems="flex-end">
+        {formatDataText(formattedNum(volume, true), pool.oneDayVolumeUSD)}
+      </DataText>
+      <DataText grid-area="fee" alignItems="flex-end">
+        {formatDataText(formattedNum(oneDayFee, true), pool.oneDayFeeUSD)}
+      </DataText>
+      <DataText grid-area="amp" alignItems="flex-end">
+        {formattedNum(amp.toPrecision(5))}
+      </DataText>
+      <DataText grid-area="fl" style={{ color: '#0FAAA2' }} alignItems="flex-end">
         {oneYearFL < MAX_ALLOW_APY ? `${oneYearFL}%` : '--'}
       </DataText>
-      <DataText grid-area="add_liquidity" style={{ alignItems: 'flex-start' }}>
+      <DataText grid-area="add_liquidity" alignItems="flex-end">
         {
           <Link
             href={`${process.env.REACT_APP_DMM_SWAP_URL}add/${pool.token0.id}/${pool.token1.id}/${pool.id}?networkId=${process.env.REACT_APP_CHAIN_ID}`}

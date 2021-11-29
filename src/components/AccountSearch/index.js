@@ -61,9 +61,9 @@ function AccountSearch({ history, small }) {
   const [savedAccounts, addAccount, removeAccount] = useSavedAccounts()
 
   function handleAccountSearch() {
-    if (isAddress(accountValue)) {
-      history.push('/account/' + accountValue)
-      if (!savedAccounts.includes(accountValue)) {
+    if (isAddress(accountValue.trim())) {
+      history.push('/account/' + accountValue.trim())
+      if (!savedAccounts.includes(accountValue.toLowerCase().trim())) {
         addAccount(accountValue)
       }
     }
@@ -71,7 +71,7 @@ function AccountSearch({ history, small }) {
 
   return (
     <AutoColumn gap={'1rem'}>
-      <>
+      {!small && (
         <Flex sx={{ gap: '1rem' }}>
           <Input
             placeholder="Search Wallet/Account..."
@@ -80,7 +80,7 @@ function AccountSearch({ history, small }) {
             }}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                handleAccountSearch(e.target.value)
+                handleAccountSearch(e.target.value.trim())
               }
             }}
           />
@@ -88,14 +88,21 @@ function AccountSearch({ history, small }) {
             <Text>Analyze</Text>
           </ButtonDark>
         </Flex>
-      </>
+      )}
 
       <AutoColumn gap={'12px'}>
-        <Panel>
+        <Panel
+          style={{
+            ...(small && {
+              padding: 0,
+              border: 'none',
+            }),
+          }}
+        >
           <DashGrid center={true} style={{ height: 'fit-content', padding: '0 0 1rem 0' }}>
             <TYPE.main area="account">Saved Accounts</TYPE.main>
           </DashGrid>
-          <Divider />
+          {!small && <Divider />}
           {savedAccounts?.length > 0 ? (
             savedAccounts.map((account) => {
               return (

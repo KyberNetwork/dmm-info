@@ -409,7 +409,7 @@ function PairPage({ pairAddress, history }) {
                 </Panel>
                 <Panel
                   style={{
-                    gridColumn: below1080 ? '1' : '2/4',
+                    gridColumn: below1080 ? '1/4' : '2/4',
                     gridRow: below1080 ? '' : '1/5',
                   }}
                 >

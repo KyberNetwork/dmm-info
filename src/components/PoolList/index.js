@@ -148,7 +148,7 @@ const PoolList = ({ pools, maxItems = 10 }) => {
             }
           />
         </Flex>
-        <Flex alignItems="center" justifyContent="flexEnd">
+        <Flex alignItems="center" justifyContent="flex-end">
           <ClickableText
             onClick={() => {
               setSortedColumn(SORT_FIELD.LIQ)
@@ -167,7 +167,7 @@ const PoolList = ({ pools, maxItems = 10 }) => {
             )}
           </ClickableText>
         </Flex>
-        <Flex alignItems="center">
+        <Flex alignItems="center" justifyContent="flex-end">
           <ClickableText
             onClick={() => {
               setSortedColumn(SORT_FIELD.VOL)
@@ -187,7 +187,7 @@ const PoolList = ({ pools, maxItems = 10 }) => {
           </ClickableText>
         </Flex>
 
-        <Flex alignItems="center" justifyContent="flexEnd">
+        <Flex alignItems="center" justifyContent="flex-end">
           <ClickableText
             onClick={() => {
               setSortedColumn(SORT_FIELD.FEES)
@@ -207,12 +207,12 @@ const PoolList = ({ pools, maxItems = 10 }) => {
           </ClickableText>
         </Flex>
 
-        <Flex alignItems="center" justifyContent="flexEnd">
+        <Flex alignItems="center" justifyContent="flex-end">
           <ClickableText>AMP</ClickableText>
           <InfoHelper text={AMP_HINT} />
         </Flex>
 
-        <Flex alignItems="center" justifyContent="flexEnd">
+        <Flex alignItems="center" justifyContent="flex-end">
           <ClickableText
             onClick={() => {
               setSortedColumn(SORT_FIELD.ONE_YEAR_FL)
@@ -233,7 +233,7 @@ const PoolList = ({ pools, maxItems = 10 }) => {
           <InfoHelper text={'Estimated return based on yearly fees of the pool'} />
         </Flex>
 
-        <Flex alignItems="center" justifyContent="flexEnd">
+        <Flex alignItems="center" justifyContent="flex-end">
           <ClickableText>Add Liquidity</ClickableText>
         </Flex>
       </TableHeader>

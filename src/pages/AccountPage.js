@@ -342,7 +342,7 @@ function AccountPage({ account }) {
             <PositionList positions={positions} />
           </Panel>
           <TYPE.main fontSize={'1.125rem'} style={{ marginTop: '3rem' }}>
-            Transactions
+            Latest Transactions
           </TYPE.main>{' '}
           <Panel
             style={{
