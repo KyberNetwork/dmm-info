@@ -91,11 +91,8 @@ const HeaderText = styled.div`
 `
 
 const Polling = styled.div`
-  position: fixed;
   display: flex;
-  left: 0;
-  bottom: 0;
-  padding: 1rem;
+  padding: 0.75rem 0;
   font-size: 10px;
   color: ${({ theme }) => theme.subText};
   transition: opacity 0.25s ease;
@@ -192,7 +189,7 @@ function SideNav({ history }) {
               </AutoColumn>
             )}
           </AutoColumn>
-          <AutoColumn gap="0.75rem" style={{ marginBottom: '4.5rem', marginTop: '1.5rem' }}>
+          <AutoColumn gap="0.75rem" style={{ marginBottom: '2.5rem', marginTop: '1.5rem' }}>
             <Option onClick={toggleDarkMode}>
               <ThemeToggle />
             </Option>
@@ -203,15 +200,15 @@ function SideNav({ history }) {
                 Kyber Network
               </Link>
             </HeaderText>
+            {!below1180 && (
+              <Polling>
+                <PollingDot />
+                <a href="/">
+                  Updated {!!seconds ? seconds + 's' : '-'} ago <br />
+                </a>
+              </Polling>
+            )}
           </AutoColumn>
-          {!below1180 && (
-            <Polling style={{ marginLeft: '.5rem' }}>
-              <PollingDot />
-              <a href="/">
-                Updated {!!seconds ? seconds + 's' : '-'} ago <br />
-              </a>
-            </Polling>
-          )}
         </DesktopWrapper>
       ) : (
         <MobileWrapper>

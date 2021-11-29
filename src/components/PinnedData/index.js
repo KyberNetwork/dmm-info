@@ -14,7 +14,7 @@ import FormattedName from '../FormattedName'
 import { shortenAddress } from '../../utils'
 
 const RightColumn = styled.div`
-  position: fixed;
+  position: sticky;
   right: 0;
   top: 0px;
   height: 100vh;

@@ -46,7 +46,8 @@ const ContentWrapper = styled.div`
 `
 
 const Right = styled.div`
-  position: fixed;
+  position: sticky;
+  top: 0;
   right: 0;
   bottom: 0rem;
   z-index: 10000;
