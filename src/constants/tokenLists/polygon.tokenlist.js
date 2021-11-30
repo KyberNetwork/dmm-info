@@ -54,7 +54,7 @@ const POLYGON_TOKEN_LIST = {
     chainId: 137,
     address: '0xcC1B9517460D8aE86fe576f614d091fCa65a28Fc',
     symbol: 'VIS',
-    name: 'Vigrous',
+    name: 'Vigorus',
     decimals: 18,
     logoURI:
       'https://raw.githubusercontent.com/stevepegaxy/assets/master/blockchains/polygon/assets/0xcC1B9517460D8aE86fe576f614d091fCa65a28Fc/logo.png',
