@@ -73,8 +73,8 @@ const SearchIconLarge = styled(SearchIcon)`
 
 const CloseIcon = styled(X)`
   height: 20px;
+  padding: 8px;
   width: 20px;
-  margin-right: 0.5rem;
   position: absolute;
   right: 10px;
   color: ${({ theme }) => theme.text3};
@@ -412,7 +412,16 @@ export const Search = ({ small = false }) => {
             }
           }}
         />
-        {!showMenu ? <SearchIconLarge /> : <CloseIcon onClick={() => toggleMenu(false)} />}
+        {!showMenu ? (
+          <SearchIconLarge />
+        ) : (
+          <CloseIcon
+            onClick={() => {
+              setValue('')
+              toggleMenu(false)
+            }}
+          />
+        )}
       </Wrapper>
       <Menu hide={!showMenu} ref={menuRef}>
         <Heading>

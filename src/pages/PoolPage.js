@@ -55,7 +55,7 @@ const PanelWrapper = styled.div`
   display: inline-grid;
   width: 100%;
   align-items: start;
-  @media screen and (max-width: 1024px) {
+  @media screen and (max-width: 1080px) {
     grid-template-columns: 1fr;
     align-items: stretch;
     > * {

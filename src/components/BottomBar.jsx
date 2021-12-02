@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   left: 0;
   right: 0;
   height: 72px;
-  display: flex;
+  display: none;
   justify-content: space-between;
   padding: 0 16px;
   align-items: center;
@@ -28,8 +28,8 @@ const Wrapper = styled.div`
 
   background: ${({ theme }) => theme.background};
 
-  @media screen and (min-width: 1080px) {
-    display: none;
+  @media screen and (max-width: 1080px) {
+    display: flex;
   }
 
   a {
