@@ -4,7 +4,7 @@ const BTTC_TOKEN_ARRAY = [
     address: '0xCa424b845497f7204D9301bd13Ff87C0E2e86FCF',
     symbol: 'USDC_b',
     name: 'USD Coin_BSC',
-    decimals: 18,
+    decimals: 6,
     logoURI: 'https://coin.top/production/upload/logo/TEkxiTehnzSmSe2XqrBj4w32RUN966rdz81.png',
   },
   {
@@ -77,7 +77,7 @@ const BTTC_TOKEN_ARRAY = [
     chainId: 199,
     address: '0xdB28719F7f938507dBfe4f0eAe55668903D34a15',
     symbol: 'USDT_t',
-    decimals: 18,
+    decimals: 6,
     name: 'Tether USD_TRON',
     logoURI: 'https://coin.top/production/logo/usdtlogo.png',
   },
