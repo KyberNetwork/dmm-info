@@ -91,10 +91,13 @@ function reducer(state, { type, payload }) {
     }
 
     case UPDATED_SUPPORTED_TOKENS: {
-      const { supportedTokens } = payload
+      const { supportedTokens, chainId } = payload
       return {
         ...state,
-        [SUPPORTED_TOKENS]: supportedTokens,
+        [SUPPORTED_TOKENS]: {
+          ...state[SUPPORTED_TOKENS],
+          [chainId]: supportedTokens,
+        },
       }
     }
 
@@ -160,11 +163,12 @@ export default function Provider({ children }) {
     })
   }, [])
 
-  const updateSupportedTokens = useCallback(supportedTokens => {
+  const updateSupportedTokens = useCallback((supportedTokens, chainId) => {
     dispatch({
       type: UPDATED_SUPPORTED_TOKENS,
       payload: {
         supportedTokens,
+        chainId,
       },
     })
   }, [])
@@ -352,8 +356,8 @@ export function useSessionStart() {
 
 export function useListedTokens() {
   const [state, { updateSupportedTokens }] = useApplicationContext()
-  const supportedTokens = state?.[SUPPORTED_TOKENS]
   const [networksInfo] = useNetworksInfo()
+  const supportedTokens = state?.[SUPPORTED_TOKENS]?.[networksInfo.CHAIN_ID]
 
   useEffect(() => {
     async function fetchList() {
@@ -403,7 +407,7 @@ export function useListedTokens() {
       }
 
       formatted = formatted.concat(Object.keys(tokenslist).map(item => item.toLowerCase()))
-      updateSupportedTokens(formatted)
+      updateSupportedTokens(formatted, networksInfo.CHAIN_ID)
     }
     if (!supportedTokens) {
       fetchList()
