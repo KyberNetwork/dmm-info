@@ -492,7 +492,7 @@ const getRateData = async (client, pairAddress, startTime, latestBlock, frequenc
       return [[], []]
     }
   }
-  return await memoRequest(run, JSON.stringify({ client, pairAddress, startTime, latestBlock, frequency }))
+  return await memoRequest(run, JSON.stringify({ pairAddress, startTime, latestBlock, frequency }))
 }
 
 // let cacheGetRateData = {}

@@ -8,6 +8,9 @@ module.exports = {
       jsx: true,
     },
   },
+  env: {
+    browser: true,
+  },
   extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:prettier/recommended', 'plugin:react-hooks/recommended'],
   ignorePatterns: ['node_modules/**/*'],
   rules: {

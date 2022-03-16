@@ -167,10 +167,10 @@ function AccountPage({ account }) {
 
   // adding/removing account from saved accounts
   const [savedAccounts, addAccount, removeAccount] = useSavedAccounts()
-  const isBookmarked = savedAccounts.includes(account)
+  const isBookmarked = !!savedAccounts.find(savedAccount => savedAccount.address == account)
   const handleBookmarkClick = useCallback(() => {
-    ;(isBookmarked ? removeAccount : addAccount)(account)
-  }, [account, isBookmarked, addAccount, removeAccount])
+    ;(isBookmarked ? removeAccount : addAccount)(account, networksInfo.CHAIN_ID)
+  }, [isBookmarked, removeAccount, addAccount, account, networksInfo.CHAIN_ID])
 
   return (
     <PageWrapper>

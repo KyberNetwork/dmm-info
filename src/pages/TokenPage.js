@@ -265,7 +265,7 @@ function TokenPage({ address, history }) {
               <span>
                 <RowFixed ml={below500 ? '0' : '2.5rem'} mt={below500 ? '1rem' : '0'}>
                   {!savedTokens[address] && !below768 ? (
-                    <Hover onClick={() => addToken(address, symbol)}>
+                    <Hover onClick={() => addToken(address, symbol, networksInfo.CHAIN_ID)}>
                       <img src={bookMarkOutline} width={24} height={24} alt='BookMark' style={{ marginRight: '0.5rem' }} />
                     </Hover>
                   ) : !below1280 ? (

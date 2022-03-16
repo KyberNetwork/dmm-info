@@ -1,17 +1,18 @@
 import React from 'react'
-import { useParams, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import { RowBetween, RowFixed } from '../Row'
 import { AutoColumn } from '../Column'
 import { TYPE } from '../../Theme'
 import { useSavedTokens, useSavedPairs, useSavedPools } from '../../contexts/LocalStorage'
 import { Hover } from '..'
-import TokenLogo from '../TokenLogo'
 import AccountSearch from '../AccountSearch'
 import { Bookmark, ChevronRight, X } from 'react-feather'
 import { ButtonFaded } from '../ButtonStyled'
 import FormattedName from '../FormattedName'
 import { shortenAddress } from '../../utils'
+import { NETWORK_ICON } from '../../constants/networks'
+import { NetworksInfoEnv } from '../../contexts/NetworkInfo'
 
 const RightColumn = styled.div`
   position: sticky;
@@ -51,8 +52,6 @@ function PinnedData({ history, open, setSavedOpen }) {
   const [savedPairs, , removePair] = useSavedPairs()
   const [savedPools, , removePool] = useSavedPools()
   const [savedTokens, , removeToken] = useSavedTokens()
-  const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   return !open ? (
     <RightColumn open={open} onClick={() => setSavedOpen(true)}>
@@ -90,9 +89,16 @@ function PinnedData({ history, open, setSavedOpen }) {
                 const pair = savedPairs[address]
                 return (
                   <RowBetween key={pair.address}>
-                    <ButtonFaded onClick={() => history.push(prefixNetworkURL + '/pair/' + address)}>
+                    <ButtonFaded
+                      onClick={() =>
+                        history.push(
+                          '/' + NetworksInfoEnv.find(network => network.CHAIN_ID === pair.chainId).URL_KEY + '/pair/' + address
+                        )
+                      }
+                    >
                       <RowFixed>
-                        <TYPE.header>
+                        <img src={NETWORK_ICON[pair.chainId]} style={{ width: '14px' }} />
+                        <TYPE.header ml='6px'>
                           <FormattedName
                             text={pair.token0Symbol + '/' + pair.token1Symbol}
                             maxCharacters={12}
@@ -127,9 +133,19 @@ function PinnedData({ history, open, setSavedOpen }) {
                 const pool = savedPools[address]
                 return (
                   <RowBetween key={pool.address}>
-                    <ButtonFaded onClick={() => history.push(prefixNetworkURL + '/pool/' + pool.address)}>
+                    <ButtonFaded
+                      onClick={() =>
+                        history.push(
+                          '/' +
+                            NetworksInfoEnv.find(network => network.CHAIN_ID === pool.chainId).URL_KEY +
+                            '/pool/' +
+                            pool.address
+                        )
+                      }
+                    >
                       <RowFixed>
-                        <TYPE.header>
+                        <img src={NETWORK_ICON[pool.chainId]} style={{ width: '14px' }} />
+                        <TYPE.header ml='6px'>
                           <FormattedName text={shortenAddress(pool.address, 3)} maxCharacters={12} fontSize={'12px'} />
                         </TYPE.header>
                       </RowFixed>
@@ -160,10 +176,16 @@ function PinnedData({ history, open, setSavedOpen }) {
                 const token = savedTokens[address]
                 return (
                   <RowBetween key={address}>
-                    <ButtonFaded onClick={() => history.push(prefixNetworkURL + '/token/' + address)}>
+                    <ButtonFaded
+                      onClick={() =>
+                        history.push(
+                          '/' + NetworksInfoEnv.find(network => network.CHAIN_ID === token.chainId).URL_KEY + '/token/' + address
+                        )
+                      }
+                    >
                       <RowFixed>
-                        <TokenLogo address={address} size={'14px'} />
-                        <TYPE.header ml={'6px'}>
+                        <img src={NETWORK_ICON[token.chainId]} style={{ width: '14px' }} />
+                        <TYPE.header ml='6px'>
                           <FormattedName text={token.symbol} maxCharacters={12} fontSize={'12px'} />
                         </TYPE.header>
                       </RowFixed>

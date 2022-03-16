@@ -13,6 +13,7 @@ import { Divider } from '..'
 import { Flex, Text } from 'rebass'
 
 import { X } from 'react-feather'
+import { NetworksInfoEnv, useNetworksInfo } from '../../contexts/NetworkInfo'
 
 const Input = styled.input`
   position: relative;
@@ -59,14 +60,13 @@ const DashGrid = styled.div`
 function AccountSearch({ history, small, shortenAddress }) {
   const [accountValue, setAccountValue] = useState()
   const [savedAccounts, addAccount, removeAccount] = useSavedAccounts()
-  const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
+  const [networksInfo] = useNetworksInfo()
 
   function handleAccountSearch() {
     if (isAddress(accountValue.trim())) {
-      history.push(prefixNetworkURL + '/account/' + accountValue.trim())
-      if (!savedAccounts.includes(accountValue.toLowerCase().trim())) {
-        addAccount(accountValue)
+      history.push('/' + networksInfo.URL_KEY + '/account/' + accountValue.trim())
+      if (!savedAccounts.find(account => account.address === accountValue.toLowerCase().trim())) {
+        addAccount(accountValue, networksInfo.CHAIN_ID)
       }
     }
   }
@@ -108,21 +108,28 @@ function AccountSearch({ history, small, shortenAddress }) {
           {savedAccounts?.length > 0 ? (
             savedAccounts.map(account => {
               return (
-                <DashGrid key={account} center={true} style={{ height: 'fit-content', padding: '1rem 0 0 0' }}>
+                <DashGrid key={account.address} center={true} style={{ height: 'fit-content', padding: '1rem 0 0 0' }}>
                   <Flex
                     area='account'
                     justifyContent='space-between'
-                    onClick={() => history.push(prefixNetworkURL + '/account/' + account)}
+                    onClick={() =>
+                      history.push(
+                        '/' +
+                          NetworksInfoEnv.find(network => network.CHAIN_ID === account.chainId).URL_KEY +
+                          '/account/' +
+                          account.address
+                      )
+                    }
                   >
                     <AccountLink>
                       {shortenAddress || small
-                        ? `${account?.slice(0, 6) + '...' + account?.slice(38, 42)}`
-                        : account?.slice(0, 42)}
+                        ? `${account.address?.slice(0, 6) + '...' + account.address?.slice(38, 42)}`
+                        : account.address?.slice(0, 42)}
                     </AccountLink>
                     <Hover
                       onClick={e => {
                         e.stopPropagation()
-                        removeAccount(account)
+                        removeAccount(account.address)
                       }}
                     >
                       <StyledIcon>

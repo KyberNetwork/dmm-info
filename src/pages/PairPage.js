@@ -270,7 +270,11 @@ function PairPage({ pairAddress, history }) {
                   }}
                 >
                   {!savedPairs[pairAddress] && !below1080 ? (
-                    <Hover onClick={() => addPair(pairAddress, token0.id, token1.id, token0.symbol, token1.symbol)}>
+                    <Hover
+                      onClick={() =>
+                        addPair(pairAddress, token0.id, token1.id, token0.symbol, token1.symbol, networksInfo.CHAIN_ID)
+                      }
+                    >
                       <img src={bookMarkOutline} width={24} height={24} alt='BookMark' style={{ marginRight: '0.5rem' }} />
                     </Hover>
                   ) : !below1080 ? (
