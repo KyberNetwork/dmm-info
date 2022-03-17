@@ -4,16 +4,13 @@ import { useHistory, useParams } from 'react-router-dom'
 
 export default function GoogleAnalyticsReporter() {
   const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
   const history = useHistory()
-
-  let currentUrl = currentNetworkURL
-    ? history.location.pathname.split('/').slice(2).join('/')
-    : history.location.pathname.split('/').slice(1).join('/')
+  let currentUrl = currentNetworkURL ? history.location.pathname.split('/')[2] : history.location.pathname.split('/')[1]
+  const URLToTrack = ['analytics', currentNetworkURL, currentUrl].filter(Boolean).join('/')
 
   useEffect(() => {
-    ReactGA.pageview('analytics/' + prefixNetworkURL + '/' + currentUrl)
-  }, [prefixNetworkURL, currentUrl])
+    ReactGA.pageview(URLToTrack)
+  }, [URLToTrack])
 
   return null
 }
