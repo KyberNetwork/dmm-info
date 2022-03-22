@@ -1,4 +1,4 @@
-export const OASIS_TOKEN_ARRAY = [
+const OASIS_TOKEN_ARRAY = [
   {
     chainId: 42262,
     address: '0xd1dF9CE4b6159441D18BD6887dbd7320a8D52a05',
@@ -326,7 +326,7 @@ export const OASIS_TOKEN_ARRAY = [
 const OASIS_TOKEN_LIST = OASIS_TOKEN_ARRAY.reduce((acc, cur) => {
   return {
     ...acc,
-    [cur.address.toLowerCase()]: cur,
+    [cur.address]: cur,
   }
 }, {})
 
