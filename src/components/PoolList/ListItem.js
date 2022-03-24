@@ -139,7 +139,7 @@ export const ItemCard = ({ pool }) => {
 
         <GridItem>
           <DataText style={{ alignItems: 'flex-end', color: theme.primary }}>
-            <Link href={`${networksInfo.DMM_SWAP_URL}add/${pool.token0.id}/${pool.token1.id}/${pool.id}`} target='_blank'>
+            <Link href={`${networksInfo[0].dmmSwapUrl}add/${pool.token0.id}/${pool.token1.id}/${pool.id}`} target='_blank'>
               <ButtonLight>+ Add</ButtonLight>
             </Link>
           </DataText>
@@ -199,7 +199,7 @@ const ListItem = ({ pool, oddRow }) => {
   const oneYearFL = getOneYearFL(liquidity, oneDayFee).toFixed(2)
 
   const theme = useTheme()
-  const [networksInfo] = useNetworksInfo()
+  const [[networkInfo]] = useNetworksInfo()
   const { network: currentNetworkURL } = useParams()
   const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
@@ -239,7 +239,7 @@ const ListItem = ({ pool, oddRow }) => {
       <DataText grid-area='add_liquidity' alignItems='flex-end'>
         {
           <Link
-            href={`${networksInfo.DMM_SWAP_URL}add/${pool.token0.id}/${pool.token1.id}/${pool.id}?networkId=${networksInfo.CHAIN_ID}`}
+            href={`${networkInfo.dmmSwapUrl}add/${pool.token0.id}/${pool.token1.id}/${pool.id}?networkId=${networkInfo.chainId}`} // todo namgold: fill this, dang fill dai
             target='_blank'
           >
             <ButtonLight>+ Add</ButtonLight>

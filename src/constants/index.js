@@ -1,4 +1,4 @@
-export const getFACTORY_ADDRESS = networkInfo => networkInfo.FACTORY_ADDRESS || '0x0639542a5cd99bd5f4e85f58cb1f61d8fbe32de9'
+import { ChainId } from './networks'
 
 export const BUNDLE_ID = '1'
 
@@ -15,13 +15,13 @@ export const timeframeOptions = {
 
 // token list urls to fetch tokens from - use for warnings on tokens and pairs
 export const getSUPPORTED_LIST_URLS__NO_ENS = networkInfo =>
-  networkInfo.CHAIN_ID === 137
+  networkInfo.chainId === ChainId.MATIC
     ? ['https://unpkg.com/quickswap-default-token-list@1.0.72/build/quickswap-default.tokenlist.json']
-    : networkInfo.CHAIN_ID === 56
+    : networkInfo.chainId === ChainId.BSCMAINNET
     ? ['https://tokens.pancakeswap.finance/pancakeswap-extended.json']
-    : networkInfo.CHAIN_ID === 43114
+    : networkInfo.chainId === ChainId.AVAXMAINNET
     ? ['https://raw.githubusercontent.com/pangolindex/tokenlists/main/ab.tokenlist.json']
-    : networkInfo.CHAIN_ID === 250
+    : networkInfo.chainId === ChainId.FANTOM
     ? ['https://raw.githubusercontent.com/SpookySwap/spooky-info/master/src/constants/token/spookyswap.json']
     : ['https://gateway.ipfs.io/ipns/tokens.uniswap.org']
 
@@ -54,31 +54,6 @@ export const ROPSTEN_TOKEN_LOGOS_MAPPING = {
   '0x787e7339a52d7784a22146da7209c702e1e38511': '0xc00e94cb662c3520282e6f5717214004a7f26888',
   '0x5f4f41e067e8ccf0d1f9ee007223af4d72990cdc': '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
   '0xc778417e063141139fce010982780140aa0cd5ab': '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-}
-
-export const getWETH_ADDRESS = networkInfo => String(networkInfo.WETH_ADDRESS) || '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
-
-export const getKNC_ADDRESS = networkInfo => String(networkInfo.KNC_ADDRESS) || '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
-
-export const getKNCL_ADDRESS = networkInfo =>
-  networkInfo.CHAIN_ID === 1 ? '0xdd974D5C2e2928deA5F71b9825b8b646686BD200' : '0x7B2810576aa1cce68F2B118CeF1F36467c648F92'
-
-export const ChainId = {
-  MAINNET: 1,
-  ROPSTEN: 3,
-  MATIC: 137,
-  MUMBAI: 80001,
-  BSCTESTNET: 97,
-  BSCMAINNET: 56,
-  AVAXTESTNET: 43113,
-  AVAXMAINNET: 43114,
-  FANTOM: 250,
-  CRONOSTESTNET: 338,
-  CRONOS: 25,
-  ARBITRUM_TESTNET: 421611,
-  ARBITRUM: 42161,
-  BTTC: 199,
-  VELAS: 106,
 }
 
 // This variable to handle crazy APR which it can be wrong calculations or a bug

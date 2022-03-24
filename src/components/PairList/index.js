@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useMedia } from 'react-use'
 import dayjs from 'dayjs'
 import LocalLoader from '../LocalLoader'
@@ -8,7 +8,7 @@ import styled from 'styled-components'
 
 import { CustomLink } from '../Link'
 import { Divider } from '../../components'
-import { useParams, withRouter } from 'react-router-dom'
+import { Link, useParams, withRouter } from 'react-router-dom'
 import { formattedNum, formattedPercent } from '../../utils'
 import DoubleTokenLogo from '../DoubleLogo'
 import FormattedName from '../FormattedName'
@@ -16,6 +16,8 @@ import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../Theme'
 import { MAX_ALLOW_APY } from '../../constants'
 import useTheme from '../../hooks/useTheme'
+import { NETWORK_INFOS } from '../../constants/networks'
+import { flatObjectArray } from '../../utils/aggregateData'
 
 dayjs.extend(utc)
 
@@ -43,8 +45,8 @@ const List = styled(Box)`
 const DashGrid = styled.div`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 100px 1fr 1fr;
-  grid-template-areas: 'name liq vol';
+  grid-template-columns: 1.5fr ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? '75px' : '')} 1fr 1fr;
+  grid-template-areas: 'name ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? 'network' : '')} liq vol';
   padding: 0;
 
   > * {
@@ -58,18 +60,18 @@ const DashGrid = styled.div`
   }
 
   @media screen and (min-width: 740px) {
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-    grid-template-areas: ' name liq vol weekVolume apy ';
+    grid-template-columns: 2fr ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? '75px' : '')} 1fr 1fr 1fr 1fr;
+    grid-template-areas: ' name ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? 'network' : '')} liq vol weekVolume apy ';
   }
 
   @media screen and (min-width: 1080px) {
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-areas: ' name liq vol volWeek fees apy';
+    grid-template-columns: 2fr ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? '75px' : '')} 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: ' name ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? 'network' : '')} liq vol volWeek fees apy';
   }
 
   @media screen and (min-width: 1200px) {
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-areas: ' name liq vol volWeek fees apy';
+    grid-template-columns: 2fr ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? '75px' : '')} 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: ' name ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? 'network' : '')} liq vol volWeek fees apy';
   }
 `
 const TableHeader = styled(DashGrid)`
@@ -113,6 +115,7 @@ const DataText = styled(Flex)`
 const SORT_FIELD = {
   LIQ: 0,
   VOL: 1,
+  NETWORK: 2,
   VOL_7DAYS: 3,
   FEES: 4,
   APY: 5,
@@ -120,6 +123,8 @@ const SORT_FIELD = {
 
 const FIELD_TO_VALUE = (field, useTracked = false) => {
   switch (field) {
+    case SORT_FIELD.NETWORK:
+      return useTracked ? 'chainId' : 'chainId'
     case SORT_FIELD.LIQ:
       return useTracked ? 'trackedReserveUSD' : 'reserveUSD'
     case SORT_FIELD.VOL:
@@ -134,6 +139,8 @@ const FIELD_TO_VALUE = (field, useTracked = false) => {
 }
 
 function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
+  const isShowNetworkColumn = pairs?.slice(1).some(Boolean)
+  const flattedPairs = useMemo(() => flatObjectArray(pairs.filter(Boolean)), [JSON.stringify(pairs)])
   const below600 = useMedia('(max-width: 600px)')
   const below740 = useMedia('(max-width: 740px)')
   const below1080 = useMedia('(max-width: 1080px)')
@@ -146,26 +153,24 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
   // sorting
   const [sortDirection, setSortDirection] = useState(true)
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.LIQ)
-  const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   useEffect(() => {
     setMaxPage(1) // edit this to do modular
     setPage(1)
-  }, [pairs])
+  }, [flattedPairs])
 
   useEffect(() => {
-    if (pairs) {
+    if (flattedPairs) {
       let extraPages = 1
-      if (Object.keys(pairs).length % ITEMS_PER_PAGE === 0) {
+      if (Object.keys(flattedPairs).length % ITEMS_PER_PAGE === 0) {
         extraPages = 0
       }
-      setMaxPage(Math.floor(Object.keys(pairs).length / ITEMS_PER_PAGE) + extraPages)
+      setMaxPage(Math.floor(Object.keys(flattedPairs).length / ITEMS_PER_PAGE) + extraPages)
     }
-  }, [ITEMS_PER_PAGE, pairs])
+  }, [ITEMS_PER_PAGE, flattedPairs])
 
   const ListItem = ({ pairAddress, index }) => {
-    const pairData = pairs[pairAddress]
+    const pairData = flattedPairs[pairAddress]
 
     if (pairData && pairData.token0 && pairData.token1) {
       const volume = pairData.oneDayVolumeUSD ? pairData.oneDayVolumeUSD : pairData.oneDayVolumeUntracked
@@ -179,13 +184,19 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
       const weekVolume = pairData.oneWeekVolumeUSD ? pairData.oneWeekVolumeUSD : pairData.oneWeekVolumeUntracked
 
       return (
-        <DashGrid style={{ height: '56px' }} disbaleLinks={disbaleLinks} focus={true}>
+        <DashGrid style={{ height: '56px' }} disbaleLinks={disbaleLinks} focus={true} isShowNetworkColumn={isShowNetworkColumn}>
           <DataText area='name' fontWeight='500'>
             {!below600 && <div style={{ marginRight: '20px', width: '10px' }}>{index}</div>}
-            <DoubleTokenLogo size={below600 ? 16 : 20} a0={pairData.token0.id} a1={pairData.token1.id} margin={!below740} />
+            <DoubleTokenLogo
+              size={below600 ? 16 : 20}
+              a0={pairData.token0.id}
+              a1={pairData.token1.id}
+              margin={!below740}
+              networkInfo={NETWORK_INFOS[pairData.chainId]}
+            />
             <CustomLink
               style={{ marginLeft: '20px', whiteSpace: 'nowrap' }}
-              to={prefixNetworkURL + '/pair/' + pairAddress}
+              to={'/' + NETWORK_INFOS[pairData.chainId].urlKey + '/pair/' + pairAddress}
               color={color}
             >
               <FormattedName
@@ -196,6 +207,13 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
               />
             </CustomLink>
           </DataText>
+          {isShowNetworkColumn && (
+            <DataText area='network'>
+              <Link to={'/' + NETWORK_INFOS[pairData.chainId].urlKey}>
+                <img src={NETWORK_INFOS[pairData.chainId].icon} width={25} />
+              </Link>
+            </DataText>
+          )}
           <DataText area='liq'>{formattedNum(liquidity, true)}</DataText>
           <DataText area='vol'>{formattedNum(volume, true)}</DataText>
           {!below740 && <DataText area='volWeek'>{formattedNum(weekVolume, true)}</DataText>}
@@ -209,11 +227,11 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
   }
 
   const pairList =
-    pairs &&
-    Object.keys(pairs)
+    flattedPairs &&
+    Object.keys(flattedPairs)
       .sort((addressA, addressB) => {
-        const pairA = pairs[addressA]
-        const pairB = pairs[addressB]
+        const pairA = flattedPairs[addressA]
+        const pairB = flattedPairs[addressB]
         if (sortedColumn === SORT_FIELD.APY) {
           const getApr = pairData => {
             const liquidity = pairData.reserveUSD ? pairData.reserveUSD : pairData.trackedReserveUSD
@@ -246,13 +264,31 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
 
   return (
     <ListWrapper>
-      <TableHeader center={true} disbaleLinks={disbaleLinks} style={{ height: 'fit-content' }}>
+      <TableHeader
+        center={true}
+        disbaleLinks={disbaleLinks}
+        style={{ height: 'fit-content' }}
+        isShowNetworkColumn={isShowNetworkColumn}
+      >
         <Flex alignItems='center' justifyContent='flexStart'>
           <Text fontWeight='500' fontSize='12px' color={theme.subText}>
             NAME
           </Text>
         </Flex>
-        <Flex alignItems='center' justifyContent='flexEnd'>
+        {isShowNetworkColumn && (
+          <Flex alignItems='center' justifyContent='flexEnd'>
+            <ClickableText
+              area='network'
+              onClick={e => {
+                setSortedColumn(SORT_FIELD.NETWORK)
+                setSortDirection(prev => (sortedColumn !== SORT_FIELD.NETWORK ? true : !prev))
+              }}
+            >
+              Network {sortedColumn === SORT_FIELD.NETWORK ? (!sortDirection ? '↑' : '↓') : ''}
+            </ClickableText>
+          </Flex>
+        )}
+        <Flex alignItems='center' justifyContent='center'>
           <ClickableText
             area='liq'
             onClick={e => {

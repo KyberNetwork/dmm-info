@@ -27,9 +27,8 @@ import {
   memoRequest,
 } from '../utils'
 
-import { timeframeOptions, getWETH_ADDRESS } from '../constants'
-import { useExchangeClient, useLatestBlocks } from './Application'
-import { getNativeTokenSymbol, getNativeTokenWrappedName } from '../utils'
+import { timeframeOptions } from '../constants'
+import { useExchangeClients, useLatestBlocks } from './Application'
 import { useNetworksInfo } from './NetworkInfo'
 
 const UPDATE = 'UPDATE'
@@ -257,9 +256,9 @@ const getTopTokens = async (client, ethPrice, ethPriceOld, networkInfo) => {
             data.oneDayTxns = data.txCount
           }
 
-          if (data.id === getWETH_ADDRESS(networkInfo)) {
-            data.name = getNativeTokenWrappedName(networkInfo)
-            data.symbol = getNativeTokenSymbol(networkInfo)
+          if (data.id === networkInfo.wethAddress) {
+            data.name = networkInfo.nativeTokenWrappedName
+            data.symbol = networkInfo.nativeTokenSymbol
           }
 
           // HOTFIX for Aave
@@ -379,9 +378,9 @@ const getTokenData = async (client, address, ethPrice, ethPriceOld, networkInfo)
     }
 
     // fix for WETH
-    if (data.id === getWETH_ADDRESS(networkInfo)) {
-      data.name = getNativeTokenWrappedName(networkInfo)
-      data.symbol = getNativeTokenSymbol(networkInfo)
+    if (data.id === networkInfo.wethAddress) {
+      data.name = networkInfo.nativeTokenWrappedName
+      data.symbol = networkInfo.nativeTokenSymbol
     }
 
     // HOTFIX for Aave
@@ -510,7 +509,10 @@ const getIntervalTokenData = async (client, tokenAddress, startTime, interval = 
       return []
     }
   }
-  return await memoRequest(run, JSON.stringify({ tokenAddress, startTime, interval, latestBlock, networkInfo }))
+  return await memoRequest(
+    run,
+    'getIntervalTokenData' + JSON.stringify({ tokenAddress, startTime, interval, latestBlock, networkInfo })
+  )
 }
 
 const getTokenChartData = async (client, tokenAddress) => {
@@ -582,97 +584,116 @@ const getTokenChartData = async (client, tokenAddress) => {
 }
 
 export function Updater() {
-  const exchangeSubgraphClient = useExchangeClient()
+  const exchangeSubgraphClient = useExchangeClients()
   const [, { updateTopTokens }] = useTokenDataContext()
   const [ethPrice, ethPriceOld] = useEthPrice()
   const [networksInfo] = useNetworksInfo()
 
   useEffect(() => {
-    let canceled = false
-    async function getData() {
+    async function getData(index) {
       // get top pairs for overview list
-      let topTokens = await getTopTokens(exchangeSubgraphClient, ethPrice, ethPriceOld, networksInfo)
-      !canceled && topTokens && updateTopTokens(topTokens, networksInfo.CHAIN_ID)
+      let topTokens = await getTopTokens(exchangeSubgraphClient[index], ethPrice[index], ethPriceOld[index], networksInfo[index])
+      topTokens?.forEach(topToken => (topToken.chainId = networksInfo[index].chainId))
+      topTokens && updateTopTokens(topTokens, networksInfo[index].chainId)
     }
-    ethPrice && ethPriceOld && getData()
-    return () => (canceled = true)
+    networksInfo.forEach((networkInfo, index) => {
+      if (ethPrice[index] && ethPriceOld[index]) {
+        memoRequest(() => getData(index), 'UpdaterTokenData_' + networkInfo.chainId + '_' + ethPrice[index], 10000)
+      }
+    })
   }, [ethPrice, ethPriceOld, updateTopTokens, exchangeSubgraphClient, networksInfo])
 
   return null
 }
 
 export function useTokenData(tokenAddress) {
-  const exchangeSubgraphClient = useExchangeClient()
+  const exchangeSubgraphClient = useExchangeClients()
   const [state, { update }] = useTokenDataContext()
   const [ethPrice, ethPriceOld] = useEthPrice()
   const [networksInfo] = useNetworksInfo()
-  const tokenData = state?.[networksInfo.CHAIN_ID]?.[tokenAddress]
+  const tokenData = networksInfo.map(networkInfo => state?.[networkInfo.chainId]?.[tokenAddress])
 
   useEffect(() => {
-    if (!tokenData && ethPrice && ethPriceOld && isAddress(tokenAddress)) {
-      getTokenData(exchangeSubgraphClient, tokenAddress, ethPrice, ethPriceOld, networksInfo).then(data => {
-        update(tokenAddress, data, networksInfo.CHAIN_ID)
-      })
-    }
+    networksInfo.forEach((networkInfo, index) => {
+      if (!tokenData[index] && ethPrice[index] && ethPriceOld[index] && isAddress(tokenAddress)) {
+        memoRequest(
+          () =>
+            getTokenData(
+              exchangeSubgraphClient[index],
+              tokenAddress,
+              ethPrice[index],
+              ethPriceOld[index],
+              networksInfo[index]
+            ).then(data => {
+              update(tokenAddress, data, networkInfo.chainId)
+            }),
+          'useTokenData_' + networkInfo.chainId + '_' + ethPrice[index],
+          10000
+        )
+      }
+    })
   }, [ethPrice, ethPriceOld, tokenAddress, tokenData, update, exchangeSubgraphClient, networksInfo])
 
-  return tokenData || {}
+  return tokenData.map(data => data || {})
 }
 
 export function useTokenTransactions(tokenAddress) {
-  const exchangeSubgraphClient = useExchangeClient()
+  const [exchangeSubgraphClient] = useExchangeClients()
   const [state, { updateTokenTxns }] = useTokenDataContext()
-  const [networksInfo] = useNetworksInfo()
-  const tokenTxns = state?.[networksInfo.CHAIN_ID]?.[tokenAddress]?.txns
+  const [[networkInfo]] = useNetworksInfo()
+  const tokenTxns = state?.[networkInfo.chainId]?.[tokenAddress]?.txns
 
-  const allPairsFormatted = state?.[networksInfo.CHAIN_ID]?.[tokenAddress]?.TOKEN_PAIRS_KEY?.map?.(pair => pair.id)
+  const allPairsFormatted = state?.[networkInfo.chainId]?.[tokenAddress]?.TOKEN_PAIRS_KEY?.map?.(pair => pair.id)
 
   useEffect(() => {
     async function checkForTxns() {
       if (!tokenTxns && allPairsFormatted) {
         let transactions = await getTokenTransactions(exchangeSubgraphClient, allPairsFormatted)
-        updateTokenTxns(tokenAddress, transactions, networksInfo.CHAIN_ID)
+        transactions.burns?.forEach(burn => (burn.chainId = networkInfo.chainId))
+        transactions.mints?.forEach(mint => (mint.chainId = networkInfo.chainId))
+        transactions.swaps?.forEach(swap => (swap.chainId = networkInfo.chainId))
+        updateTokenTxns(tokenAddress, transactions, networkInfo.chainId)
       }
     }
     checkForTxns()
-  }, [state[tokenAddress], tokenTxns, tokenAddress, updateTokenTxns, allPairsFormatted, exchangeSubgraphClient])
+  }, [tokenTxns, tokenAddress, updateTokenTxns, allPairsFormatted, exchangeSubgraphClient, networkInfo.chainId])
 
-  return tokenTxns || []
+  return tokenTxns
 }
 
 export function useTokenPairs(tokenAddress) {
-  const exchangeSubgraphClient = useExchangeClient()
+  const [exchangeSubgraphClient] = useExchangeClients()
   const [state, { updateAllPairs }] = useTokenDataContext()
-  const [networksInfo] = useNetworksInfo()
-  const tokenPairs = state?.[networksInfo.CHAIN_ID]?.[tokenAddress]?.[TOKEN_PAIRS_KEY]
+  const [[networkInfo]] = useNetworksInfo()
+  const tokenPairs = state?.[networkInfo.chainId]?.[tokenAddress]?.[TOKEN_PAIRS_KEY]
 
   useEffect(() => {
     async function fetchData() {
       let allPairs = await getTokenPairs(exchangeSubgraphClient, tokenAddress)
-      updateAllPairs(tokenAddress, allPairs, networksInfo.CHAIN_ID)
+      updateAllPairs(tokenAddress, allPairs, networkInfo.chainId)
     }
     if (!tokenPairs && isAddress(tokenAddress)) {
       fetchData()
     }
-  }, [tokenAddress, tokenPairs, updateAllPairs, exchangeSubgraphClient])
+  }, [tokenAddress, tokenPairs, updateAllPairs, exchangeSubgraphClient, networkInfo.chainId])
 
   return tokenPairs || []
 }
 
 export function useTokenChartData(tokenAddress) {
-  const exchangeSubgraphClient = useExchangeClient()
+  const [exchangeSubgraphClient] = useExchangeClients()
   const [state, { updateChartData }] = useTokenDataContext()
-  const [networksInfo] = useNetworksInfo()
-  const chartData = state?.[networksInfo.CHAIN_ID]?.[tokenAddress]?.chartData
+  const [[networkInfo]] = useNetworksInfo()
+  const chartData = state?.[networkInfo.chainId]?.[tokenAddress]?.chartData
   useEffect(() => {
     async function checkForChartData() {
       if (!chartData) {
         let data = await getTokenChartData(exchangeSubgraphClient, tokenAddress)
-        updateChartData(tokenAddress, data, networksInfo.CHAIN_ID)
+        updateChartData(tokenAddress, data, networkInfo.chainId)
       }
     }
     checkForChartData()
-  }, [chartData, tokenAddress, updateChartData, exchangeSubgraphClient])
+  }, [chartData, tokenAddress, updateChartData, exchangeSubgraphClient, networkInfo.chainId])
   return chartData
 }
 
@@ -684,11 +705,11 @@ export function useTokenChartData(tokenAddress) {
  * @param {*} interval  // the chunk size in seconds - default is 1 hour of 3600s
  */
 export function useTokenPriceData(tokenAddress, timeWindow, interval = 3600) {
-  const exchangeSubgraphClient = useExchangeClient()
+  const [exchangeSubgraphClient] = useExchangeClients()
   const [state, { updatePriceData }] = useTokenDataContext()
-  const [networksInfo] = useNetworksInfo()
-  const [latestBlock] = useLatestBlocks()
-  const chartData = state?.[networksInfo.CHAIN_ID]?.[tokenAddress]?.[timeWindow]?.[interval]
+  const [[networkInfo]] = useNetworksInfo()
+  const [[latestBlock]] = useLatestBlocks()
+  const chartData = state?.[networkInfo.chainId]?.[tokenAddress]?.[timeWindow]?.[interval]
 
   useEffect(() => {
     const currentTime = dayjs.utc()
@@ -716,13 +737,13 @@ export function useTokenPriceData(tokenAddress, timeWindow, interval = 3600) {
     }
 
     async function fetch() {
-      let data = await getIntervalTokenData(exchangeSubgraphClient, tokenAddress, startTime, interval, latestBlock, networksInfo)
-      updatePriceData(tokenAddress, data, timeWindow, interval, networksInfo.CHAIN_ID)
+      let data = await getIntervalTokenData(exchangeSubgraphClient, tokenAddress, startTime, interval, latestBlock, networkInfo)
+      updatePriceData(tokenAddress, data, timeWindow, interval, networkInfo.chainId)
     }
     if (!chartData) {
       fetch()
     }
-  }, [chartData, interval, timeWindow, tokenAddress, updatePriceData, latestBlock, exchangeSubgraphClient, networksInfo])
+  }, [chartData, interval, timeWindow, tokenAddress, updatePriceData, latestBlock, exchangeSubgraphClient, networkInfo])
 
   return chartData
 }
@@ -730,5 +751,5 @@ export function useTokenPriceData(tokenAddress, timeWindow, interval = 3600) {
 export function useAllTokenData() {
   const [state] = useTokenDataContext()
   const [networksInfo] = useNetworksInfo()
-  return state?.[networksInfo.CHAIN_ID] || {}
+  return networksInfo.map(networkInfo => state?.[networkInfo.chainId] || {})
 }

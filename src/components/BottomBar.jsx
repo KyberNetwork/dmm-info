@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
-import SwitchNetworkButton from './SwitcNetworkButton'
+import SwitchNetworkButton from './SwitchNetworkButton'
 import { useSessionStart } from '../contexts/Application'
 import { Flex, Text } from 'rebass'
 import useTheme from '../hooks/useTheme'
@@ -107,7 +107,7 @@ function BottomBar() {
             </Flex>
           </BasicLink>
           <Divider />
-          <Link href={networksInfo.DMM_SWAP_URL} external onClick={() => toggleMenuModal()}>
+          <Link href={networksInfo[0].dmmSwapUrl} external onClick={() => toggleMenuModal()}>
             <Flex color={theme.subText} alignItems='center'>
               <Repeat size={16} />
               <Text marginLeft='8px'>Swap</Text>

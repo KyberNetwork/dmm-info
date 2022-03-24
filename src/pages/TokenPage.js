@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useParams, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import Link from '../components/Link'
@@ -15,7 +15,7 @@ import TokenChart from '../components/TokenChart'
 import NotFound from '../components/404'
 import { BasicLink } from '../components/Link'
 import Search from '../components/Search'
-import { formattedNum, formattedPercent, getEtherscanLinkText, getPoolLink, getSwapLink, localNumber } from '../utils'
+import { formattedNum, formattedPercent, getPoolLink, getSwapLink, localNumber } from '../utils'
 import { useTokenData, useTokenTransactions, useTokenPairs } from '../contexts/TokenData'
 import { TYPE, ThemedBackground } from '../Theme'
 import { transparentize } from 'polished'
@@ -111,8 +111,8 @@ function TokenPage({ address, history }) {
     liquidityChangeUSD,
     oneDayTxns,
     txnChange,
-  } = useTokenData(address)
-  const [networksInfo] = useNetworksInfo()
+  } = useTokenData(address)[0]
+  const [[networkInfo]] = useNetworksInfo()
 
   useEffect(() => {
     document.querySelector('body').scrollTo(0, 0)
@@ -193,7 +193,7 @@ function TokenPage({ address, history }) {
   const listedTokens = useListedTokens()
 
   // TODO: Remove this when Cronos has a token list
-  const noWarning = [25].includes(networksInfo.CHAIN_ID)
+  const noWarning = [25].includes(networkInfo.chainId)
 
   useEffect(() => {
     window.scrollTo({
@@ -201,13 +201,11 @@ function TokenPage({ address, history }) {
       top: 0,
     })
   }, [])
-  const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   return !name ? (
     <LocalLoader />
   ) : name === 'error-token' ? (
-    <NotFound type='token' currentChainName={networksInfo.NAME} redirectLink={prefixNetworkURL + '/tokens'} />
+    <NotFound type='token' currentChainName={networkInfo.name} redirectLink={'/' + networkInfo.urlKey + '/tokens'} />
   ) : (
     <PageWrapper>
       <ThemedBackground backgroundColor={transparentize(0.6, backgroundColor)} />
@@ -222,10 +220,10 @@ function TokenPage({ address, history }) {
         <RowBetween style={{ flexWrap: 'wrap', alingItems: 'start' }}>
           <AutoRow align='flex-end' style={{ width: 'fit-content' }}>
             <TYPE.body>
-              <BasicLink to={prefixNetworkURL + '/tokens'}>{'Tokens '}</BasicLink>→ {symbol}
+              <BasicLink to={'/' + networkInfo.urlKey + '/tokens'}>{'Tokens '}</BasicLink>→ {symbol}
               {'  '}
             </TYPE.body>
-            <Link style={{ width: 'fit-content' }} external href={`${networksInfo.ETHERSCAN_URL}/address/${address}`}>
+            <Link style={{ width: 'fit-content' }} external href={`${networkInfo.etherscanUrl}/address/${address}`}>
               <Text style={{ marginLeft: '.15rem' }} fontSize={'14px'} fontWeight={400}>
                 ({address.slice(0, 8) + '...' + address.slice(36, 42)})
               </Text>
@@ -245,7 +243,7 @@ function TokenPage({ address, history }) {
             >
               <RowFixed style={{ flexWrap: 'wrap' }}>
                 <RowFixed style={{ alignItems: 'baseline' }}>
-                  <TokenLogo address={address} size='32px' style={{ alignSelf: 'center' }} />
+                  <TokenLogo address={address} size='32px' style={{ alignSelf: 'center' }} networkInfo={networkInfo} />
                   <TYPE.main fontSize={below1280 ? '1.5rem' : '2rem'} fontWeight={500} style={{ margin: '0 1rem' }}>
                     <RowFixed gap='6px'>
                       <FormattedName text={name ? name + ' ' : ''} maxCharacters={16} style={{ marginRight: '6px' }} />{' '}
@@ -265,7 +263,7 @@ function TokenPage({ address, history }) {
               <span>
                 <RowFixed ml={below500 ? '0' : '2.5rem'} mt={below500 ? '1rem' : '0'}>
                   {!savedTokens[address] && !below768 ? (
-                    <Hover onClick={() => addToken(address, symbol)}>
+                    <Hover onClick={() => addToken(address, symbol, networkInfo.chainId)}>
                       <img src={bookMarkOutline} width={24} height={24} alt='BookMark' style={{ marginRight: '0.5rem' }} />
                     </Hover>
                   ) : !below1280 ? (
@@ -275,11 +273,11 @@ function TokenPage({ address, history }) {
                   ) : (
                     <></>
                   )}
-                  <Link href={getPoolLink(address, networksInfo)} target='_blank'>
+                  <Link href={getPoolLink(address, networkInfo)} target='_blank'>
                     <ButtonOutlined style={{ padding: '11px 22px' }}>+ Add Liquidity</ButtonOutlined>
                   </Link>
                   <Link
-                    href={bestPairToken ? getSwapLink(address, networksInfo, bestPairToken) : getSwapLink(address, networksInfo)}
+                    href={bestPairToken ? getSwapLink(address, networkInfo, bestPairToken) : getSwapLink(address, networkInfo)}
                     target='_blank'
                   >
                     <ButtonDark ml={'.5rem'} mr={below1280 && '.5rem'} color={backgroundColor} style={{ padding: '11px 22px' }}>
@@ -375,7 +373,7 @@ function TokenPage({ address, history }) {
               }}
             >
               {address && fetchedPairsList ? (
-                <PairList color={backgroundColor} address={address} pairs={fetchedPairsList} />
+                <PairList color={backgroundColor} address={address} pairs={[fetchedPairsList]} />
               ) : (
                 <Loader />
               )}
@@ -384,7 +382,7 @@ function TokenPage({ address, history }) {
               <TYPE.main fontSize={'1.125rem'}>Latest Transactions</TYPE.main> <div />
             </RowBetween>
             <Panel rounded style={{ padding: 0 }}>
-              {transactions ? <TxnList color={backgroundColor} transactions={transactions} /> : <Loader />}
+              {transactions ? <TxnList color={backgroundColor} transactions={[transactions]} /> : <Loader />}
             </Panel>
             <>
               <RowBetween style={{ marginTop: '3rem' }}>
@@ -419,8 +417,8 @@ function TokenPage({ address, history }) {
                       <CopyHelper toCopy={address} />
                     </AutoRow>
                   </Column>
-                  <Link external href={`${networksInfo.ETHERSCAN_URL}/address/${address}`}>
-                    <ButtonDark color={backgroundColor}>{`View on ${getEtherscanLinkText(networksInfo)}`} ↗</ButtonDark>
+                  <Link external href={`${networkInfo.etherscanUrl}/address/${address}`}>
+                    <ButtonDark color={backgroundColor}>{`View on ${networkInfo.etherscanLinkText}`} ↗</ButtonDark>
                   </Link>
                 </TokenDetailsLayout>
               </Panel>

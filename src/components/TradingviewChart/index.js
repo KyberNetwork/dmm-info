@@ -33,7 +33,7 @@ const TradingViewChart = ({ type = CHART_TYPES.BAR, data, base, baseChange, fiel
   const dataPrev = usePrevious(data)
 
   useEffect(() => {
-    if (data !== dataPrev && chartCreated && type === CHART_TYPES.BAR) {
+    if (JSON.stringify(data) !== JSON.stringify(dataPrev) && chartCreated) {
       // remove the tooltip element
       let tooltip = document.getElementById('tooltip-id' + type)
       let node = document.getElementById('test-id' + type)
@@ -41,7 +41,8 @@ const TradingViewChart = ({ type = CHART_TYPES.BAR, data, base, baseChange, fiel
       chartCreated.resize(0, 0)
       setChartCreated()
     }
-  }, [chartCreated, data, dataPrev, type])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chartCreated, JSON.stringify(data), JSON.stringify(dataPrev), type])
 
   // parese the data and format for tardingview consumption
   const formattedData = data?.map(entry => {
@@ -207,13 +208,16 @@ const TradingViewChart = ({ type = CHART_TYPES.BAR, data, base, baseChange, fiel
 
       setChartCreated(chart)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     base,
     baseChange,
     chartCreated,
     darkMode,
-    data,
-    formattedData,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    JSON.stringify(data),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    JSON.stringify(formattedData),
     textColor,
     title,
     topScale,

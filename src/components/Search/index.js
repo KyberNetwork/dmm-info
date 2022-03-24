@@ -6,19 +6,19 @@ import TokenLogo from '../TokenLogo'
 import { Search as SearchIcon, X } from 'react-feather'
 import { BasicLink } from '../Link'
 
-import { useExchangeClient } from '../../contexts/Application'
+import { useExchangeClients } from '../../contexts/Application'
 import { useAllTokenData, useTokenData } from '../../contexts/TokenData'
 import { useAllPairData, usePairData } from '../../contexts/PairData'
 import DoubleTokenLogo from '../DoubleLogo'
-import { useAllPairsInUniswap, useAllTokensInUniswap } from '../../contexts/GlobalData'
-import { OVERVIEW_TOKEN_BLACKLIST, PAIR_BLACKLIST, getWETH_ADDRESS } from '../../constants'
+import { useAllPairsInUniswap, useAllTokensInKyberswap } from '../../contexts/GlobalData'
+import { OVERVIEW_TOKEN_BLACKLIST, PAIR_BLACKLIST } from '../../constants'
 
 import { PAIR_SEARCH, TOKEN_SEARCH } from '../../apollo/queries'
 import FormattedName from '../FormattedName'
 import { TYPE } from '../../Theme'
-import { getNativeTokenSymbol, getNativeTokenWrappedName } from '../../utils'
 import { useNetworksInfo } from '../../contexts/NetworkInfo'
 import { useParams } from 'react-router-dom'
+import { NETWORK_INFOS } from '../../constants/networks'
 
 const Container = styled.div`
   height: 48px;
@@ -132,10 +132,9 @@ const Blue = styled.span`
 `
 
 export const Search = ({ small = false }) => {
-  const exchangeSubgraphClient = useExchangeClient()
-  let allTokens = useAllTokensInUniswap()
+  const exchangeSubgraphClient = useExchangeClients()
+  let allTokens = useAllTokensInKyberswap()
   const allTokenData = useAllTokenData()
-  const [networksInfo] = useNetworksInfo()
 
   let allPairs = useAllPairsInUniswap()
   const allPairData = useAllPairData()
@@ -144,8 +143,6 @@ export const Search = ({ small = false }) => {
   const [value, setValue] = useState('')
   const [, toggleShadow] = useState(false)
   const [, toggleBottomShadow] = useState(false)
-  const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   // fetch new data on tokens and pairs if needed
   useTokenData(value)
@@ -440,18 +437,23 @@ export const Search = ({ small = false }) => {
           )}
           {filteredPairList &&
             filteredPairList.slice(0, pairsShown).map(pair => {
-              if (pair?.token0?.id === getWETH_ADDRESS(networksInfo)) {
-                pair.token0.name = getNativeTokenWrappedName(networksInfo)
-                pair.token0.symbol = getNativeTokenSymbol(networksInfo)
+              if (pair?.token0?.id === NETWORK_INFOS[pair.chainId].wethAddress) {
+                pair.token0.name = NETWORK_INFOS[pair.chainId].nativeTokenWrappedName
+                pair.token0.symbol = NETWORK_INFOS[pair.chainId].nativeTokenSymbol
               }
-              if (pair?.token1.id === getWETH_ADDRESS(networksInfo)) {
-                pair.token1.name = getNativeTokenWrappedName(networksInfo)
-                pair.token1.symbol = getNativeTokenSymbol(networksInfo)
+              if (pair?.token1.id === NETWORK_INFOS[pair.chainId].wethAddress) {
+                pair.token1.name = NETWORK_INFOS[pair.chainId].nativeTokenWrappedName
+                pair.token1.symbol = NETWORK_INFOS[pair.chainId].nativeTokenSymbol
               }
               return (
-                <BasicLink to={prefixNetworkURL + '/pair/' + pair.id} key={pair.id} onClick={onDismiss}>
+                <BasicLink to={'/' + NETWORK_INFOS[pair.chainId].urlKey + '/pair/' + pair.id} key={pair.id} onClick={onDismiss}>
                   <MenuItem>
-                    <DoubleTokenLogo a0={pair?.token0?.id} a1={pair?.token1?.id} margin={true} />
+                    <DoubleTokenLogo
+                      a0={pair?.token0?.id}
+                      a1={pair?.token1?.id}
+                      margin={true}
+                      networkInfo={NETWORK_INFOS[pair.chainId]}
+                    />
                     <TYPE.body style={{ marginLeft: '10px' }}>{pair.token0.symbol + '-' + pair.token1.symbol} Pair</TYPE.body>
                   </MenuItem>
                 </BasicLink>
@@ -478,10 +480,10 @@ export const Search = ({ small = false }) => {
           )}
           {filteredTokenList.slice(0, tokensShown).map(token => {
             return (
-              <BasicLink to={prefixNetworkURL + '/token/' + token.id} key={token.id} onClick={onDismiss}>
+              <BasicLink to={'/' + NETWORK_INFOS[token.chainId].urlKey + '/token/' + token.id} key={token.id} onClick={onDismiss}>
                 <MenuItem>
                   <RowFixed>
-                    <TokenLogo address={token.id} style={{ marginRight: '10px' }} />
+                    <TokenLogo address={token.id} style={{ marginRight: '10px' }} networkInfo={NETWORK_INFOS[token.chainId]} />
                     <FormattedName text={token.name} maxCharacters={20} style={{ marginRight: '6px' }} />
                     (<FormattedName text={token.symbol} maxCharacters={6} />)
                   </RowFixed>

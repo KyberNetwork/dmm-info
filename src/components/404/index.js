@@ -65,8 +65,8 @@ const Page404 = ({ type, currentChainName, availableChains, redirectLink }) => {
   if (availableChains?.length) {
     const availableChainElement = availableChains
       .map(availableChain => (
-        <Link to={'/' + availableChain.URL_KEY + '/'} key={availableChain.CHAIN_ID}>
-          {availableChain.NAME}
+        <Link to={'/' + availableChain.urlKey + '/'} key={availableChain.chainId}>
+          {availableChain.name}
         </Link>
       ))
       .reduce((accu, elem) => (accu ? [elem] : [...accu, ', ', elem]), null) //join with comma

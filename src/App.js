@@ -27,6 +27,7 @@ import { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
 import { Updater as TokenDataContextUpdater } from './contexts/TokenData'
 import { Updater as PairDataContextUpdater } from './contexts/PairData'
 import { Updater as PoolDataContextUpdater } from './contexts/PoolData'
+import { ChainId } from './constants/networks'
 
 const AppWrapper = styled.div`
   position: relative;
@@ -118,13 +119,23 @@ function AppLogicWrapper(props) {
   const [networksInfo] = useNetworksInfo()
   const globalData = useGlobalData()
   const globalChartData = useGlobalChartData()
-  const [latestBlock, headBlock] = useLatestBlocks()
+  const [latestBlocks, headBlocks] = useLatestBlocks()
 
   const [dismissed, markAsDismissed] = useState(false)
 
   // show warning
-  const BLOCK_DIFFERENCE_THRESHOLD = networksInfo.length === 1 && networksInfo.CHAIN_ID === 137 ? 210 : 30
-  const showWarning = headBlock && latestBlock ? headBlock - latestBlock > BLOCK_DIFFERENCE_THRESHOLD : false
+  const BLOCK_DIFFERENCE_THRESHOLD = networksInfo.length === 1 && networksInfo.chainId === ChainId.MATIC ? 210 : 30 //todo namgold: check this
+  const showWarning = networksInfo
+    .map((networkInfo, i) =>
+      headBlocks[i] && latestBlocks[i]
+        ? headBlocks[i] - latestBlocks[i] > BLOCK_DIFFERENCE_THRESHOLD && {
+            networkInfo,
+            latestBlock: latestBlocks[i],
+            headBlock: headBlocks[i],
+          }
+        : false
+    )
+    .find(Boolean)
   return (
     <AppWrapper>
       {!dismissed && showWarning && (
@@ -134,7 +145,7 @@ function AppLogicWrapper(props) {
               <Text fontWeight={500} fontSize={14} color={'#ffaf01'} style={{ display: 'inline' }} mr={'8px'}>
                 Warning:
               </Text>
-              {`The data on this site has only synced to ${networksInfo.NAME} block ${latestBlock} (out of ${headBlock}). Please check back soon.`}
+              {`The data on this site has only synced to ${showWarning.networkInfo.name} block ${showWarning.latestBlock} (out of ${showWarning.headBlock}). Please check back soon.`}
             </div>
 
             <CloseButtonWrapper>
@@ -145,11 +156,11 @@ function AppLogicWrapper(props) {
           </WarningBanner>
         </WarningWrapper>
       )}
-      {latestBlock &&
-      globalData &&
-      Object.keys(globalData).length > 0 &&
-      globalChartData &&
-      Object.keys(globalChartData).length > 0 ? (
+      {latestBlocks[0] &&
+      globalData[0] &&
+      Object.keys(globalData[0]).length > 0 &&
+      globalChartData[0] &&
+      Object.keys(globalChartData[0]).length > 0 ? (
         props.children
       ) : (
         <LocalLoader fill='true' size='200px' />
@@ -165,19 +176,19 @@ function AppLogicWrapper(props) {
  */
 const LayoutWrapper = props => {
   const { network: currentNetworkURL } = useParams()
-  const [networksInfo, updateChain] = useNetworksInfo()
-  let networkInfoFromURL = NetworksInfoEnv.find(networkInfo => networkInfo.URL_KEY === currentNetworkURL)
+  const [, updateChain] = useNetworksInfo()
+  let networkInfoFromURL = NetworksInfoEnv.find(networkInfo => networkInfo.urlKey === currentNetworkURL)
 
   useEffect(() => {
     if (!currentNetworkURL) {
-      updateChain(NetworksInfoEnv[0].ENV_KEY) //default for ETH right now, will change to handle all chain later
+      updateChain('allchain')
     } else if (networkInfoFromURL) {
-      updateChain(networkInfoFromURL.ENV_KEY)
+      updateChain(networkInfoFromURL.chainId || 'allchain')
     }
   }, [currentNetworkURL, networkInfoFromURL, updateChain])
   if (currentNetworkURL && !networkInfoFromURL) return <Redirect to='/home' />
-  if (!currentNetworkURL && !networkInfoFromURL) networkInfoFromURL = NetworksInfoEnv[0] //default for ETH right now, will change to handle all chain later
-  if (networksInfo !== networkInfoFromURL) return null
+  // if (!currentNetworkURL && !networkInfoFromURL) networkInfoFromURL = NetworksInfoEnv //todo namgold: currently we allow to go on, react will automatically update through useEffect. isnt it?
+  // if (networksInfo[1] || networksInfo[0] !== networkInfoFromURL) return null
   return (
     <AppLogicWrapper>
       <Updaters />
@@ -302,7 +313,8 @@ function App() {
             </LayoutWrapper>
           )}
         />
-        <Route path='/:network?/*' render={() => <RedirectToHome />} />
+        <Route path='/:network' render={() => <RedirectToHome />} />
+        <Route path='*' render={() => <RedirectToHome />} />
       </Switch>
     </BrowserRouter>
   )
