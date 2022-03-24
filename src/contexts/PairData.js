@@ -499,6 +499,86 @@ const getRateData = async (client, pairAddress, startTime, latestBlock, frequenc
   return await memoRequest(run, 'getRateData' + JSON.stringify({ pairAddress, startTime, latestBlock, frequency }))
 }
 
+// let cacheGetRateData = {}
+// const getRateData2 = async (client, pairAddress, startTime, latestBlock, networksInfo, frequency = 300) => {
+//   if (cacheGetRateData?.[networksInfo.CHAIN_ID]?.[pairAddress + startTime + latestBlock + frequency])
+//     return await cacheGetRateData[networksInfo.CHAIN_ID][pairAddress + startTime + latestBlock + frequency]
+//   if (!cacheGetRateData?.[networksInfo.CHAIN_ID]) cacheGetRateData[networksInfo.CHAIN_ID] = {}
+//   let promise = new Promise(async (resolve, reject) => {
+//     try {
+//       const utcEndTime = dayjs.utc()
+//       let time = startTime
+
+//       // create an array of hour start times until we reach current hour
+//       const timestamps = []
+//       while (time <= utcEndTime.unix() - frequency) {
+//         timestamps.push(time)
+//         time += frequency
+//       }
+
+//       // backout if invalid timestamp format
+//       if (timestamps.length === 0) {
+//         resolve([])
+//       }
+
+//       // once you have all the timestamps, get the blocks for each timestamp in a bulk query
+//       let blocks
+
+//       blocks = await getBlocksFromTimestamps(timestamps, networksInfo, 100)
+
+//       // catch failing case
+//       if (!blocks || blocks?.length === 0) {
+//         resolve([])
+//       }
+
+//       if (latestBlock) {
+//         blocks = blocks.filter(b => {
+//           return parseFloat(b.number) <= parseFloat(latestBlock)
+//         })
+//       }
+
+//       const result = await splitQuery(HOURLY_PAIR_RATES, client, [pairAddress], blocks, 100)
+
+//       // format token ETH price results
+//       let values = []
+//       for (var row in result) {
+//         let timestamp = row.split('t')[1]
+//         if (timestamp) {
+//           values.push({
+//             timestamp,
+//             rate0: parseFloat(result[row]?.token0Price),
+//             rate1: parseFloat(result[row]?.token1Price),
+//           })
+//         }
+//       }
+
+//       let formattedHistoryRate0 = []
+//       let formattedHistoryRate1 = []
+
+//       // for each hour, construct the open and close price
+//       for (let i = 0; i < values.length - 1; i++) {
+//         formattedHistoryRate0.push({
+//           timestamp: values[i].timestamp,
+//           open: parseFloat(values[i].rate0),
+//           close: parseFloat(values[i + 1].rate0),
+//         })
+//         formattedHistoryRate1.push({
+//           timestamp: values[i].timestamp,
+//           open: parseFloat(values[i].rate1),
+//           close: parseFloat(values[i + 1].rate1),
+//         })
+//       }
+
+//       resolve([formattedHistoryRate0, formattedHistoryRate1])
+//     } catch (e) {
+//       console.log(e)
+//       resolve([[], []])
+//     }
+//   })
+//   cacheGetRateData[networksInfo.CHAIN_ID][pairAddress + startTime + latestBlock + frequency] = promise
+//   return await promise
+// }
+
 export function Updater() {
   const exchangeSubgraphClient = useExchangeClients()
   const [, { updateTopPairs }] = usePairDataContext()

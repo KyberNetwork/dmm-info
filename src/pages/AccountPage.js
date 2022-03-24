@@ -102,6 +102,8 @@ function AccountPage({ account }) {
 
   // get data for user stats
   const transactionCount = transactions?.swaps?.length + transactions?.burns?.length + transactions?.mints?.length
+  const { network: currentNetworkURL } = useParams()
+  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   // get derived totals
   let totalSwappedUSD = useMemo(() => {

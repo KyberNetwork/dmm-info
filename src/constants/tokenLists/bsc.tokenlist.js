@@ -129,6 +129,14 @@ const BSC_TOKEN_LIST = {
     decimals: 18,
     logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
   },
+  '0x5fdAb5BDbad5277B383B3482D085f4bFef68828C': {
+    chainId: 56,
+    address: '0x5fdAb5BDbad5277B383B3482D085f4bFef68828C',
+    symbol: 'DFH',
+    name: 'DeFiHorse',
+    decimals: 18,
+    logoURI: 'https://i.imgur.com/nQryhVr.jpg',
+  },
 }
 
 export default BSC_TOKEN_LIST

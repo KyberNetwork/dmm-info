@@ -135,6 +135,7 @@ export const Search = ({ small = false }) => {
   const exchangeSubgraphClient = useExchangeClients()
   let allTokens = useAllTokensInKyberswap()
   const allTokenData = useAllTokenData()
+  const [networksInfo] = useNetworksInfo()
 
   let allPairs = useAllPairsInUniswap()
   const allPairData = useAllPairData()
@@ -143,6 +144,8 @@ export const Search = ({ small = false }) => {
   const [value, setValue] = useState('')
   const [, toggleShadow] = useState(false)
   const [, toggleBottomShadow] = useState(false)
+  const { network: currentNetworkURL } = useParams()
+  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   // fetch new data on tokens and pairs if needed
   useTokenData(value)

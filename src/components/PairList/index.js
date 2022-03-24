@@ -153,6 +153,8 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
   // sorting
   const [sortDirection, setSortDirection] = useState(true)
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.LIQ)
+  const { network: currentNetworkURL } = useParams()
+  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   useEffect(() => {
     setMaxPage(1) // edit this to do modular

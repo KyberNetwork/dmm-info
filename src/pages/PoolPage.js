@@ -215,6 +215,8 @@ function PoolPage({ poolAddress, history }) {
   const [savedPools, addPool, removePool] = useSavedPools()
 
   const listedTokens = useListedTokens()
+  const { network: currentNetworkURL } = useParams()
+  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   return (
     <PageWrapper>

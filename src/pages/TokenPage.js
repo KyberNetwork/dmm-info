@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
+import { useParams, withRouter } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import Link from '../components/Link'

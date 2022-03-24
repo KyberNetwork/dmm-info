@@ -40,7 +40,7 @@ const Content = styled.div`
 function KyberSwapAnounce() {
   const below768 = useMedia('(max-width: 768px)')
 
-  const rebrandingAnnouncement = localStorage.getItem('rebranding-announcement') !== 'false'
+  const rebrandingAnnouncement = false
 
   const [show, setShow] = useState(rebrandingAnnouncement)
 

@@ -12,6 +12,7 @@ import { getAvaxTokenLogoURL } from '../../utils/avaxTokenMapping'
 import { getFantomTokenLogoURL } from '../../utils/fantomTokenMapping'
 import { getCronosTokenLogoURL } from '../../utils/cronosTokenMapping'
 import { ChainId } from '../../constants/networks'
+import { useNetworksInfo } from '../../contexts/NetworkInfo'
 
 const BAD_IMAGES = {}
 
@@ -60,6 +61,7 @@ export function getCustomLogo({ address, chainId, src, size, setError, ...rest }
 //todo: dò reference TokenLogo networkInfo
 export default function TokenLogo({ address, networkInfo, header = false, size = '24px', ...rest }) {
   const [error, setError] = useState(false)
+  const [networksInfo] = useNetworksInfo()
 
   useEffect(() => {
     setError(false)
@@ -194,6 +196,14 @@ export default function TokenLogo({ address, networkInfo, header = false, size =
       if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
         return getCustomLogo({ address, src: networkInfo.tokenLists[formattedAddress].logoURI, size, setError, ...rest })
       }
+      path = 'error'
+      break
+
+    case ChainId.OASIS:
+      if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
+        return getCustomLogo({ address, src: networkInfo.tokenLists[formattedAddress].logoURI, size, setError, ...rest })
+      }
+      path = 'error'
       break
 
     case ChainId.VELAS:

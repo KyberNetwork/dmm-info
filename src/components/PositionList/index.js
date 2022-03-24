@@ -133,6 +133,8 @@ function PositionList({ positions }) {
   }, [positions])
 
   const theme = useTheme()
+  const { network: currentNetworkURL } = useParams()
+  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   const ListItem = ({ position }) => {
     const poolOwnership = position.liquidityTokenBalance / position.pool.totalSupply

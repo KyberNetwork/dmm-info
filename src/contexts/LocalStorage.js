@@ -3,7 +3,7 @@ import React, { createContext, useContext, useReducer, useMemo, useCallback, use
 const KYBERSWAP = 'KYBERSWAP'
 
 const VERSION = 'VERSION'
-const CURRENT_VERSION = 0
+const CURRENT_VERSION = 1
 const LAST_SAVED = 'LAST_SAVED'
 const DISMISSED_PATHS = 'DISMISSED_PATHS'
 const SAVED_ACCOUNTS = 'SAVED_ACCOUNTS'
@@ -47,7 +47,7 @@ function init() {
     [VERSION]: CURRENT_VERSION,
     [DARK_MODE]: true,
     [DISMISSED_PATHS]: {},
-    [SAVED_ACCOUNTS]: [],
+    [SAVED_ACCOUNTS]: {},
     [SAVED_TOKENS]: {},
     [SAVED_PAIRS]: {},
     [SAVED_POOLS]: {},
