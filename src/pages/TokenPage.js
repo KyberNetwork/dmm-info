@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useParams, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import Link from '../components/Link'
@@ -33,6 +33,7 @@ import bookMarkOutline from '../assets/bookmark_outline.svg'
 import useTheme from '../hooks/useTheme'
 import { useNetworksInfo } from '../contexts/NetworkInfo'
 import LocalLoader from '../components/LocalLoader'
+import { ChainId } from '../constants/networks'
 
 const DashboardWrapper = styled.div`
   width: 100%;
@@ -193,7 +194,7 @@ function TokenPage({ address, history }) {
   const listedTokens = useListedTokens()
 
   // TODO: Remove this when Cronos has a token list
-  const noWarning = [25].includes(networkInfo.chainId)
+  const noWarning = [ChainId.CRONOS].includes(networkInfo.chainId)
 
   useEffect(() => {
     window.scrollTo({

@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import Link, { CustomLink } from '../Link'
 import { Divider } from '../../components'
 import DoubleTokenLogo from '../DoubleLogo'
-import { useParams, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { formattedNum, getPoolLink, shortenAddress } from '../../utils'
 import { AutoColumn } from '../Column'
 import { ButtonLight } from '../ButtonStyled'
@@ -133,8 +133,6 @@ function PositionList({ positions }) {
   }, [positions])
 
   const theme = useTheme()
-  const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   const ListItem = ({ position }) => {
     const poolOwnership = position.liquidityTokenBalance / position.pool.totalSupply
@@ -156,7 +154,7 @@ function PositionList({ positions }) {
               </AutoColumn>
               <AutoColumn gap='8px' justify='flex-end' style={{ marginLeft: '8px' }}>
                 <CustomLink to={'/' + networkInfo.urlKey + '/pair/' + position.pair.id}>
-                  <TYPE.main style={{ whiteSpace: 'nowrap' }} to={'/' + networkInfo.urlKey + '/pair/'}>
+                  <TYPE.main style={{ whiteSpace: 'nowrap' }}>
                     <FormattedName
                       text={position.pair.token0.symbol + '-' + position.pair.token1.symbol}
                       maxCharacters={below740 ? 10 : 18}
@@ -175,7 +173,7 @@ function PositionList({ positions }) {
             flexDirection='column'
           >
             <CustomLink to={'/' + networkInfo.urlKey + '/pool/' + position.pool.id}>
-              <TYPE.main style={{ whiteSpace: 'nowrap' }} to={'/' + networkInfo.urlKey + '/pair/'}>
+              <TYPE.main style={{ whiteSpace: 'nowrap' }}>
                 <FormattedName
                   text={shortenAddress(position.pool.id, 3)}
                   maxCharacters={below740 ? 14 : 18}
@@ -196,7 +194,7 @@ function PositionList({ positions }) {
                 </AutoColumn>
                 <AutoColumn gap='8px' justify='flex-end' style={{ marginLeft: '8px' }}>
                   <CustomLink to={'/' + networkInfo.urlKey + '/pair/' + position.pair.id}>
-                    <TYPE.main style={{ whiteSpace: 'nowrap' }} to={'/' + networkInfo.urlKey + '/pair/'}>
+                    <TYPE.main style={{ whiteSpace: 'nowrap' }}>
                       <FormattedName
                         text={position.pair.token0.symbol + '-' + position.pair.token1.symbol}
                         maxCharacters={below740 ? 10 : 18}

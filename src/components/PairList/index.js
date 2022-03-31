@@ -8,7 +8,7 @@ import styled from 'styled-components'
 
 import { CustomLink } from '../Link'
 import { Divider } from '../../components'
-import { Link, useParams, withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { formattedNum, formattedPercent } from '../../utils'
 import DoubleTokenLogo from '../DoubleLogo'
 import FormattedName from '../FormattedName'
@@ -153,8 +153,6 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
   // sorting
   const [sortDirection, setSortDirection] = useState(true)
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.LIQ)
-  const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   useEffect(() => {
     setMaxPage(1) // edit this to do modular

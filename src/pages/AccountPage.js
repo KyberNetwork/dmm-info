@@ -25,7 +25,6 @@ import { useOnClickOutside } from '../hooks'
 import useTheme from '../hooks/useTheme'
 import { Flex, Text } from 'rebass'
 import { useNetworksInfo } from '../contexts/NetworkInfo'
-import { useParams } from 'react-router-dom'
 
 const AccountWrapper = styled.div`
   padding: 6px 16px 6px 0;
@@ -102,8 +101,6 @@ function AccountPage({ account }) {
 
   // get data for user stats
   const transactionCount = transactions?.swaps?.length + transactions?.burns?.length + transactions?.mints?.length
-  const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   // get derived totals
   let totalSwappedUSD = useMemo(() => {

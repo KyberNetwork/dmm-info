@@ -111,9 +111,7 @@ export const ItemCard = ({ pool }) => {
   const oneYearFL = getOneYearFL(liquidity, oneDayFee).toFixed(2)
 
   const theme = useTheme()
-  const [networksInfo] = useNetworksInfo()
-  const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
+  const [[networkInfo]] = useNetworksInfo()
   return (
     <div>
       {isWarning && (
@@ -129,7 +127,7 @@ export const ItemCard = ({ pool }) => {
           <DataTitle>Pool</DataTitle>
           <DataText grid-area='pool'>
             <PoolAddressContainer>
-              <CustomLink to={prefixNetworkURL + `/pool/${pool.id}`} style={{ cursor: 'pointer' }}>
+              <CustomLink to={`/${networkInfo.urlKey}/pool/${pool.id}`} style={{ cursor: 'pointer' }}>
                 {shortenPoolAddress}
               </CustomLink>
               <CopyHelper toCopy={pool.id} />
@@ -139,7 +137,7 @@ export const ItemCard = ({ pool }) => {
 
         <GridItem>
           <DataText style={{ alignItems: 'flex-end', color: theme.primary }}>
-            <Link href={`${networksInfo[0].dmmSwapUrl}add/${pool.token0.id}/${pool.token1.id}/${pool.id}`} target='_blank'>
+            <Link href={`${networkInfo.dmmSwapUrl}add/${pool.token0.id}/${pool.token1.id}/${pool.id}`} target='_blank'>
               <ButtonLight>+ Add</ButtonLight>
             </Link>
           </DataText>
@@ -200,8 +198,6 @@ const ListItem = ({ pool, oddRow }) => {
 
   const theme = useTheme()
   const [[networkInfo]] = useNetworksInfo()
-  const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   return (
     <TableRow oddRow={oddRow}>
@@ -212,7 +208,7 @@ const ListItem = ({ pool, oddRow }) => {
           </MouseoverTooltip>
         </div>
       )}
-      <CustomLink to={prefixNetworkURL + `/pool/${pool.id}`} style={{ cursor: 'pointer' }}>
+      <CustomLink to={`/${networkInfo.urlKey}/pool/${pool.id}`} style={{ cursor: 'pointer' }}>
         <DataText grid-area='pool' style={{ color: theme.primary }}>
           {shortenPoolAddress}
         </DataText>
@@ -239,7 +235,7 @@ const ListItem = ({ pool, oddRow }) => {
       <DataText grid-area='add_liquidity' alignItems='flex-end'>
         {
           <Link
-            href={`${networkInfo.dmmSwapUrl}add/${pool.token0.id}/${pool.token1.id}/${pool.id}?networkId=${networkInfo.chainId}`} // todo namgold: fill this, dang fill dai
+            href={`${networkInfo.dmmSwapUrl}add/${pool.token0.id}/${pool.token1.id}/${pool.id}?networkId=${networkInfo.chainId}`}
             target='_blank'
           >
             <ButtonLight>+ Add</ButtonLight>

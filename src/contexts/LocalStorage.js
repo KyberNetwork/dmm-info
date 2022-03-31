@@ -47,7 +47,7 @@ function init() {
     [VERSION]: CURRENT_VERSION,
     [DARK_MODE]: true,
     [DISMISSED_PATHS]: {},
-    [SAVED_ACCOUNTS]: {},
+    [SAVED_ACCOUNTS]: [],
     [SAVED_TOKENS]: {},
     [SAVED_PAIRS]: {},
     [SAVED_POOLS]: {},
@@ -116,7 +116,8 @@ export function usePathDismissed(path) {
 
 export function useSavedAccounts() {
   const [state, { updateKey }] = useLocalStorageContext()
-  const savedAccounts = state?.[SAVED_ACCOUNTS].filter(Boolean).map(acc => ({ ...acc, address: acc.address?.toLowerCase?.() }))
+  const savedAccounts =
+    state?.[SAVED_ACCOUNTS]?.filter?.(Boolean).map(acc => ({ ...acc, address: acc.address?.toLowerCase?.() })) ?? []
 
   function addAccount(address, chainId) {
     address = address.toLowerCase()

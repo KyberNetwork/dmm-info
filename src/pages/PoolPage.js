@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import 'feather-icons'
 import { transparentize } from 'polished'
 import styled from 'styled-components'
@@ -215,8 +215,6 @@ function PoolPage({ poolAddress, history }) {
   const [savedPools, addPool, removePool] = useSavedPools()
 
   const listedTokens = useListedTokens()
-  const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   return (
     <PageWrapper>

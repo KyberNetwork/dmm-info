@@ -146,11 +146,9 @@ export function useUserTransactions(account) {
           fetchPolicy: 'no-cache',
         })
         if (result?.data) {
-          result.data.forEach(transaction => (transaction.chainId = networkInfo.chainId))
-          // todo namgold: fix this
-          // transactions.burns?.forEach(burn => (burn.chainId = networkInfo.chainId))
-          // transactions.mints?.forEach(mint => (mint.chainId = networkInfo.chainId))
-          // transactions.swaps?.forEach(swap => (swap.chainId = networkInfo.chainId))
+          result.data.burns?.forEach?.(transaction => (transaction.chainId = networkInfo.chainId))
+          result.data.mints?.forEach?.(transaction => (transaction.chainId = networkInfo.chainId))
+          result.data.swaps?.forEach?.(transaction => (transaction.chainId = networkInfo.chainId))
           updateTransactions(account, result?.data, networkInfo.chainId)
         }
       } catch (e) {

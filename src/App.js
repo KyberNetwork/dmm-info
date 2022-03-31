@@ -28,7 +28,6 @@ import { Updater as TokenDataContextUpdater } from './contexts/TokenData'
 import { Updater as PairDataContextUpdater } from './contexts/PairData'
 import { Updater as PoolDataContextUpdater } from './contexts/PoolData'
 import { ChainId } from './constants/networks'
-import GoogleAnalyticsReporter from './components/GoogleAnalyticsReporter'
 
 const AppWrapper = styled.div`
   position: relative;
@@ -125,7 +124,7 @@ function AppLogicWrapper(props) {
   const [dismissed, markAsDismissed] = useState(false)
 
   // show warning
-  const BLOCK_DIFFERENCE_THRESHOLD = networksInfo.length === 1 && networksInfo.chainId === ChainId.MATIC ? 210 : 30 //todo namgold: check this
+  const BLOCK_DIFFERENCE_THRESHOLD = !networksInfo.slice(1).some(Boolean) && networksInfo[0].chainId === ChainId.MATIC ? 210 : 30
   const showWarning = networksInfo
     .map((networkInfo, i) =>
       headBlocks[i] && latestBlocks[i]
@@ -188,8 +187,6 @@ const LayoutWrapper = props => {
     }
   }, [currentNetworkURL, networkInfoFromURL, updateChain])
   if (currentNetworkURL && !networkInfoFromURL) return <Redirect to='/home' />
-  // if (!currentNetworkURL && !networkInfoFromURL) networkInfoFromURL = NetworksInfoEnv //todo namgold: currently we allow to go on, react will automatically update through useEffect. isnt it?
-  // if (networksInfo[1] || networksInfo[0] !== networkInfoFromURL) return null
   return (
     <AppLogicWrapper>
       <Updaters />

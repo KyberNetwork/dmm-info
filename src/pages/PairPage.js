@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import 'feather-icons'
 import { transparentize } from 'polished'
 import { Link as LinkScroll } from 'react-scroll'
@@ -211,8 +211,6 @@ function PairPage({ pairAddress, history }) {
   const [savedPairs, addPair, removePair] = useSavedPairs()
 
   const listedTokens = useListedTokens()
-  const { network: currentNetworkURL } = useParams()
-  const prefixNetworkURL = currentNetworkURL ? `/${currentNetworkURL}` : ''
 
   return (
     <PageWrapper>
