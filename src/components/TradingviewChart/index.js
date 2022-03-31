@@ -204,7 +204,13 @@ const TradingViewChart = ({ type = CHART_TYPES.BAR, data, base, baseChange, fiel
         }
       })
 
-      chart.timeScale().fitContent()
+      // chart.timeScale().fitContent()
+      if (formattedData.length) {
+        chart.timeScale().setVisibleRange({
+          from: new Date(Date.UTC(2022, 0, 1, 0, 0, 0, 0)).getTime() / 1000,
+          to: new Date(Date.UTC(2024, 0, 1, 0, 0, 0, 0)).getTime() / 1000,
+        })
+      }
 
       setChartCreated(chart)
     }
