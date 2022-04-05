@@ -208,7 +208,7 @@ const TradingViewChart = ({ type = CHART_TYPES.BAR, data, base, baseChange, fiel
       if (formattedData.length) {
         chart.timeScale().setVisibleRange({
           from: new Date(Date.UTC(2022, 0, 1, 0, 0, 0, 0)).getTime() / 1000,
-          to: new Date(Date.UTC(2024, 0, 1, 0, 0, 0, 0)).getTime() / 1000,
+          to: new Date(Date.UTC(2050, 0, 1, 0, 0, 0, 0)).getTime() / 1000,
         })
       }
 
@@ -221,7 +221,7 @@ const TradingViewChart = ({ type = CHART_TYPES.BAR, data, base, baseChange, fiel
     chartCreated,
     darkMode,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    JSON.stringify(data),
+    // JSON.stringify(data),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     JSON.stringify(formattedData),
     textColor,

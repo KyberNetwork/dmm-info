@@ -18,7 +18,7 @@ import { TYPE } from '../../Theme'
 import LocalLoader from '../LocalLoader'
 import { useAllTokenData } from '../../contexts/TokenData'
 import { NETWORK_INFOS } from '../../constants/networks'
-import { flatObjectArray } from '../../utils/aggregateData'
+import { aggregateTokens } from '../../utils/aggregateData'
 
 dayjs.extend(utc)
 
@@ -46,7 +46,7 @@ const List = styled(Box)`
 const DashGrid = styled.div`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 100px ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? '75px' : '')} 1fr 1fr;
+  grid-template-columns: 1.5fr ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? '75px' : '')} 1fr 1fr;
   grid-template-areas: 'name ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? 'network' : '')} liq vol';
   padding: 0;
 
@@ -67,7 +67,7 @@ const DashGrid = styled.div`
   @media screen and (min-width: 680px) {
     display: grid;
     grid-gap: 1em;
-    grid-template-columns: 180px ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? '75px' : '')} 0.6fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? '75px' : '')} 0.6fr 1fr 1fr 1fr;
     grid-template-areas: 'name ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? 'network' : '')} symbol liq price vol ';
 
     > * {
@@ -83,7 +83,7 @@ const DashGrid = styled.div`
   @media screen and (min-width: 1080px) {
     display: grid;
     grid-gap: 0.5em;
-    grid-template-columns: 1.5fr ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? '75px' : '')} 0.6fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? '75px' : '')} 0.6fr 1fr 1fr 1fr 1fr;
     grid-template-areas: 'name ${({ isShowNetworkColumn }) =>
       isShowNetworkColumn ? 'network' : ''} symbol liq vol price change';
   }
@@ -161,7 +161,7 @@ function TopTokenList({ itemMax = 5 }) {
   }, [tokens])
 
   const formattedTokens = useMemo(() => {
-    const flattedTokens = flatObjectArray(tokens.filter(Boolean))
+    const flattedTokens = aggregateTokens(tokens.filter(Boolean))
     return (
       flattedTokens &&
       Object.keys(flattedTokens)

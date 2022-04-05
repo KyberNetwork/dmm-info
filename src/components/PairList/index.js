@@ -17,7 +17,7 @@ import { TYPE } from '../../Theme'
 import { MAX_ALLOW_APY } from '../../constants'
 import useTheme from '../../hooks/useTheme'
 import { NETWORK_INFOS } from '../../constants/networks'
-import { flatObjectArray } from '../../utils/aggregateData'
+import { aggregatePairs } from '../../utils/aggregateData'
 
 dayjs.extend(utc)
 
@@ -56,6 +56,10 @@ const DashGrid = styled.div`
       justify-content: flex-start;
       text-align: left;
       width: 20px;
+    }
+
+    &:nth-child(2) {
+      justify-content: center;
     }
   }
 
@@ -140,7 +144,7 @@ const FIELD_TO_VALUE = (field, useTracked = false) => {
 
 function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
   const isShowNetworkColumn = pairs?.slice(1).some(Boolean)
-  const flattedPairs = useMemo(() => flatObjectArray(pairs.filter(Boolean)), [JSON.stringify(pairs)])
+  const flattedPairs = useMemo(() => aggregatePairs(pairs.filter(Boolean)), [JSON.stringify(pairs)])
   const below600 = useMedia('(max-width: 600px)')
   const below740 = useMedia('(max-width: 740px)')
   const below1080 = useMedia('(max-width: 1080px)')

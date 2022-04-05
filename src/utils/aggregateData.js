@@ -1,6 +1,6 @@
 import { get2DayPercentChange, getPercentChange } from '.'
 
-export const flatObjectArray = objectsArray => {
+export const aggregateTokens = objectsArray => {
   const result = {}
   objectsArray.forEach(object => {
     Object.keys(object).forEach(key => {
@@ -8,6 +8,10 @@ export const flatObjectArray = objectsArray => {
     })
   })
   return result
+}
+
+export const aggregatePairs = objectsArray => {
+  return aggregateTokens(objectsArray)
 }
 
 export const aggregateLps = lpsArray => {
@@ -125,42 +129,3 @@ export const calculateValuesOnGlobalData = data => {
     data.weeklyVolumeChange = weeklyVolumeChange
   }
 }
-
-// {
-//   "data": {
-//     "dmmDayDatas": [
-//       {
-//         "__typename": "DmmDayData",
-//         "id": "19059",
-//         "date": 1646697600,
-
-//         "dailyVolumeETH": "0",
-//         "dailyVolumeUSD": "0",
-//         "totalLiquidityETH": "0",
-//         "totalLiquidityUSD": "0",
-//         "totalVolumeUSD": "0"
-//       }
-//     ]
-//   }
-// }
-
-// {
-//   "id": "0x5f1fe642060b5b9658c15721ea22e982643c095c",
-//   "totalVolumeUSD": "1120493287.698824640576757222703006",
-//   "totalFeeUSD": "2599468.601592519649082589076908392",
-//   "untrackedVolumeUSD": "1176738240.895777460954865444537508",
-//   "totalLiquidityUSD": 20947884.5790311,
-//   "totalLiquidityETH": "14117682.46539278284396139682605648",
-//   "txCount": "2247995",
-//   "pairCount": 199,
-//   "__typename": "DmmFactory",
-//   "oneDayVolumeUSD": 4656557.555687666,
-//   "volumeChangeUSD": -7.024501751133099,
-//   "oneDayFeeUSD": 6300.770075035747,
-//   "oneDayFeeChange": -40.056420346895884,
-//   "liquidityChangeUSD": 0.2708434901131414,
-//   "oneDayTxns": 20599,
-//   "txnChange": -12.999957764919543,
-//   "oneWeekVolume": 23885075.918694735,
-//   "weeklyVolumeChange": 52.943897666962535
-// }

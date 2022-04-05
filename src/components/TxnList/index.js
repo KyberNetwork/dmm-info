@@ -57,6 +57,10 @@ const DashGrid = styled.div`
       text-align: left;
       width: 100px;
     }
+
+    &:nth-child(2) {
+      justify-content: center;
+    }
   }
 
   @media screen and (min-width: 500px) {
@@ -188,6 +192,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
   useEffect(() => {
     setMaxPage(1) // edit this to do modular
     setPage(1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(flattedTransactions)])
 
   // parse the txns and format for UI
@@ -273,6 +278,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
         setMaxPage(Math.floor(filtered.length / ITEMS_PER_PAGE) + extraPages)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(flattedTransactions), txFilter])
 
   useEffect(() => {
@@ -291,6 +297,9 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
 
   const below1080 = useMedia('(max-width: 1080px)')
   const below780 = useMedia('(max-width: 780px)')
+  const below900 = useMedia('(max-width: 900px)')
+  const below1280 = useMedia('(max-width: 1280px)')
+  const isShowDropdown = below900 || (!below1080 && below1280)
 
   const ListItem = ({ item }) => {
     const urls = useMemo(() => getEtherScanUrls(NETWORK_INFOS[item.chainId]), [item.chainId])
@@ -345,7 +354,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
   return (
     <>
       <TableHeader center={true} style={{ height: 'fit-content' }} isShowNetworkColumn={isShowNetworkColumn}>
-        {below780 ? (
+        {isShowDropdown ? (
           <RowBetween area='txn'>
             <DropdownSelect options={TXN_TYPE} active={txFilter} setActive={setTxFilter} color={color} />
           </RowBetween>
@@ -395,7 +404,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
                 setSortDirection(sortedColumn !== SORT_FIELD.NETWORK ? true : !sortDirection)
               }}
             >
-              Networks {sortedColumn === SORT_FIELD.NETWORK ? (!sortDirection ? '↑' : '↓') : ''}
+              Network {sortedColumn === SORT_FIELD.NETWORK ? (!sortDirection ? '↑' : '↓') : ''}
             </ClickableText>
           </Flex>
         )}
