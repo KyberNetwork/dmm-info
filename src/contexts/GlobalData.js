@@ -551,7 +551,7 @@ export function useGlobalChartData() {
     }
     networksInfo.forEach((networkInfo, index) => {
       if (oldestDateFetch[index] && !(chartDataDaily[index] && chartDataWeekly[index])) {
-        memoRequest(() => fetchData(index), 'useEthPrice' + networkInfo.chainId, 10000)
+        memoRequest(() => fetchData(index), 'useGlobalChartData' + networkInfo.chainId, 10000)
       }
     })
   }, [chartDataDaily, chartDataWeekly, oldestDateFetch, updateChart, exchangeSubgraphClient, networksInfo])
