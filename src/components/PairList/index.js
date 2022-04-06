@@ -69,6 +69,7 @@ const DashGrid = styled.div`
   }
 
   @media screen and (min-width: 1080px) {
+    grid-gap: 0.5em;
     grid-template-columns: 2fr ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? '75px' : '')} 1fr 1fr 1fr 1fr 1fr;
     grid-template-areas: ' name ${({ isShowNetworkColumn }) => (isShowNetworkColumn ? 'network' : '')} liq vol volWeek fees apy';
   }
@@ -280,7 +281,7 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
           </Text>
         </Flex>
         {isShowNetworkColumn && (
-          <Flex alignItems='center' justifyContent='flexEnd'>
+          <Flex alignItems='center' justifyContent='center'>
             <ClickableText
               area='network'
               onClick={e => {
@@ -292,7 +293,7 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
             </ClickableText>
           </Flex>
         )}
-        <Flex alignItems='center' justifyContent='center'>
+        <Flex alignItems='center' justifyContent='flexEnd'>
           <ClickableText
             area='liq'
             onClick={e => {
