@@ -219,25 +219,25 @@ async function getGlobalData(client, networksInfo) {
       fetchPolicy: 'cache-first',
     })
 
-    data.oneDayData = oneDayResult.data.dmmFactories[0]
+    data.oneDayData = { ...oneDayResult.data.dmmFactories[0] } //preventing fetchPolicy: 'cache-first' returning same object causing circular object
 
     let twoDayResult = await client.query({
       query: GLOBAL_DATA(networksInfo, twoDayBlock?.number),
       fetchPolicy: 'cache-first',
     })
-    data.twoDayData = twoDayResult.data.dmmFactories[0]
+    data.twoDayData = { ...twoDayResult.data.dmmFactories[0] } //preventing fetchPolicy: 'cache-first' returning same object causing circular object
 
     let oneWeekResult = await client.query({
       query: GLOBAL_DATA(networksInfo, oneWeekBlock?.number),
       fetchPolicy: 'cache-first',
     })
-    data.oneWeekData = oneWeekResult.data.dmmFactories[0]
+    data.oneWeekData = { ...oneWeekResult.data.dmmFactories[0] } //preventing fetchPolicy: 'cache-first' returning same object causing circular object
 
     let twoWeekResult = await client.query({
       query: GLOBAL_DATA(networksInfo, twoWeekBlock?.number),
       fetchPolicy: 'cache-first',
     })
-    data.twoWeekData = twoWeekResult.data.dmmFactories[0]
+    data.twoWeekData = { ...twoWeekResult.data.dmmFactories[0] } //preventing fetchPolicy: 'cache-first' returning same object causing circular object
 
     calculateValuesOnGlobalData(data)
   } catch (e) {
