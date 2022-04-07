@@ -518,7 +518,7 @@ export function Updater() {
       const formattedPairs = pairs.map(pair => pair.id)
 
       // get data for every pair in list
-      let topPairs = await getBulkPairData(exchangeSubgraphClient[index], formattedPairs, ethPrice, networksInfo[index])
+      let topPairs = await getBulkPairData(exchangeSubgraphClient[index], formattedPairs, ethPrice[index], networksInfo[index])
       topPairs?.forEach(topPair => (topPair.chainId = networksInfo[index].chainId))
       topPairs && updateTopPairs(topPairs, networksInfo[index].chainId)
     }
@@ -582,7 +582,7 @@ export function usePairRateData(pairAddress, timeWindow, frequency) {
 export function useDataForList(pairList) {
   const [exchangeSubgraphClient] = useExchangeClients()
   const [state] = usePairDataContext()
-  const [ethPrice] = useEthPrice()
+  const [[ethPrice]] = useEthPrice()
 
   const [stale, setStale] = useState(false)
   const [fetched, setFetched] = useState()

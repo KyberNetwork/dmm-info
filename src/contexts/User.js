@@ -436,7 +436,7 @@ export function useUserPositions(account) {
   const positions = state?.[networkInfo.chainId]?.[account]?.[POSITIONS_KEY]
 
   const snapshots = useUserSnapshots(account)
-  const [ethPrice] = useEthPrice()
+  const [[ethPrice]] = useEthPrice()
 
   useEffect(() => {
     async function fetchData(account) {
