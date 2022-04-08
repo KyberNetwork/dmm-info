@@ -19,23 +19,6 @@ const VOLUME_WINDOW = {
   DAYS: 'DAYS',
 }
 
-const combineData = dataArray => {
-  const periodHash = {}
-  dataArray
-    .filter(Boolean)
-    .flat(1)
-    .forEach(data => {
-      if (periodHash[data.date]) {
-        periodHash[data.date].totalVolumeUSD = Number(periodHash[data.date].totalVolumeUSD) + Number(data.totalVolumeUSD)
-        periodHash[data.date].dailyVolumeUSD = Number(periodHash[data.date].dailyVolumeUSD) + Number(data.dailyVolumeUSD)
-        periodHash[data.date].totalLiquidityUSD = Number(periodHash[data.date].totalLiquidityUSD) + Number(data.totalLiquidityUSD)
-      } else {
-        periodHash[data.date] = data
-      }
-    })
-  return Object.keys(periodHash).map(key => periodHash[key])
-}
-
 const GlobalChart = ({ display }) => {
   const chartView = display === 'volume' ? CHART_VIEW.VOLUME : CHART_VIEW.LIQUIDITY
 
@@ -45,8 +28,10 @@ const GlobalChart = ({ display }) => {
 
   // global historical data
   const [dailyDatas, weeklyDatas] = useGlobalChartData()
-  const aggregatedDailyDatas = aggregateChartData(dailyDatas)
-  const aggregatedWeeklyDatas = aggregateChartData(weeklyDatas)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const aggregatedDailyDatas = useMemo(() => aggregateChartData(dailyDatas), [...dailyDatas])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const aggregatedWeeklyDatas = useMemo(() => aggregateChartData(weeklyDatas), [...weeklyDatas])
   const globalDatas = useGlobalData()
   const {
     totalLiquidityUSD,
