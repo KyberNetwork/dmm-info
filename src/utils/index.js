@@ -600,3 +600,7 @@ export const memoRequest = async (request, key, cacheTimeout = 0) => {
   }
   return result
 }
+
+export const isAllChainLoadDone = allChainData => {
+  return allChainData && allChainData.length && allChainData.every(Boolean)
+}
