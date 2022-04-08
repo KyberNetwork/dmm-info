@@ -29,9 +29,9 @@ const GlobalChart = ({ display }) => {
   // global historical data
   const [dailyDatas, weeklyDatas] = useGlobalChartData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const aggregatedDailyDatas = useMemo(() => aggregateChartData(dailyDatas), [...dailyDatas])
+  const aggregatedDailyDatas = useMemo(() => aggregateChartData(dailyDatas), [JSON.stringify(dailyDatas)])
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const aggregatedWeeklyDatas = useMemo(() => aggregateChartData(weeklyDatas), [...weeklyDatas])
+  const aggregatedWeeklyDatas = useMemo(() => aggregateChartData(weeklyDatas), [JSON.stringify(weeklyDatas)])
   const globalDatas = useGlobalData()
   const {
     totalLiquidityUSD,

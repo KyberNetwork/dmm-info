@@ -145,6 +145,7 @@ const FIELD_TO_VALUE = (field, useTracked = false) => {
 
 function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
   const isShowNetworkColumn = pairs?.slice(1).some(Boolean)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const flattedPairs = useMemo(() => aggregatePairs(pairs.filter(Boolean)), [JSON.stringify(pairs)])
   const below600 = useMedia('(max-width: 600px)')
   const below740 = useMedia('(max-width: 740px)')

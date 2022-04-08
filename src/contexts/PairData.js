@@ -715,7 +715,7 @@ export function usePairChartData(pairAddress) {
 }
 
 /**
- * Get list of all pairs in Uniswap
+ * Get list of all pairs in Kyberswap
  */
 export function useAllPairData() {
   //todo namgold: dò lại

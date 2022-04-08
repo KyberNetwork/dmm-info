@@ -417,9 +417,9 @@ const PAIRS_TO_FETCH = 500
 const TOKENS_TO_FETCH = 500
 
 /**
- * Loop through every pair on uniswap, used for search
+ * Loop through every pair on kyberswap, used for search
  */
-async function getAllPairsOnUniswap(client) {
+async function getAllPairsOnKyberswap(client) {
   try {
     let allFound = false
     let pairs = []
@@ -445,9 +445,9 @@ async function getAllPairsOnUniswap(client) {
 }
 
 /**
- * Loop through every token on uniswap, used for search
+ * Loop through every token on kyberswap, used for search
  */
-async function getAllTokensOnUniswap(client) {
+async function getAllTokensOnKyberswap(client) {
   try {
     let allFound = false
     let skipCount = 0
@@ -487,11 +487,11 @@ export function useGlobalData() {
       let globalData = await getGlobalData(exchangeSubgraphClient[index], networksInfo[index])
       globalData && update(globalData, networksInfo[index].chainId)
 
-      let allPairs = await getAllPairsOnUniswap(exchangeSubgraphClient[index])
+      let allPairs = await getAllPairsOnKyberswap(exchangeSubgraphClient[index])
       allPairs?.forEach(allPair => (allPair.chainId = networksInfo[index].chainId))
       updateAllPairsInKyberswap(allPairs, networksInfo[index].chainId)
 
-      let allTokens = await getAllTokensOnUniswap(exchangeSubgraphClient[index])
+      let allTokens = await getAllTokensOnKyberswap(exchangeSubgraphClient[index])
       allTokens?.forEach(allToken => (allToken.chainId = networksInfo[index].chainId))
       updateAllTokensInKyberswap(allTokens, networksInfo[index].chainId)
     }
@@ -611,20 +611,18 @@ export function useEthPrice() {
   return [ethPrice, ethPriceOld]
 }
 
-export function useAllPairsInUniswap() {
+export function useAllPairsInKyberswap() {
   const [state] = useGlobalDataContext()
-  let allPairs = state?.allPairs
+  const [[networkInfo]] = useNetworksInfo()
+  const allPairs = state?.[networkInfo.chainId]?.allPairs
 
   return allPairs || []
 }
 
 export function useAllTokensInKyberswap() {
   const [state] = useGlobalDataContext()
-  const [networksInfo] = useNetworksInfo()
-  const allTokens = networksInfo
-    .map(networkInfo => state?.[networkInfo.chainId]?.allTokens)
-    .filter(Boolean)
-    .flat(1)
+  const [[networkInfo]] = useNetworksInfo()
+  const allTokens = state?.[networkInfo.chainId]?.allTokens
 
   return allTokens || []
 }

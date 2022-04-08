@@ -10,7 +10,7 @@ import { useExchangeClients } from '../../contexts/Application'
 import { useAllTokenData, useTokenData } from '../../contexts/TokenData'
 import { useAllPairData, usePairData } from '../../contexts/PairData'
 import DoubleTokenLogo from '../DoubleLogo'
-import { useAllPairsInUniswap, useAllTokensInKyberswap } from '../../contexts/GlobalData'
+import { useAllPairsInKyberswap, useAllTokensInKyberswap } from '../../contexts/GlobalData'
 import { OVERVIEW_TOKEN_BLACKLIST, PAIR_BLACKLIST } from '../../constants'
 
 import { PAIR_SEARCH, TOKEN_SEARCH } from '../../apollo/queries'
@@ -130,12 +130,12 @@ const Blue = styled.span`
 `
 
 export const Search = ({ small = false }) => {
-  const exchangeSubgraphClient = useExchangeClients()
+  const [exchangeSubgraphClient] = useExchangeClients()
   let allTokens = useAllTokensInKyberswap()
-  const allTokenData = useAllTokenData()
+  const [allTokenData] = useAllTokenData()
 
-  let allPairs = useAllPairsInUniswap()
-  const allPairData = useAllPairData()
+  let allPairs = useAllPairsInKyberswap()
+  const [allPairData] = useAllPairData()
 
   const [showMenu, toggleMenu] = useState(false)
   const [value, setValue] = useState('')

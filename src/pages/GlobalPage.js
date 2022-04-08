@@ -83,7 +83,7 @@ function GlobalPage() {
               flexDirection={below800 ? 'column-reverse' : 'row'}
             >
               <TYPE.largeHeader style={{ marginTop: below800 ? '20px' : '0' }}>Summary</TYPE.largeHeader>
-              <Search />
+              {/* <Search /> */}
             </Flex>
             <GlobalStats />
           </AutoColumn>

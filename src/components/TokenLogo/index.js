@@ -210,10 +210,6 @@ export default function TokenLogo({ address, networkInfo, header = false, size =
       if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
         return getCustomLogo({ address, src: networkInfo.tokenLists[formattedAddress].logoURI, size, setError, ...rest })
       }
-      path = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/${isAddress(
-        //todo namgold: fill this
-        address
-      )}/logo.png`
       break
 
     default:

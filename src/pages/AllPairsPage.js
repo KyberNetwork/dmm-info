@@ -24,7 +24,7 @@ function AllPairsPage() {
       <FullWrapper>
         <RowBetween>
           <TYPE.largeHeader>Top Pairs</TYPE.largeHeader>
-          {!below800 && <Search small={true} />}
+          {/* {!below800 && <Search small={true} />} */}
         </RowBetween>
         <Panel style={{ padding: '0' }}>
           <PairList pairs={allPairs} disbaleLinks={true} maxItems={15} />

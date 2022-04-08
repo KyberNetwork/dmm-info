@@ -607,7 +607,7 @@ export function usePoolChartData(poolAddress) {
 }
 
 /**
- * Get list of all pools in Uniswap
+ * Get list of all pools in Kyberswap
  */
 export function useAllPoolData() {
   const [state] = usePoolDataContext()
