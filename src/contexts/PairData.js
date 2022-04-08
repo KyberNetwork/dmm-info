@@ -423,7 +423,7 @@ const getPairChartData = async (client, pairAddress) => {
   return data
 }
 
-const getRateData = async (client, pairAddress, startTime, latestBlock, frequency = 300) => {
+const getRateData = async (client, pairAddress, startTime, latestBlock, networkInfo, frequency = 300) => {
   const run = async () => {
     try {
       const utcEndTime = dayjs.utc()
@@ -444,7 +444,7 @@ const getRateData = async (client, pairAddress, startTime, latestBlock, frequenc
       // once you have all the timestamps, get the blocks for each timestamp in a bulk query
       let blocks
 
-      blocks = await getBlocksFromTimestamps(timestamps, 100)
+      blocks = await getBlocksFromTimestamps(timestamps, networkInfo, 100)
 
       // catch failing case
       if (!blocks || blocks?.length === 0) {
@@ -536,7 +536,7 @@ export function usePairRateData(pairAddress, timeWindow, frequency) {
   const [state, { updateHourlyData }] = usePairDataContext()
   const [[networkInfo]] = useNetworksInfo()
   const chartData = state?.[networkInfo.chainId]?.[pairAddress]?.hourlyData?.[timeWindow]
-  const [latestBlock] = useLatestBlocks()
+  const [[latestBlock]] = useLatestBlocks()
 
   useEffect(() => {
     const currentTime = dayjs.utc()
