@@ -33,7 +33,7 @@ function AccountLookup() {
       <FullWrapper>
         <RowBetween>
           <TYPE.largeHeader>Wallet Analytics</TYPE.largeHeader>
-          {/* {!below600 && <Search small={true} />} */}
+          {!below600 && <Search small={true} />}
         </RowBetween>
         <AccountWrapper>
           <AccountSearch shortenAddress={below600} />

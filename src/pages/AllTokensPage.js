@@ -8,8 +8,10 @@ import { PageWrapper, FullWrapper } from '../components'
 import { RowBetween } from '../components/Row'
 import Search from '../components/Search'
 import { useMedia } from 'react-use'
+import { useParams } from 'react-router-dom'
 
 function AllTokensPage() {
+  const { network: currentNetworkURL } = useParams()
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
@@ -21,7 +23,7 @@ function AllTokensPage() {
       <FullWrapper>
         <RowBetween>
           <TYPE.largeHeader>Top Tokens</TYPE.largeHeader>
-          {/* {!below600 && <Search small={true} />} */}
+          {currentNetworkURL && !below600 && <Search small={true} />}
         </RowBetween>
         <Panel style={{ padding: '0' }}>
           <TopTokenList itemMax={15} />

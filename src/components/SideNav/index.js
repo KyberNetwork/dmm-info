@@ -158,12 +158,14 @@ function SideNav() {
                   </Option>
                 </BasicLink>
 
-                <BasicLink to={prefixNetworkURL + `/accounts`}>
-                  <Option activeText={currentUrl === 'accounts' || currentUrl === 'account'}>
-                    <Wallet />
-                    <Text marginLeft='0.75rem'> Wallet Analytics</Text>
-                  </Option>
-                </BasicLink>
+                {currentNetworkURL && (
+                  <BasicLink to={prefixNetworkURL + `/accounts`}>
+                    <Option activeText={currentUrl === 'accounts' || currentUrl === 'account'}>
+                      <Wallet />
+                      <Text marginLeft='0.75rem'> Wallet Analytics</Text>
+                    </Option>
+                  </BasicLink>
+                )}
 
                 <Divider />
 

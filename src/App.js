@@ -304,7 +304,7 @@ function App() {
           )}
         />
         <Route
-          path='/:network?/accounts'
+          path='/:network/accounts'
           render={() => (
             <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
               <AccountLookup />

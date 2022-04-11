@@ -130,6 +130,7 @@ const Blue = styled.span`
 `
 
 export const Search = ({ small = false }) => {
+  // TODO: support search on all chain
   const [exchangeSubgraphClient] = useExchangeClients()
   let allTokens = useAllTokensInKyberswap()
   const [allTokenData] = useAllTokenData()
