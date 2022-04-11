@@ -7,6 +7,9 @@ import Cronos from '../assets/networks/cronos-network.png'
 import Arbitrum from '../assets/networks/arbitrum-network.svg'
 import BitTorrent from '../assets/networks/bittorrent-network.png'
 import Velas from '../assets/networks/velas-network.png'
+import Aurora from '../assets/networks/aurora-network.svg'
+import Oasis from '../assets/networks/oasis-network.svg'
+
 import ETHEREUM_TOKEN_LIST from './tokenLists/ethereum.tokenlist'
 import BSC_TOKEN_LIST from './tokenLists/bsc.tokenlist'
 import POLYGON_TOKEN_LIST from './tokenLists/polygon.tokenlist'
@@ -16,6 +19,8 @@ import CRONOS_TOKEN_LIST from './tokenLists/cronos.tokenlist'
 import ARBITRUM_TOKEN_LIST from './tokenLists/arbitrum.tokenlist'
 import BTTC_TOKEN_LIST from './tokenLists/bttc.tokenlist'
 import VELAS_TOKEN_LIST from './tokenLists/velas.tokenlist'
+import AURORA_TOKEN_LIST from './tokenLists/aurora.tokenlist'
+import OASIS_TOKEN_LIST from './tokenLists/oasis.tokenlist'
 
 import EthereumLogo from '../assets/eth.png'
 import MaticLogo from '../assets/polygon.png'
@@ -25,6 +30,8 @@ import FantomLogo from '../assets/networks/fantom-network.png'
 import CronosLogo from '../assets/cronos.svg'
 import BTTCLogo from '../assets/bttc.png'
 import VelasLogo from '../assets/velas.png'
+import AuroraLogo from '../assets/aurora.svg'
+import OasisLogo from '../assets/oasis.svg'
 
 export enum ChainId {
   MAINNET = 1,
@@ -42,6 +49,8 @@ export enum ChainId {
   ARBITRUM = 42161,
   BTTC = 199,
   VELAS = 106,
+  AURORA = 1313161554,
+  OASIS = 42262,
 }
 
 export type NETWORK_INFO = {
@@ -383,5 +392,45 @@ export const NETWORK_INFOS: { [key in ChainId]: NETWORK_INFO } = {
     nativeTokenLogo: VelasLogo,
     etherscanLinkText: 'Velas EVM Explorer',
     tokenLists: VELAS_TOKEN_LIST,
+  },
+  [ChainId.AURORA]: {
+    chainId: ChainId.AURORA,
+    icon: Aurora,
+    name: 'Aurora',
+    urlKey: 'aurora',
+    dmmSwapUrl: 'https://kyberswap.com/#/',
+    factoryAddress: '0x39a8809fbbf22ccaeac450eaf559c076843eb910',
+    subgraphName: 'piavgh/dmm-exchange-aurora',
+    subgraphUrls: ['https://aurora-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-aurora'],
+    subgraphBlockUrl: 'https://aurora-graph.kyberengineering.io/subgraphs/name/kybernetwork/aurora-blocks',
+    etherscanUrl: 'https://aurorascan.dev',
+    kncAddress: '0xfe56d5892bdffc7bf58f2e84be1b2c32d21c308b',
+    wethAddress: '0xC9BdeEd33CD01541e1eeD10f90519d2C06Fe3feB',
+    defaultStartTime: 1630313700,
+    nativeTokenSymbol: 'ETH',
+    nativeTokenWrappedName: 'ETH (Wrapped)',
+    nativeTokenLogo: AuroraLogo,
+    etherscanLinkText: 'Aurora Explorer',
+    tokenLists: AURORA_TOKEN_LIST,
+  },
+  [ChainId.OASIS]: {
+    chainId: ChainId.OASIS,
+    icon: Oasis,
+    name: 'Oasis',
+    urlKey: 'oasis',
+    dmmSwapUrl: 'https://kyberswap.com/#/',
+    factoryAddress: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
+    subgraphName: 'kybernetwork/kyberswap-exchange-oasis',
+    subgraphUrls: ['https://oasis-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-oasis'],
+    subgraphBlockUrl: 'https://oasis-graph.kyberengineering.io/subgraphs/name/kybernetwork/oasis-blocks',
+    etherscanUrl: 'https://explorer.emerald.oasis.dev',
+    kncAddress: '0xfe56d5892bdffc7bf58f2e84be1b2c32d21c308b',
+    wethAddress: '0x21C718C22D52d0F3a789b752D4c2fD5908a8A733',
+    defaultStartTime: 1647932400,
+    nativeTokenSymbol: 'ROSE',
+    nativeTokenWrappedName: 'ROSE (Wrapped)',
+    nativeTokenLogo: OasisLogo,
+    etherscanLinkText: 'Oasis Emerald Explorer',
+    tokenLists: OASIS_TOKEN_LIST,
   },
 }

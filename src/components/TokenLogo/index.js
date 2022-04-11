@@ -12,7 +12,6 @@ import { getAvaxTokenLogoURL } from '../../utils/avaxTokenMapping'
 import { getFantomTokenLogoURL } from '../../utils/fantomTokenMapping'
 import { getCronosTokenLogoURL } from '../../utils/cronosTokenMapping'
 import { ChainId } from '../../constants/networks'
-import { useNetworksInfo } from '../../contexts/NetworkInfo'
 
 const BAD_IMAGES = {}
 
@@ -61,7 +60,6 @@ export function getCustomLogo({ address, chainId, src, size, setError, ...rest }
 //todo: dò reference TokenLogo networkInfo
 export default function TokenLogo({ address, networkInfo, header = false, size = '24px', ...rest }) {
   const [error, setError] = useState(false)
-  const [networksInfo] = useNetworksInfo()
 
   useEffect(() => {
     setError(false)
@@ -95,26 +93,25 @@ export default function TokenLogo({ address, networkInfo, header = false, size =
   const formattedAddress = isAddress(address)
   let path
 
+  if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
+    return getCustomLogo({
+      address,
+      chainId: networkInfo.chainId,
+      src: networkInfo.tokenLists[formattedAddress].logoURI,
+      size,
+      setError,
+      ...rest,
+    })
+  }
+
   switch (networkInfo.chainId) {
     case ChainId.ROPSTEN:
       if (ROPSTEN_TOKEN_LOGOS_MAPPING[address?.toLowerCase()]) {
         address = ROPSTEN_TOKEN_LOGOS_MAPPING[address?.toLowerCase()]
       }
-
       path = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${formattedAddress}/logo.png`
       break
     case ChainId.MATIC:
-      if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
-        return getCustomLogo({
-          address,
-          chainId: networkInfo.chainId,
-          src: networkInfo.tokenLists[formattedAddress].logoURI,
-          size,
-          setError,
-          ...rest,
-        })
-      }
-
       path = getMaticTokenLogoURL(address)
       break
     case ChainId.MUMBAI:
@@ -124,106 +121,33 @@ export default function TokenLogo({ address, networkInfo, header = false, size =
       path = getBscTestnetTokenLogoURL(address)
       break
     case ChainId.BSCMAINNET:
-      if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
-        return getCustomLogo({
-          address,
-          chainId: networkInfo.chainId,
-          src: networkInfo.tokenLists[formattedAddress].logoURI,
-          size,
-          setError,
-          ...rest,
-        })
-      }
       path = getBscTokenLogoURL(address)
       break
 
     case ChainId.AVAXMAINNET:
-      if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
-        return getCustomLogo({
-          address,
-          chainId: networkInfo.chainId,
-          src: networkInfo.tokenLists[formattedAddress].logoURI,
-          size,
-          setError,
-          ...rest,
-        })
-      }
       path = getAvaxTokenLogoURL(address)
       break
 
     case ChainId.FANTOM:
-      if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
-        return getCustomLogo({
-          address,
-          chainId: networkInfo.chainId,
-          src: networkInfo.tokenLists[formattedAddress].logoURI,
-          size,
-          setError,
-          ...rest,
-        })
-      }
       path = getFantomTokenLogoURL(address)
       break
 
     case ChainId.CRONOS:
-      if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
-        return getCustomLogo({
-          address,
-          chainId: networkInfo.chainId,
-          src: networkInfo.tokenLists[formattedAddress].logoURI,
-          size,
-          setError,
-          ...rest,
-        })
-      }
       path = getCronosTokenLogoURL(address)
       break
 
     case ChainId.ARBITRUM:
-      if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
-        return getCustomLogo({
-          address,
-          src: networkInfo.tokenLists[formattedAddress].logoURI,
-          size,
-          setError,
-          ...rest,
-        })
-      }
       path = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/${isAddress(address)}/logo.png`
       break
 
     case ChainId.BTTC:
-      if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
-        return getCustomLogo({ address, src: networkInfo.tokenLists[formattedAddress].logoURI, size, setError, ...rest })
-      }
-      path = 'error'
-      break
-
-    case ChainId.OASIS:
-      if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
-        return getCustomLogo({ address, src: networkInfo.tokenLists[formattedAddress].logoURI, size, setError, ...rest })
-      }
-      path = 'error'
-      break
-
     case ChainId.VELAS:
-      if (formattedAddress && networkInfo.tokenLists[formattedAddress]) {
-        return getCustomLogo({ address, src: networkInfo.tokenLists[formattedAddress].logoURI, size, setError, ...rest })
-      }
+    case ChainId.AURORA:
+    case ChainId.OASIS:
+      path = 'error'
       break
 
     default:
-      if (formattedAddress && networkInfo.tokenLists[formattedAddress]?.logoURI) {
-        return getCustomLogo({
-          address,
-          chainId: networkInfo.chainId,
-          src: networkInfo.tokenLists[formattedAddress].logoURI,
-          size,
-          setError,
-          ...rest,
-        })
-      }
-
       // hard coded fixes for trust wallet api issues
       if (address?.toLowerCase() === '0x5e74c9036fb86bd7ecdcb084a0673efc32ea31cb') {
         address = '0x42456d7084eacf4083f1140d3229471bba2949a8'
