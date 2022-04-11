@@ -170,26 +170,24 @@ const getTopTokens = async (client, ethPrice, ethPriceOld, networkInfo) => {
   try {
     let current = await client.query({
       query: TOKENS_CURRENT,
-      fetchPolicy: 'cache-first',
+      fetchPolicy: 'network-only',
     })
 
     let oneDayResult = await client.query({
       query: TOKENS_DYNAMIC(oneDayBlock),
-      fetchPolicy: 'cache-first',
+      fetchPolicy: 'network-only',
     })
 
     let twoDayResult = await client.query({
       query: TOKENS_DYNAMIC(twoDayBlock),
-      fetchPolicy: 'cache-first',
+      fetchPolicy: 'network-only',
     })
 
-    let oneDayData = oneDayResult?.data?.tokens.reduce((obj, cur, i) => {
-      return { ...obj, [cur.id]: cur }
-    }, {})
+    let oneDayData = {}
+    oneDayResult?.data?.tokens.forEach(item => (oneDayData[item.id] = item))
 
-    let twoDayData = twoDayResult?.data?.tokens.reduce((obj, cur, i) => {
-      return { ...obj, [cur.id]: cur }
-    }, {})
+    let twoDayData = {}
+    twoDayResult?.data?.tokens.forEach(item => (twoDayData[item.id] = item))
 
     let bulkResults = await Promise.all(
       current &&
@@ -206,14 +204,14 @@ const getTopTokens = async (client, ethPrice, ethPriceOld, networkInfo) => {
           if (!oneDayHistory) {
             let oneDayResult = await client.query({
               query: TOKEN_DATA(token.id, oneDayBlock),
-              fetchPolicy: 'cache-first',
+              fetchPolicy: 'network-only',
             })
             oneDayHistory = oneDayResult.data.tokens[0]
           }
           if (!twoDayHistory) {
             let twoDayResult = await client.query({
               query: TOKEN_DATA(token.id, twoDayBlock),
-              fetchPolicy: 'cache-first',
+              fetchPolicy: 'network-only',
             })
             twoDayHistory = twoDayResult.data.tokens[0]
           }
@@ -265,7 +263,7 @@ const getTopTokens = async (client, ethPrice, ethPriceOld, networkInfo) => {
           if (data.id === '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9') {
             const aaveData = await client.query({
               query: PAIR_DATA('0xdfc14d2af169b0d36c4eff567ada9b2e0cae044f'),
-              fetchPolicy: 'cache-first',
+              fetchPolicy: 'network-only',
             })
             const result = aaveData.data.pairs[0]
             data.totalLiquidityUSD = parseFloat(result.reserveUSD) / 2

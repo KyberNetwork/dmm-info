@@ -191,14 +191,14 @@ async function getBulkPairData(client, pairList, ethPrice, networkInfo) {
       variables: {
         allPairs: pairList,
       },
-      fetchPolicy: 'cache-first',
+      fetchPolicy: 'network-only',
     })
 
     let [oneDayResult, twoDayResult, oneWeekResult] = await Promise.all(
       [b1, b2, bWeek].map(async block => {
         let result = client.query({
           query: PAIRS_HISTORICAL_BULK(block, pairList),
-          fetchPolicy: 'cache-first',
+          fetchPolicy: 'network-only',
         })
         return result
       })
@@ -224,7 +224,7 @@ async function getBulkPairData(client, pairList, ethPrice, networkInfo) {
           if (!oneDayHistory) {
             let newData = await client.query({
               query: PAIR_DATA(pair.id, b1),
-              fetchPolicy: 'cache-first',
+              fetchPolicy: 'network-only',
             })
             oneDayHistory = newData.data.pairs[0]
           }
@@ -232,7 +232,7 @@ async function getBulkPairData(client, pairList, ethPrice, networkInfo) {
           if (!twoDayHistory) {
             let newData = await client.query({
               query: PAIR_DATA(pair.id, b2),
-              fetchPolicy: 'cache-first',
+              fetchPolicy: 'network-only',
             })
             twoDayHistory = newData.data.pairs[0]
           }
@@ -240,7 +240,7 @@ async function getBulkPairData(client, pairList, ethPrice, networkInfo) {
           if (!oneWeekHistory) {
             let newData = await client.query({
               query: PAIR_DATA(pair.id, bWeek),
-              fetchPolicy: 'cache-first',
+              fetchPolicy: 'network-only',
             })
             oneWeekHistory = newData.data.pairs[0]
           }
@@ -335,27 +335,6 @@ const getPairPools = async (client, pairAddress) => {
 
   return pools
 }
-
-// const getPairTransactions = async (client, pairAddress) => {
-//   const transactions = {}
-
-//   try {
-//     let result = await client.query({
-//       query: FILTERED_TRANSACTIONS,
-//       variables: {
-//         allPairs: [pairAddress],
-//       },
-//       fetchPolicy: 'no-cache',
-//     })
-//     transactions.mints = result.data.mints
-//     transactions.burns = result.data.burns
-//     transactions.swaps = result.data.swaps
-//   } catch (e) {
-//     console.log(e)
-//   }
-
-//   return transactions
-// }
 
 const getPairChartData = async (client, pairAddress) => {
   let data = []
