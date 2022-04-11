@@ -146,7 +146,7 @@ const FIELD_TO_VALUE = (field, useTracked = false) => {
 function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
   const isShowNetworkColumn = pairs?.slice(1).some(Boolean)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const flattedPairs = useMemo(() => aggregatePairs(pairs.filter(Boolean)), [JSON.stringify(pairs)])
+  const aggregatedPairs = useMemo(() => aggregatePairs(pairs.filter(Boolean)), [JSON.stringify(pairs)])
   const below600 = useMedia('(max-width: 600px)')
   const below740 = useMedia('(max-width: 740px)')
   const below1080 = useMedia('(max-width: 1080px)')
@@ -163,20 +163,20 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
   useEffect(() => {
     setMaxPage(1) // edit this to do modular
     setPage(1)
-  }, [flattedPairs])
+  }, [aggregatedPairs])
 
   useEffect(() => {
-    if (flattedPairs) {
+    if (aggregatedPairs) {
       let extraPages = 1
-      if (Object.keys(flattedPairs).length % ITEMS_PER_PAGE === 0) {
+      if (Object.keys(aggregatedPairs).length % ITEMS_PER_PAGE === 0) {
         extraPages = 0
       }
-      setMaxPage(Math.floor(Object.keys(flattedPairs).length / ITEMS_PER_PAGE) + extraPages)
+      setMaxPage(Math.floor(Object.keys(aggregatedPairs).length / ITEMS_PER_PAGE) + extraPages)
     }
-  }, [ITEMS_PER_PAGE, flattedPairs])
+  }, [ITEMS_PER_PAGE, aggregatedPairs])
 
   const ListItem = ({ pairAddress, index }) => {
-    const pairData = flattedPairs[pairAddress]
+    const pairData = aggregatedPairs[pairAddress]
 
     if (pairData && pairData.token0 && pairData.token1) {
       const volume = pairData.oneDayVolumeUSD ? pairData.oneDayVolumeUSD : pairData.oneDayVolumeUntracked
@@ -233,11 +233,11 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
   }
 
   const pairList =
-    flattedPairs &&
-    Object.keys(flattedPairs)
+    aggregatedPairs &&
+    Object.keys(aggregatedPairs)
       .sort((addressA, addressB) => {
-        const pairA = flattedPairs[addressA]
-        const pairB = flattedPairs[addressB]
+        const pairA = aggregatedPairs[addressA]
+        const pairB = aggregatedPairs[addressB]
         if (sortedColumn === SORT_FIELD.APY) {
           const getApr = pairData => {
             const liquidity = pairData.reserveUSD ? pairData.reserveUSD : pairData.trackedReserveUSD

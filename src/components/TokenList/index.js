@@ -143,6 +143,9 @@ const SORT_FIELD = {
 function TopTokenList({ itemMax = 5 }) {
   const tokens = useAllTokenData()
   const isShowNetworkColumn = tokens?.slice(1).some(Boolean)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const aggregatedTokens = useMemo(() => aggregateTokens(tokens.filter(Boolean)), [JSON.stringify(tokens)])
+
   // page state
   const [page, setPage] = useState(1)
   const [maxPage, setMaxPage] = useState(1)
@@ -158,23 +161,22 @@ function TopTokenList({ itemMax = 5 }) {
   useEffect(() => {
     setMaxPage(1) // edit this to do modular
     setPage(1)
-  }, [tokens])
+  }, [aggregatedTokens])
 
   const formattedTokens = useMemo(() => {
-    const flattedTokens = aggregateTokens(tokens.filter(Boolean))
     return (
-      flattedTokens &&
-      Object.keys(flattedTokens)
+      aggregatedTokens &&
+      Object.keys(aggregatedTokens)
         .filter(key => {
           return !OVERVIEW_TOKEN_BLACKLIST.includes(key)
         })
         .filter(key => {
-          return flattedTokens[key]
+          return aggregatedTokens[key]
         })
-        .filter(key => flattedTokens[key].name !== 'error-token')
-        .map(key => flattedTokens[key])
+        .filter(key => aggregatedTokens[key].name !== 'error-token')
+        .map(key => aggregatedTokens[key])
     )
-  }, [tokens])
+  }, [aggregatedTokens])
 
   useEffect(() => {
     if (tokens && formattedTokens) {

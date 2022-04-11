@@ -175,7 +175,8 @@ function getTransactionType(event, symbol0, symbol1) {
 
 // @TODO rework into virtualized list
 function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
-  const flattedTransactions = aggregateGlobalTxns(transactions.filter(Boolean))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const aggregatedTransactions = useMemo(() => aggregateGlobalTxns(transactions.filter(Boolean)), [JSON.stringify(transactions)])
   const isShowNetworkColumn = transactions?.slice(1).some(Boolean)
   // page state
   const [page, setPage] = useState(1)
@@ -193,14 +194,14 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
     setMaxPage(1) // edit this to do modular
     setPage(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(flattedTransactions)])
+  }, [aggregatedTransactions])
 
   // parse the txns and format for UI
   useEffect(() => {
-    if (flattedTransactions && flattedTransactions.mints && flattedTransactions.burns && flattedTransactions.swaps) {
+    if (aggregatedTransactions && aggregatedTransactions.mints && aggregatedTransactions.burns && aggregatedTransactions.swaps) {
       let newTxns = []
-      if (flattedTransactions.mints?.length > 0) {
-        flattedTransactions.mints.forEach(mint => {
+      if (aggregatedTransactions.mints?.length > 0) {
+        aggregatedTransactions.mints.forEach(mint => {
           let newTxn = {}
           newTxn.hash = mint.transaction.id
           newTxn.timestamp = mint.transaction.timestamp
@@ -215,8 +216,8 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
           return newTxns.push(newTxn)
         })
       }
-      if (flattedTransactions.burns?.length > 0) {
-        flattedTransactions.burns.forEach(burn => {
+      if (aggregatedTransactions.burns?.length > 0) {
+        aggregatedTransactions.burns.forEach(burn => {
           let newTxn = {}
           newTxn.hash = burn.transaction.id
           newTxn.timestamp = burn.transaction.timestamp
@@ -231,8 +232,8 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
           return newTxns.push(newTxn)
         })
       }
-      if (flattedTransactions.swaps.length > 0) {
-        flattedTransactions.swaps.forEach(swap => {
+      if (aggregatedTransactions.swaps.length > 0) {
+        aggregatedTransactions.swaps.forEach(swap => {
           const netToken0 = swap.amount0In - swap.amount0Out
           const netToken1 = swap.amount1In - swap.amount1Out
 
@@ -279,7 +280,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(flattedTransactions), txFilter])
+  }, [aggregatedTransactions, txFilter])
 
   useEffect(() => {
     setPage(1)

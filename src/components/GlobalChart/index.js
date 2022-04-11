@@ -48,6 +48,7 @@ const GlobalChart = ({ display }) => {
   const chartDataFiltered = useMemo(() => {
     let currentDatas = volumeWindow === VOLUME_WINDOW.DAYS ? aggregatedDailyDatas : aggregatedWeeklyDatas
     return currentDatas.filter(item => item.date > utcStartTime)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(aggregatedDailyDatas), utcStartTime, volumeWindow, JSON.stringify(aggregatedWeeklyDatas)])
 
   // update the width on a window resize
