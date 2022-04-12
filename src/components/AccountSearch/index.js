@@ -16,6 +16,7 @@ import { X } from 'react-feather'
 import { NETWORK_INFOS } from '../../constants/networks'
 import { useNetworksInfo } from '../../contexts/NetworkInfo'
 import { BasicLink } from '../Link'
+import { RowFixed } from '../Row'
 
 const Input = styled.input`
   position: relative;
@@ -38,11 +39,22 @@ const Input = styled.input`
     font-size: 12px;
   }
 `
+const Wrapper = styled.div`
+  ${({ isWrap }) =>
+    isWrap
+      ? `
+  justify-content: space-between;
+  background-color: #3e4b51;
+  border-radius: 24px;
+  padding: 8px;
+  `
+      : ''}
+  color: #A7B6BD;
+`
 
 const AccountLink = styled.span`
-  display: flex;
   cursor: pointer;
-  color: ${({ theme }) => theme.primary};
+  ${({ isSmall, theme }) => !isSmall && `color: ${theme.primary};`}
   font-size: 14px;
   font-weight: 500;
 `
@@ -109,25 +121,31 @@ function AccountSearch({ history, small, shortenAddress }) {
             savedAccounts.map(account => {
               return (
                 <DashGrid key={account.address} center={true} style={{ height: 'fit-content', padding: '1rem 0 0 0' }}>
-                  <BasicLink to={'/' + NETWORK_INFOS[account.chainId]?.urlKey + '/account/' + account.address}>
-                    <Flex area='account' justifyContent='space-between'>
-                      <AccountLink>
-                        {shortenAddress || small
-                          ? `${account.address?.slice(0, 6) + '...' + account.address?.slice(38, 42)}`
-                          : account.address?.slice(0, 42)}
-                      </AccountLink>
-                      <Hover
-                        onClick={e => {
-                          e.stopPropagation()
-                          removeAccount(account.address, account.chainId)
-                        }}
-                      >
-                        <StyledIcon>
-                          <X size={16} />
-                        </StyledIcon>
-                      </Hover>
-                    </Flex>
-                  </BasicLink>
+                  <Flex area='account' justifyContent='space-between'>
+                    <Wrapper isWrap={small}>
+                      <BasicLink to={'/' + NETWORK_INFOS[account.chainId]?.urlKey + '/account/' + account.address}>
+                        <RowFixed>
+                          {small && <img src={NETWORK_INFOS[account.chainId].icon} width='16px' style={{ marginRight: '4px' }} />}
+                          <AccountLink isSmall={small}>
+                            {shortenAddress || small
+                              ? `${account.address?.slice(0, 6) + '...' + account.address?.slice(38, 42)}`
+                              : account.address?.slice(0, 42)}
+                          </AccountLink>
+                        </RowFixed>
+                      </BasicLink>
+                    </Wrapper>
+
+                    <Hover
+                      onClick={e => {
+                        e.stopPropagation()
+                        removeAccount(account.address, account.chainId)
+                      }}
+                    >
+                      <StyledIcon>
+                        <X size={16} />
+                      </StyledIcon>
+                    </Hover>
+                  </Flex>
                 </DashGrid>
               )
             })

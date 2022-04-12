@@ -37,6 +37,16 @@ const SavedButton = styled(RowBetween)`
   }
 `
 
+const Wrapper = styled.div`
+  justify-content: space-between;
+  background-color: #3e4b51;
+  border-radius: 24px;
+  padding: 8px;
+  * div {
+    color: #a7b6bd !important;
+  }
+`
+
 const ScrollableDiv = styled(AutoColumn)`
   overflow: auto;
   padding-bottom: 60px;
@@ -87,18 +97,20 @@ function PinnedData({ open, setSavedOpen }) {
                 const pair = savedPairs[address]
                 return (
                   <RowBetween key={pair.address}>
-                    <Link to={'/' + NETWORK_INFOS[pair.chainId].urlKey + '/pair/' + address}>
-                      <RowFixed>
-                        <img src={NETWORK_INFOS[pair.chainId].icon} width='16px' style={{ marginRight: '4px' }} />
-                        <TYPE.header>
-                          <FormattedName
-                            text={pair.token0Symbol + '/' + pair.token1Symbol}
-                            maxCharacters={12}
-                            fontSize={'12px'}
-                          />
-                        </TYPE.header>
-                      </RowFixed>
-                    </Link>
+                    <Wrapper>
+                      <Link to={'/' + NETWORK_INFOS[pair.chainId].urlKey + '/pair/' + address}>
+                        <RowFixed>
+                          <img src={NETWORK_INFOS[pair.chainId].icon} width='16px' style={{ marginRight: '4px' }} />
+                          <TYPE.header>
+                            <FormattedName
+                              text={pair.token0Symbol + '/' + pair.token1Symbol}
+                              maxCharacters={12}
+                              fontSize={'12px'}
+                            />
+                          </TYPE.header>
+                        </RowFixed>
+                      </Link>
+                    </Wrapper>
                     <Hover onClick={() => removePair(pair.address)}>
                       <StyledIcon>
                         <X size={16} />
@@ -125,14 +137,16 @@ function PinnedData({ open, setSavedOpen }) {
                 const pool = savedPools[address]
                 return (
                   <RowBetween key={pool.address}>
-                    <Link to={'/' + NETWORK_INFOS[pool.chainId].urlKey + '/pool/' + pool.address}>
-                      <RowFixed>
-                        <img src={NETWORK_INFOS[pool.chainId].icon} width='16px' style={{ marginRight: '4px' }} />
-                        <TYPE.header>
-                          <FormattedName text={shortenAddress(pool.address, 3)} maxCharacters={12} fontSize={'12px'} />
-                        </TYPE.header>
-                      </RowFixed>
-                    </Link>
+                    <Wrapper>
+                      <Link to={'/' + NETWORK_INFOS[pool.chainId].urlKey + '/pool/' + pool.address}>
+                        <RowFixed>
+                          <img src={NETWORK_INFOS[pool.chainId].icon} width='16px' style={{ marginRight: '4px' }} />
+                          <TYPE.header>
+                            <FormattedName text={shortenAddress(pool.address, 3)} maxCharacters={12} fontSize={'12px'} />
+                          </TYPE.header>
+                        </RowFixed>
+                      </Link>
+                    </Wrapper>
                     <Hover onClick={() => removePool(pool.address)}>
                       <StyledIcon>
                         <X size={16} />
@@ -159,14 +173,16 @@ function PinnedData({ open, setSavedOpen }) {
                 const token = savedTokens[address]
                 return (
                   <RowBetween key={address}>
-                    <Link to={'/' + NETWORK_INFOS[token.chainId].urlKey + '/token/' + address}>
-                      <RowFixed>
-                        <img src={NETWORK_INFOS[token.chainId].icon} width='16px' style={{ marginRight: '4px' }} />
-                        <TYPE.header ml={'6px'}>
-                          <FormattedName text={token.symbol} maxCharacters={12} fontSize={'12px'} />
-                        </TYPE.header>
-                      </RowFixed>
-                    </Link>
+                    <Wrapper>
+                      <Link to={'/' + NETWORK_INFOS[token.chainId].urlKey + '/token/' + address}>
+                        <RowFixed>
+                          <img src={NETWORK_INFOS[token.chainId].icon} width='16px' style={{ marginRight: '4px' }} />
+                          <TYPE.header ml={'6px'}>
+                            <FormattedName text={token.symbol} maxCharacters={12} fontSize={'12px'} />
+                          </TYPE.header>
+                        </RowFixed>
+                      </Link>
+                    </Wrapper>
                     <Hover onClick={() => removeToken(address)}>
                       <StyledIcon>
                         <X size={16} />
