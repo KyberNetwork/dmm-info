@@ -137,7 +137,7 @@ const FIELD_TO_VALUE = (field, useTracked = false) => {
     case SORT_FIELD.VOL_7DAYS:
       return useTracked ? 'oneWeekVolumeUSD' : 'oneWeekVolumeUntracked'
     case SORT_FIELD.FEES:
-      return useTracked ? 'oneDayVolumeUSD' : 'oneDayVolumeUntracked'
+      return useTracked ? 'oneDayFeeUSD' : 'oneDayFeeUntracked'
     default:
       return 'reserveUSD'
   }
@@ -250,7 +250,7 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
           const apy1 = getApr(pairB)
           return apy0 > apy1 ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
         }
-        return parseFloat(pairA[FIELD_TO_VALUE(sortedColumn)]) > parseFloat(pairB[FIELD_TO_VALUE(sortedColumn)])
+        return parseFloat(pairA[FIELD_TO_VALUE(sortedColumn, true)]) > parseFloat(pairB[FIELD_TO_VALUE(sortedColumn, true)])
           ? (sortDirection ? -1 : 1) * 1
           : (sortDirection ? -1 : 1) * -1
       })
