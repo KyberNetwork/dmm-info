@@ -11,6 +11,7 @@ import { RowFixed, RowBetween } from '../Row'
 import LocalLoader from '../LocalLoader'
 import { Box, Flex, Text } from 'rebass'
 import Link from '../Link'
+import { Link as RouterLink } from 'react-router-dom'
 import { Divider, EmptyCard } from '..'
 import DropdownSelect from '../DropdownSelect'
 import FormattedName from '../FormattedName'
@@ -321,9 +322,9 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
         </DataText>
         {isShowNetworkColumn && (
           <DataText area='network'>
-            <Link to={'/' + NETWORK_INFOS[item.chainId].urlKey}>
+            <RouterLink to={'/' + NETWORK_INFOS[item.chainId].urlKey}>
               <img src={NETWORK_INFOS[item.chainId].icon} width={25} />
-            </Link>
+            </RouterLink>
           </DataText>
         )}
         <DataText area='value'>
