@@ -100,15 +100,17 @@ function BottomBar() {
 
       {menuModalOpen && (
         <MenuFlyout>
-          (currentNetworkURL && (
-          <BasicLink to={prefixNetworkURL + '/accounts'} onClick={() => toggleMenuModal()}>
-            <Flex color={theme.subText} alignItems='center'>
-              <Wallet />
-              <Text marginLeft='8px'> Wallet Analytics</Text>
-            </Flex>
-          </BasicLink>
-          ))
-          <Divider />
+          {currentNetworkURL && (
+            <>
+              <BasicLink to={prefixNetworkURL + '/accounts'} onClick={() => toggleMenuModal()}>
+                <Flex color={theme.subText} alignItems='center'>
+                  <Wallet />
+                  <Text marginLeft='8px'> Wallet Analytics</Text>
+                </Flex>
+              </BasicLink>
+              <Divider />
+            </>
+          )}
           <Link href={networksInfo[0].dmmSwapUrl} external onClick={() => toggleMenuModal()}>
             <Flex color={theme.subText} alignItems='center'>
               <Repeat size={16} />
