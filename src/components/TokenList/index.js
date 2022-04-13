@@ -17,7 +17,7 @@ import FormattedName from '../FormattedName'
 import { TYPE } from '../../Theme'
 import LocalLoader from '../LocalLoader'
 import { useAllTokenData } from '../../contexts/TokenData'
-import { ChainId, NETWORK_INFOS } from '../../constants/networks'
+import { NETWORK_INFOS } from '../../constants/networks'
 import { aggregateTokens } from '../../utils/aggregateData'
 import { MouseoverTooltip } from '../Tooltip'
 

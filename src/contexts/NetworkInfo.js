@@ -5,11 +5,6 @@ const UPDATE_CHAIN = 'UPDATE_CHAIN'
 export const NetworksInfoEnv = process.env.REACT_APP_SUPPORT_CHAINS_ID.split(',').map(
   supportChainId => NETWORK_INFOS[supportChainId]
 )
-console.log('🚀 ---------------------------------------------')
-console.log('🚀 ~ NetworksInfoEnv', NetworksInfoEnv)
-console.log('🚀 ---------------------------------------------')
-
-// const INITIAL_STATE = {}
 const INITIAL_STATE = {
   networksInfo: [NetworksInfoEnv[0]],
 }
