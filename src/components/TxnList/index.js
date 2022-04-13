@@ -19,6 +19,7 @@ import { TYPE } from '../../Theme'
 import useTheme from '../../hooks/useTheme'
 import { NETWORK_INFOS } from '../../constants/networks'
 import { aggregateGlobalTxns } from '../../utils/aggregateData'
+import { MouseoverTooltip } from '../Tooltip'
 
 dayjs.extend(utc)
 
@@ -291,9 +292,16 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
     filteredItems &&
     filteredItems
       .sort((a, b) => {
-        return parseFloat(a[sortedColumn]) > parseFloat(b[sortedColumn])
-          ? (sortDirection ? -1 : 1) * 1
-          : (sortDirection ? -1 : 1) * -1
+        let valueToCompareA = null
+        let valueToCompareB = null
+        if (sortedColumn === SORT_FIELD.NETWORK) {
+          valueToCompareA = NETWORK_INFOS[a.chainId].name
+          valueToCompareB = NETWORK_INFOS[b.chainId].name
+        } else {
+          valueToCompareA = parseFloat(a[sortedColumn])
+          valueToCompareB = parseFloat(b[sortedColumn])
+        }
+        return valueToCompareA > valueToCompareB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
       })
       .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
 
@@ -323,7 +331,9 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
         {isShowNetworkColumn && (
           <DataText area='network'>
             <RouterLink to={'/' + NETWORK_INFOS[item.chainId].urlKey}>
-              <img src={NETWORK_INFOS[item.chainId].icon} width={25} />
+              <MouseoverTooltip text={NETWORK_INFOS[item.chainId].name} width='unset'>
+                <img src={NETWORK_INFOS[item.chainId].icon} width={25} />
+              </MouseoverTooltip>
             </RouterLink>
           </DataText>
         )}

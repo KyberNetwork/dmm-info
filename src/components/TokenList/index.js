@@ -19,6 +19,7 @@ import LocalLoader from '../LocalLoader'
 import { useAllTokenData } from '../../contexts/TokenData'
 import { NETWORK_INFOS } from '../../constants/networks'
 import { aggregateTokens } from '../../utils/aggregateData'
+import { MouseoverTooltip } from '../Tooltip'
 
 dayjs.extend(utc)
 
@@ -193,12 +194,19 @@ function TopTokenList({ itemMax = 5 }) {
       formattedTokens &&
       formattedTokens
         .sort((a, b) => {
-          if (sortedColumn === SORT_FIELD.SYMBOL || sortedColumn === SORT_FIELD.NAME || sortedColumn === SORT_FIELD.NETWORK) {
-            return a[sortedColumn] > b[sortedColumn] ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
+          let valueToCompareA = null
+          let valueToCompareB = null
+          if (sortedColumn === SORT_FIELD.SYMBOL || sortedColumn === SORT_FIELD.NAME) {
+            valueToCompareA = a[sortedColumn]
+            valueToCompareB = b[sortedColumn]
+          } else if (sortedColumn === SORT_FIELD.NETWORK) {
+            valueToCompareA = NETWORK_INFOS[a.chainId].name
+            valueToCompareB = NETWORK_INFOS[b.chainId].name
+          } else {
+            valueToCompareA = parseFloat(a[sortedColumn])
+            valueToCompareB = parseFloat(b[sortedColumn])
           }
-          return parseFloat(a[sortedColumn]) > parseFloat(b[sortedColumn])
-            ? (sortDirection ? -1 : 1) * 1
-            : (sortDirection ? -1 : 1) * -1
+          return valueToCompareA > valueToCompareB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
         })
         .slice(itemMax * (page - 1), page * itemMax)
     )
@@ -227,7 +235,9 @@ function TopTokenList({ itemMax = 5 }) {
         {isShowNetworkColumn && (
           <DataText area='network'>
             <Link to={'/' + NETWORK_INFOS[item.chainId].urlKey}>
-              <img src={NETWORK_INFOS[item.chainId].icon} width={25} />
+              <MouseoverTooltip text={NETWORK_INFOS[item.chainId].name} width='unset'>
+                <img src={NETWORK_INFOS[item.chainId].icon} width={25} />
+              </MouseoverTooltip>
             </Link>
           </DataText>
         )}

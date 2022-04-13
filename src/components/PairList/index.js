@@ -18,6 +18,7 @@ import { MAX_ALLOW_APY } from '../../constants'
 import useTheme from '../../hooks/useTheme'
 import { NETWORK_INFOS } from '../../constants/networks'
 import { aggregatePairs } from '../../utils/aggregateData'
+import { MouseoverTooltip } from '../Tooltip'
 
 dayjs.extend(utc)
 
@@ -55,7 +56,6 @@ const DashGrid = styled.div`
     :first-child {
       justify-content: flex-start;
       text-align: left;
-      width: 20px;
     }
 
     &:nth-child(2) {
@@ -124,6 +124,7 @@ const SORT_FIELD = {
   VOL_7DAYS: 3,
   FEES: 4,
   APY: 5,
+  NAME: 6,
 }
 
 const FIELD_TO_VALUE = (field, useTracked = false) => {
@@ -216,7 +217,9 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
           {isShowNetworkColumn && (
             <DataText area='network'>
               <Link to={'/' + NETWORK_INFOS[pairData.chainId].urlKey}>
-                <img src={NETWORK_INFOS[pairData.chainId].icon} width={25} />
+                <MouseoverTooltip text={NETWORK_INFOS[pairData.chainId].name} width='unset'>
+                  <img src={NETWORK_INFOS[pairData.chainId].icon} width={25} />
+                </MouseoverTooltip>
               </Link>
             </DataText>
           )}
@@ -238,6 +241,8 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
       .sort((addressA, addressB) => {
         const pairA = aggregatedPairs[addressA]
         const pairB = aggregatedPairs[addressB]
+        let valueToCompareA = null
+        let valueToCompareB = null
         if (sortedColumn === SORT_FIELD.APY) {
           const getApr = pairData => {
             const liquidity = pairData.reserveUSD ? pairData.reserveUSD : pairData.trackedReserveUSD
@@ -246,13 +251,19 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
             return apy
           }
 
-          const apy0 = getApr(pairA)
-          const apy1 = getApr(pairB)
-          return apy0 > apy1 ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
+          valueToCompareA = getApr(pairA)
+          valueToCompareB = getApr(pairB)
+        } else if (sortedColumn === SORT_FIELD.NETWORK) {
+          valueToCompareA = NETWORK_INFOS[pairA.chainId].name
+          valueToCompareB = NETWORK_INFOS[pairB.chainId].name
+        } else if (sortedColumn === SORT_FIELD.NAME) {
+          valueToCompareA = pairA.token0.symbol + '-' + pairA.token1.symbol
+          valueToCompareB = pairB.token0.symbol + '-' + pairB.token1.symbol
+        } else {
+          valueToCompareA = parseFloat(pairA[FIELD_TO_VALUE(sortedColumn, true)])
+          valueToCompareB = parseFloat(pairB[FIELD_TO_VALUE(sortedColumn, true)])
         }
-        return parseFloat(pairA[FIELD_TO_VALUE(sortedColumn, true)]) > parseFloat(pairB[FIELD_TO_VALUE(sortedColumn, true)])
-          ? (sortDirection ? -1 : 1) * 1
-          : (sortDirection ? -1 : 1) * -1
+        return valueToCompareA > valueToCompareB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
       })
       .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
       .map((pairAddress, index) => {
@@ -277,9 +288,15 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
         isShowNetworkColumn={isShowNetworkColumn}
       >
         <Flex alignItems='center' justifyContent='flexStart'>
-          <Text fontWeight='500' fontSize='12px' color={theme.subText}>
-            NAME
-          </Text>
+          <ClickableText
+            area='name'
+            onClick={e => {
+              setSortedColumn(SORT_FIELD.NAME)
+              setSortDirection(prev => (sortedColumn !== SORT_FIELD.NAME ? true : !prev))
+            }}
+          >
+            NAME {sortedColumn === SORT_FIELD.NAME ? (!sortDirection ? '↑' : '↓') : ''}
+          </ClickableText>
         </Flex>
         {isShowNetworkColumn && (
           <Flex alignItems='center' justifyContent='center'>
