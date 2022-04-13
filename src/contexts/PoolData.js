@@ -463,7 +463,7 @@ const getHourlyRateData = async (client, poolAddress, startTime, latestBlock, fr
 
 export function Updater() {
   const exchangeSubgraphClient = useExchangeClients()
-  const [, { updateTopPools }] = usePoolDataContext()
+  const [state, { updateTopPools }] = usePoolDataContext()
   const [ethPrice] = useEthPrice()
   const [networksInfo] = useNetworksInfo()
 
@@ -478,10 +478,8 @@ export function Updater() {
       })
 
       // format as array of addresses
-      const formattedPools = pools.map(pool => {
-        return pool.id
-      })
-
+      const formattedPools = pools.map(pool => pool.id).filter(poolId => !state[networksInfo[index].chainId]?.[poolId])
+      if (!formattedPools.length) return
       // get data for every pool in list
       let topPools = await getBulkPoolData(exchangeSubgraphClient[index], formattedPools, ethPrice[index], networksInfo[index])
       topPools?.forEach(topPool => (topPool.chainId = networksInfo[index].chainId))
@@ -489,7 +487,7 @@ export function Updater() {
     }
     networksInfo.forEach((networkInfo, index) => {
       if (ethPrice[index]) {
-        memoRequest(() => getData(index), 'UpdaterPoolData_' + networkInfo.chainId + '_' + ethPrice[index], 30000)
+        memoRequest(() => getData(index), 'UpdaterPoolData_' + networkInfo.chainId + '_' + ethPrice[index], 10000)
       }
     })
   }, [ethPrice, updateTopPools, exchangeSubgraphClient, networksInfo])

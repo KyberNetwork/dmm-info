@@ -583,12 +583,13 @@ const getTokenChartData = async (client, tokenAddress) => {
 
 export function Updater() {
   const exchangeSubgraphClient = useExchangeClients()
-  const [, { updateTopTokens }] = useTokenDataContext()
+  const [state, { updateTopTokens }] = useTokenDataContext()
   const [ethPrice, ethPriceOld] = useEthPrice()
   const [networksInfo] = useNetworksInfo()
 
   useEffect(() => {
     async function getData(index) {
+      if (state[networksInfo[index].chainId] && Object.keys(state[networksInfo[index].chainId]).length > 10) return
       // get top pairs for overview list
       let topTokens = await getTopTokens(exchangeSubgraphClient[index], ethPrice[index], ethPriceOld[index], networksInfo[index])
       topTokens?.forEach(topToken => (topToken.chainId = networksInfo[index].chainId))

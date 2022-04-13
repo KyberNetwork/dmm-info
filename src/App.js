@@ -23,10 +23,6 @@ import useTheme from './hooks/useTheme'
 import BottomBar from './components/BottomBar'
 import KyberSwapAnounce from './components/KyberSwapAnnounce'
 import { NetworksInfoEnv, useNetworksInfo } from './contexts/NetworkInfo'
-import { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
-import { Updater as TokenDataContextUpdater } from './contexts/TokenData'
-import { Updater as PairDataContextUpdater } from './contexts/PairData'
-import { Updater as PoolDataContextUpdater } from './contexts/PoolData'
 import { ChainId } from './constants/networks'
 
 const AppWrapper = styled.div`
@@ -103,17 +99,6 @@ const Marginer = styled.div`
   margin-top: 3rem;
 `
 
-function Updaters() {
-  return (
-    <>
-      <LocalStorageContextUpdater />
-      <PairDataContextUpdater />
-      <PoolDataContextUpdater />
-      <TokenDataContextUpdater />
-    </>
-  )
-}
-
 function AppLogicWrapper(props) {
   const theme = useTheme()
   const [networksInfo] = useNetworksInfo()
@@ -189,7 +174,6 @@ const LayoutWrapper = props => {
   if (currentNetworkURL && !networkInfoFromURL) return <Redirect to='/home' />
   return (
     <AppLogicWrapper>
-      <Updaters />
       <KyberSwapAnounce />
       <ContentWrapper open={props.savedOpen}>
         <SideNav />

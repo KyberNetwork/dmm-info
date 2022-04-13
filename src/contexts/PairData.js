@@ -479,7 +479,7 @@ const getRateData = async (client, pairAddress, startTime, latestBlock, networkI
 
 export function Updater() {
   const exchangeSubgraphClient = useExchangeClients()
-  const [, { updateTopPairs }] = usePairDataContext()
+  const [state, { updateTopPairs }] = usePairDataContext()
   const [ethPrice] = useEthPrice()
   const [networksInfo] = useNetworksInfo()
 
@@ -494,8 +494,8 @@ export function Updater() {
       })
 
       // format as array of addresses
-      const formattedPairs = pairs.map(pair => pair.id)
-
+      const formattedPairs = pairs.map(pair => pair.id).filter(pairId => !state[networksInfo[index].chainId]?.[pairId])
+      if (!formattedPairs.length) return
       // get data for every pair in list
       let topPairs = await getBulkPairData(exchangeSubgraphClient[index], formattedPairs, ethPrice[index], networksInfo[index])
       topPairs?.forEach(topPair => (topPair.chainId = networksInfo[index].chainId))
@@ -506,7 +506,7 @@ export function Updater() {
         memoRequest(() => getData(index), 'UpdaterPairData_' + networkInfo.chainId + '_' + ethPrice[index], 10000)
       }
     })
-  }, [ethPrice, updateTopPairs, exchangeSubgraphClient, networksInfo])
+  }, [ethPrice, updateTopPairs, exchangeSubgraphClient, networksInfo, state])
   return null
 }
 
