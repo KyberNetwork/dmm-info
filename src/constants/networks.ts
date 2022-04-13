@@ -321,7 +321,7 @@ export const NETWORK_INFOS: { [key in ChainId]: NETWORK_INFO } = {
     dmmSwapUrl: 'https://kyberswap.com/#/',
     factoryAddress: '0x51e8d106c646ca58caf32a47812e95887c071a62',
     subgraphName: 'viet-nv/kyberswap-arbitrum',
-    subgraphUrls: ['https://api.thegraph.com/subgraphs/name/viet-nv/kyberswap-arbitrum'],
+    subgraphUrls: ['https://arbitrum-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-arbitrum'],
     subgraphBlockUrl: 'https://api.thegraph.com/subgraphs/name/viet-nv/arbitrum-blocks',
     etherscanUrl: 'https://arbiscan.io',
     kncAddress: '0x868fc5cb3367c4a43c350b85d5001acaf58a857e',
