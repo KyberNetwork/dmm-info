@@ -83,6 +83,14 @@ const BTTC_TOKEN_ARRAY = [
   },
   {
     chainId: 199,
+    address: '0xE887512ab8BC60BcC9224e1c3b5Be68E26048B8B',
+    symbol: 'USDT_e',
+    name: 'Tether USD_Ethereum',
+    decimals: 6,
+    logoURI: 'https://coin.top/production/logo/usdtlogo.png',
+  },
+  {
+    chainId: 199,
     address: '0xcBb9EDF6775e39748Ea6483A7fa6a385Cd7E9a4E',
     symbol: 'BTT_b',
     name: 'BitTorrent_BSC',

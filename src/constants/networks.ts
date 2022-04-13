@@ -361,7 +361,7 @@ export const NETWORK_INFOS: { [key in ChainId]: NETWORK_INFO } = {
     dmmSwapUrl: 'https://kyberswap.com/#/',
     factoryAddress: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
     subgraphName: 'dynamic-amm/kyberswap-bttc',
-    subgraphUrls: ['https://bttc-graph.dev.kyberengineering.io/subgraphs/name/dynamic-amm/kyberswap-bttc'],
+    subgraphUrls: ['https://bttc-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-bttc'],
     subgraphBlockUrl: 'https://bttc-graph.dev.kyberengineering.io/subgraphs/name/dynamic-amm/bttc-blocks',
     etherscanUrl: 'https://bttcscan.com',
     kncAddress: '0x868fc5cb3367c4a43c350b85d5001acaf58a857e',
