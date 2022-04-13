@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -192,12 +192,6 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
 
   const [currency] = useCurrentCurrency()
 
-  useEffect(() => {
-    setMaxPage(1) // edit this to do modular
-    setPage(1)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [aggregatedTransactions])
-
   // parse the txns and format for UI
   useEffect(() => {
     if (aggregatedTransactions && aggregatedTransactions.mints && aggregatedTransactions.burns && aggregatedTransactions.swaps) {
@@ -300,6 +294,15 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
         } else {
           valueToCompareA = parseFloat(a[sortedColumn])
           valueToCompareB = parseFloat(b[sortedColumn])
+        }
+        if (valueToCompareA == valueToCompareB) {
+          if (a.timestamp == b.timestamp) {
+            if (a.amountUSD == b.amountUSD) {
+              return a.hash < b.hash ? 1 : -1
+            }
+            return a.amountUSD < b.amountUSD ? 1 : -1
+          }
+          return a.timestamp < b.timestamp ? 1 : -1
         }
         return valueToCompareA > valueToCompareB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
       })

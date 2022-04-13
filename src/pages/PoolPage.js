@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import 'feather-icons'
 import { transparentize } from 'polished'
@@ -26,7 +26,15 @@ import { usePoolData, usePoolTransactions } from '../contexts/PoolData'
 import { useEthPrice } from '../contexts/GlobalData'
 import { usePathDismissed, useSavedPools } from '../contexts/LocalStorage'
 import { useListedTokens } from '../contexts/Application'
-import { formattedNum, formattedPercent, formattedTokenRatio, getPoolLink, getSwapLink, shortenAddress } from '../utils'
+import {
+  formattedNum,
+  formattedPercent,
+  formattedTokenRatio,
+  getEtherScanUrls,
+  getPoolLink,
+  getSwapLink,
+  shortenAddress,
+} from '../utils'
 import bookMark from '../assets/bookmark.svg'
 import bookMarkOutline from '../assets/bookmark_outline.svg'
 import useTheme from '../hooks/useTheme'
@@ -215,6 +223,7 @@ function PoolPage({ poolAddress, history }) {
   const [savedPools, addPool, removePool] = useSavedPools()
 
   const listedTokens = useListedTokens()
+  const urls = useMemo(() => getEtherScanUrls(networkInfo), [networkInfo])
 
   return (
     <PageWrapper>
@@ -621,7 +630,7 @@ function PoolPage({ poolAddress, history }) {
                       <CopyHelper toCopy={token1?.id} />
                     </AutoRow>
                   </Column>
-                  <Link external href={`${networkInfo.etherscanUrl}/address/${poolAddress}`}>
+                  <Link external href={urls.showAddress(poolAddress)}>
                     <ButtonDark color={backgroundColor} style={{ padding: '11px 22px' }}>
                       View on {networkInfo.etherscanLinkText} ↗
                     </ButtonDark>

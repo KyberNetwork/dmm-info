@@ -17,7 +17,7 @@ import FormattedName from '../FormattedName'
 import { TYPE } from '../../Theme'
 import LocalLoader from '../LocalLoader'
 import { useAllTokenData } from '../../contexts/TokenData'
-import { NETWORK_INFOS } from '../../constants/networks'
+import { ChainId, NETWORK_INFOS } from '../../constants/networks'
 import { aggregateTokens } from '../../utils/aggregateData'
 import { MouseoverTooltip } from '../Tooltip'
 
@@ -159,11 +159,6 @@ function TopTokenList({ itemMax = 5 }) {
   const below680 = useMedia('(max-width: 680px)')
   const below600 = useMedia('(max-width: 600px)')
 
-  useEffect(() => {
-    setMaxPage(1) // edit this to do modular
-    setPage(1)
-  }, [aggregatedTokens])
-
   const formattedTokens = useMemo(() => {
     return (
       aggregatedTokens &&
@@ -197,20 +192,28 @@ function TopTokenList({ itemMax = 5 }) {
           let valueToCompareA = null
           let valueToCompareB = null
           if (sortedColumn === SORT_FIELD.SYMBOL || sortedColumn === SORT_FIELD.NAME) {
-            valueToCompareA = a[sortedColumn]
-            valueToCompareB = b[sortedColumn]
+            //reverse order
+            valueToCompareB = a[sortedColumn].toLowerCase()
+            valueToCompareA = b[sortedColumn].toLowerCase()
           } else if (sortedColumn === SORT_FIELD.NETWORK) {
-            valueToCompareA = NETWORK_INFOS[a.chainId].name
-            valueToCompareB = NETWORK_INFOS[b.chainId].name
+            //reverse order
+            valueToCompareB = NETWORK_INFOS[a.chainId].name
+            valueToCompareA = NETWORK_INFOS[b.chainId].name
           } else {
             valueToCompareA = parseFloat(a[sortedColumn])
             valueToCompareB = parseFloat(b[sortedColumn])
+          }
+          if (valueToCompareA == valueToCompareB) {
+            if (a.totalLiquidityUSD == b.totalLiquidityUSD) {
+              return (below680 ? a.symbol : a.name).toLowerCase() > (below680 ? b.symbol : b.name).toLowerCase() ? 1 : -1
+            }
+            return a.totalLiquidityUSD < b.totalLiquidityUSD ? 1 : -1
           }
           return valueToCompareA > valueToCompareB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
         })
         .slice(itemMax * (page - 1), page * itemMax)
     )
-  }, [formattedTokens, itemMax, page, sortDirection, sortedColumn])
+  }, [below680, formattedTokens, itemMax, page, sortDirection, sortedColumn])
 
   const ListItem = ({ item, index }) => {
     return (

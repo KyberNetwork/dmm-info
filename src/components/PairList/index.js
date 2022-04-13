@@ -117,30 +117,30 @@ const DataText = styled(Flex)`
   }
 `
 
-const SORT_FIELD = {
-  LIQ: 0,
-  VOL: 1,
+const FIELDS = {
+  LIQ: 'liquidity',
+  VOL: 'volume',
   NETWORK: 2,
-  VOL_7DAYS: 3,
-  FEES: 4,
-  APY: 5,
-  NAME: 6,
+  VOL_7DAYS: 'weekVolume',
+  FEES: 'oneDayFee',
+  APY: 'apy',
+  NAME: 'name',
 }
 
-const FIELD_TO_VALUE = (field, useTracked = false) => {
-  switch (field) {
-    case SORT_FIELD.NETWORK:
-      return useTracked ? 'chainId' : 'chainId'
-    case SORT_FIELD.LIQ:
-      return useTracked ? 'trackedReserveUSD' : 'reserveUSD'
-    case SORT_FIELD.VOL:
-      return useTracked ? 'oneDayVolumeUSD' : 'oneDayVolumeUntracked'
-    case SORT_FIELD.VOL_7DAYS:
-      return useTracked ? 'oneWeekVolumeUSD' : 'oneWeekVolumeUntracked'
-    case SORT_FIELD.FEES:
-      return useTracked ? 'oneDayFeeUSD' : 'oneDayFeeUntracked'
-    default:
-      return 'reserveUSD'
+const MAP_SHOW_DATA = pairData => {
+  const liquidity = pairData.reserveUSD || pairData.trackedReserveUSD
+  const volume = pairData.oneDayVolumeUSD || pairData.oneDayVolumeUntracked
+  const weekVolume = pairData.oneWeekVolumeUSD || pairData.oneWeekVolumeUntracked
+  const oneDayFee = pairData.oneDayFeeUSD || pairData.oneDayFeeUntracked
+  const apy = (oneDayFee * 365 * 100) / liquidity < MAX_ALLOW_APY ? (oneDayFee * 365 * 100) / liquidity : 0
+  const name = pairData.token0.symbol + '-' + pairData.token1.symbol
+  return {
+    [FIELDS.LIQ]: liquidity,
+    [FIELDS.VOL]: volume,
+    [FIELDS.VOL_7DAYS]: weekVolume,
+    [FIELDS.FEES]: oneDayFee,
+    [FIELDS.APY]: apy,
+    [FIELDS.NAME]: name,
   }
 }
 
@@ -159,12 +159,7 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
 
   // sorting
   const [sortDirection, setSortDirection] = useState(true)
-  const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.LIQ)
-
-  useEffect(() => {
-    setMaxPage(1) // edit this to do modular
-    setPage(1)
-  }, [aggregatedPairs])
+  const [sortedColumn, setSortedColumn] = useState(FIELDS.LIQ)
 
   useEffect(() => {
     if (aggregatedPairs) {
@@ -180,15 +175,7 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
     const pairData = aggregatedPairs[pairAddress]
 
     if (pairData && pairData.token0 && pairData.token1) {
-      const volume = pairData.oneDayVolumeUSD ? pairData.oneDayVolumeUSD : pairData.oneDayVolumeUntracked
-
-      const liquidity = pairData.reserveUSD ? pairData.reserveUSD : pairData.trackedReserveUSD
-      const oneDayFee = pairData.oneDayFeeUSD ? pairData.oneDayFeeUSD : pairData.oneDayFeeUntracked
-
-      const apy =
-        (oneDayFee * 365 * 100) / liquidity < MAX_ALLOW_APY ? formattedPercent((oneDayFee * 365 * 100) / liquidity) : '--'
-
-      const weekVolume = pairData.oneWeekVolumeUSD ? pairData.oneWeekVolumeUSD : pairData.oneWeekVolumeUntracked
+      const showData = MAP_SHOW_DATA(pairData)
 
       return (
         <DashGrid style={{ height: '56px' }} disbaleLinks={disbaleLinks} focus={true} isShowNetworkColumn={isShowNetworkColumn}>
@@ -206,12 +193,7 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
               to={'/' + NETWORK_INFOS[pairData.chainId].urlKey + '/pair/' + pairAddress}
               color={color}
             >
-              <FormattedName
-                text={pairData.token0.symbol + '-' + pairData.token1.symbol}
-                maxCharacters={below600 ? 8 : 16}
-                adjustSize={true}
-                link={true}
-              />
+              <FormattedName text={showData.name} maxCharacters={below600 ? 8 : 16} adjustSize={true} link={true} />
             </CustomLink>
           </DataText>
           {isShowNetworkColumn && (
@@ -223,11 +205,11 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
               </Link>
             </DataText>
           )}
-          <DataText area='liq'>{formattedNum(liquidity, true)}</DataText>
-          <DataText area='vol'>{formattedNum(volume, true)}</DataText>
-          {!below740 && <DataText area='volWeek'>{formattedNum(weekVolume, true)}</DataText>}
-          {!below1080 && <DataText area='fees'>{formattedNum(oneDayFee, true)}</DataText>}
-          {!below740 && <DataText area='apy'>{apy}</DataText>}
+          <DataText area='liq'>{formattedNum(showData.liquidity, true)}</DataText>
+          <DataText area='vol'>{formattedNum(showData.volume, true)}</DataText>
+          {!below740 && <DataText area='volWeek'>{formattedNum(showData.weekVolume, true)}</DataText>}
+          {!below1080 && <DataText area='fees'>{formattedNum(showData.oneDayFee, true)}</DataText>}
+          {!below740 && <DataText area='apy'>{showData.apy ? formattedPercent(showData.apy) : '--'}</DataText>}
         </DashGrid>
       )
     } else {
@@ -243,25 +225,23 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
         const pairB = aggregatedPairs[addressB]
         let valueToCompareA = null
         let valueToCompareB = null
-        if (sortedColumn === SORT_FIELD.APY) {
-          const getApr = pairData => {
-            const liquidity = pairData.reserveUSD ? pairData.reserveUSD : pairData.trackedReserveUSD
-            const oneDayFee = pairData.oneDayFeeUSD ? pairData.oneDayFeeUSD : pairData.oneDayFeeUntracked
-            const apy = (oneDayFee * 365 * 100) / liquidity < MAX_ALLOW_APY ? (oneDayFee * 365 * 100) / liquidity : 0
-            return apy
+        if (sortedColumn == FIELDS.NAME) {
+          //reverse order
+          valueToCompareB = MAP_SHOW_DATA(pairA)[sortedColumn]
+          valueToCompareA = MAP_SHOW_DATA(pairB)[sortedColumn]
+        } else if ([FIELDS.APY, FIELDS.FEES, FIELDS.LIQ, FIELDS.VOL, FIELDS.VOL_7DAYS].includes(sortedColumn)) {
+          valueToCompareA = parseFloat(MAP_SHOW_DATA(pairA)[sortedColumn])
+          valueToCompareB = parseFloat(MAP_SHOW_DATA(pairB)[sortedColumn])
+        } else if (sortedColumn === FIELDS.NETWORK) {
+          //reverse order
+          valueToCompareB = NETWORK_INFOS[pairA.chainId].name
+          valueToCompareA = NETWORK_INFOS[pairB.chainId].name
+        }
+        if (valueToCompareA == valueToCompareB) {
+          if (parseFloat(MAP_SHOW_DATA(pairA)[FIELDS.LIQ]) == parseFloat(MAP_SHOW_DATA(pairB)[FIELDS.LIQ])) {
+            return MAP_SHOW_DATA(pairA)[FIELDS.NAME] > MAP_SHOW_DATA(pairB)[FIELDS.NAME] ? 1 : -1
           }
-
-          valueToCompareA = getApr(pairA)
-          valueToCompareB = getApr(pairB)
-        } else if (sortedColumn === SORT_FIELD.NETWORK) {
-          valueToCompareA = NETWORK_INFOS[pairA.chainId].name
-          valueToCompareB = NETWORK_INFOS[pairB.chainId].name
-        } else if (sortedColumn === SORT_FIELD.NAME) {
-          valueToCompareA = pairA.token0.symbol + '-' + pairA.token1.symbol
-          valueToCompareB = pairB.token0.symbol + '-' + pairB.token1.symbol
-        } else {
-          valueToCompareA = parseFloat(pairA[FIELD_TO_VALUE(sortedColumn, true)])
-          valueToCompareB = parseFloat(pairB[FIELD_TO_VALUE(sortedColumn, true)])
+          return parseFloat(MAP_SHOW_DATA(pairA)[FIELDS.LIQ]) < parseFloat(MAP_SHOW_DATA(pairB)[FIELDS.LIQ]) ? 1 : -1
         }
         return valueToCompareA > valueToCompareB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
       })
@@ -291,11 +271,11 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
           <ClickableText
             area='name'
             onClick={e => {
-              setSortedColumn(SORT_FIELD.NAME)
-              setSortDirection(prev => (sortedColumn !== SORT_FIELD.NAME ? true : !prev))
+              setSortedColumn(FIELDS.NAME)
+              setSortDirection(prev => (sortedColumn !== FIELDS.NAME ? true : !prev))
             }}
           >
-            NAME {sortedColumn === SORT_FIELD.NAME ? (!sortDirection ? '↑' : '↓') : ''}
+            NAME {sortedColumn === FIELDS.NAME ? (!sortDirection ? '↑' : '↓') : ''}
           </ClickableText>
         </Flex>
         {isShowNetworkColumn && (
@@ -303,11 +283,11 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
             <ClickableText
               area='network'
               onClick={e => {
-                setSortedColumn(SORT_FIELD.NETWORK)
-                setSortDirection(prev => (sortedColumn !== SORT_FIELD.NETWORK ? true : !prev))
+                setSortedColumn(FIELDS.NETWORK)
+                setSortDirection(prev => (sortedColumn !== FIELDS.NETWORK ? true : !prev))
               }}
             >
-              Network {sortedColumn === SORT_FIELD.NETWORK ? (!sortDirection ? '↑' : '↓') : ''}
+              Network {sortedColumn === FIELDS.NETWORK ? (!sortDirection ? '↑' : '↓') : ''}
             </ClickableText>
           </Flex>
         )}
@@ -315,23 +295,23 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
           <ClickableText
             area='liq'
             onClick={e => {
-              setSortedColumn(SORT_FIELD.LIQ)
-              setSortDirection(prev => (sortedColumn !== SORT_FIELD.LIQ ? true : !prev))
+              setSortedColumn(FIELDS.LIQ)
+              setSortDirection(prev => (sortedColumn !== FIELDS.LIQ ? true : !prev))
             }}
           >
-            Liquidity {sortedColumn === SORT_FIELD.LIQ ? (!sortDirection ? '↑' : '↓') : ''}
+            Liquidity {sortedColumn === FIELDS.LIQ ? (!sortDirection ? '↑' : '↓') : ''}
           </ClickableText>
         </Flex>
         <Flex alignItems='center'>
           <ClickableText
             area='vol'
             onClick={e => {
-              setSortedColumn(SORT_FIELD.VOL)
-              setSortDirection(sortedColumn !== SORT_FIELD.VOL ? true : !sortDirection)
+              setSortedColumn(FIELDS.VOL)
+              setSortDirection(sortedColumn !== FIELDS.VOL ? true : !sortDirection)
             }}
           >
             Volume (24H)
-            {sortedColumn === SORT_FIELD.VOL ? (!sortDirection ? '↑' : '↓') : ''}
+            {sortedColumn === FIELDS.VOL ? (!sortDirection ? '↑' : '↓') : ''}
           </ClickableText>
         </Flex>
         {!below740 && (
@@ -339,11 +319,11 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
             <ClickableText
               area='volWeek'
               onClick={e => {
-                setSortedColumn(SORT_FIELD.VOL_7DAYS)
-                setSortDirection(sortedColumn !== SORT_FIELD.VOL_7DAYS ? true : !sortDirection)
+                setSortedColumn(FIELDS.VOL_7DAYS)
+                setSortDirection(sortedColumn !== FIELDS.VOL_7DAYS ? true : !sortDirection)
               }}
             >
-              Volume (7D) {sortedColumn === SORT_FIELD.VOL_7DAYS ? (!sortDirection ? '↑' : '↓') : ''}
+              Volume (7D) {sortedColumn === FIELDS.VOL_7DAYS ? (!sortDirection ? '↑' : '↓') : ''}
             </ClickableText>
           </Flex>
         )}
@@ -352,11 +332,11 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
             <ClickableText
               area='fees'
               onClick={e => {
-                setSortedColumn(SORT_FIELD.FEES)
-                setSortDirection(sortedColumn !== SORT_FIELD.FEES ? true : !sortDirection)
+                setSortedColumn(FIELDS.FEES)
+                setSortDirection(sortedColumn !== FIELDS.FEES ? true : !sortDirection)
               }}
             >
-              Fees (24H) {sortedColumn === SORT_FIELD.FEES ? (!sortDirection ? '↑' : '↓') : ''}
+              Fees (24H) {sortedColumn === FIELDS.FEES ? (!sortDirection ? '↑' : '↓') : ''}
             </ClickableText>
           </Flex>
         )}
@@ -365,11 +345,11 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 5 }) {
             <ClickableText
               area='apy'
               onClick={e => {
-                setSortedColumn(SORT_FIELD.APY)
-                setSortDirection(prev => (sortedColumn !== SORT_FIELD.APY ? true : !prev))
+                setSortedColumn(FIELDS.APY)
+                setSortDirection(prev => (sortedColumn !== FIELDS.APY ? true : !prev))
               }}
             >
-              APR {sortedColumn === SORT_FIELD.APY ? (!sortDirection ? '↑' : '↓') : ''}
+              APR {sortedColumn === FIELDS.APY ? (!sortDirection ? '↑' : '↓') : ''}
             </ClickableText>
             <QuestionHelper text={'Estimated return based on yearly fees of the pool'} />
           </Flex>

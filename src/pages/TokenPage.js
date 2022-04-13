@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -15,7 +15,7 @@ import TokenChart from '../components/TokenChart'
 import NotFound from '../components/404'
 import { BasicLink } from '../components/Link'
 import Search from '../components/Search'
-import { formattedNum, formattedPercent, getPoolLink, getSwapLink, localNumber } from '../utils'
+import { formattedNum, formattedPercent, getEtherScanUrls, getPoolLink, getSwapLink, localNumber } from '../utils'
 import { useTokenData, useTokenTransactions, useTokenPairs } from '../contexts/TokenData'
 import { TYPE, ThemedBackground } from '../Theme'
 import { transparentize } from 'polished'
@@ -202,6 +202,7 @@ function TokenPage({ address, history }) {
       top: 0,
     })
   }, [])
+  const urls = useMemo(() => getEtherScanUrls(networkInfo), [networkInfo])
 
   return !name ? (
     <LocalLoader />
@@ -224,7 +225,7 @@ function TokenPage({ address, history }) {
               <BasicLink to={'/' + networkInfo.urlKey + '/tokens'}>{'Tokens '}</BasicLink>→ {symbol}
               {'  '}
             </TYPE.body>
-            <Link style={{ width: 'fit-content' }} external href={`${networkInfo.etherscanUrl}/address/${address}`}>
+            <Link style={{ width: 'fit-content' }} external href={urls.showAddress(address)}>
               <Text style={{ marginLeft: '.15rem' }} fontSize={'14px'} fontWeight={400}>
                 ({address.slice(0, 8) + '...' + address.slice(36, 42)})
               </Text>
@@ -418,7 +419,7 @@ function TokenPage({ address, history }) {
                       <CopyHelper toCopy={address} />
                     </AutoRow>
                   </Column>
-                  <Link external href={`${networkInfo.etherscanUrl}/address/${address}`}>
+                  <Link external href={urls.showAddress(address)}>
                     <ButtonDark color={backgroundColor}>{`View on ${networkInfo.etherscanLinkText}`} ↗</ButtonDark>
                   </Link>
                 </TokenDetailsLayout>

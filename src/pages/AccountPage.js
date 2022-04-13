@@ -20,7 +20,7 @@ import Search from '../components/Search'
 import { TYPE } from '../Theme'
 import { useUserTransactions, useUserPositions } from '../contexts/User'
 import { useSavedAccounts } from '../contexts/LocalStorage'
-import { formattedNum } from '../utils'
+import { formattedNum, getEtherScanUrls } from '../utils'
 import { useOnClickOutside } from '../hooks'
 import useTheme from '../hooks/useTheme'
 import { Flex, Text } from 'rebass'
@@ -167,6 +167,7 @@ function AccountPage({ account }) {
   const handleBookmarkClick = useCallback(() => {
     ;(isBookmarked ? removeAccount : addAccount)(account, networkInfo.chainId)
   }, [isBookmarked, removeAccount, addAccount, account, networkInfo.chainId])
+  const urls = useMemo(() => getEtherScanUrls(networkInfo), [networkInfo])
 
   return (
     <PageWrapper>
@@ -174,7 +175,7 @@ function AccountPage({ account }) {
         <RowBetween>
           <TYPE.body>
             <BasicLink to={'/' + networkInfo.urlKey + '/accounts'}>{'Accounts '}</BasicLink>→{' '}
-            <Link lineHeight={'145.23%'} href={`${networkInfo.etherscanUrl}/address/${account}`} target='_blank'>
+            <Link lineHeight={'145.23%'} href={urls.showAddress(account)} target='_blank'>
               {account?.slice(0, 42)}
             </Link>
           </TYPE.body>
@@ -198,7 +199,7 @@ function AccountPage({ account }) {
                   />
                 </StyledIcon>
               )}
-              <Link lineHeight={'145.23%'} href={`${networkInfo.etherscanUrl}/address/${account}`} target='_blank'>
+              <Link lineHeight={'145.23%'} href={urls.showAddress(account)} target='_blank'>
                 <ButtonDark>
                   <Text fontSize={14}>View on {networkInfo.etherscanLinkText}↗</Text>
                 </ButtonDark>
