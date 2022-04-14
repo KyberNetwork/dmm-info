@@ -76,7 +76,7 @@ const Page404 = ({ type, currentChainName, availableChains, redirectLink }) => {
   message = (
     <>
       This {type}’s address is not available on {currentChainName}.
-      {availableChainElement?.length && (
+      {availableChainElement && (
         <>
           <br />
           This address is only available on {availableChains}
