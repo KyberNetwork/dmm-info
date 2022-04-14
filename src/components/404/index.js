@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import MaintenanceImg from '../../assets/404.svg'
-import MaintenanceImgWhite from '../../assets/404White.svg'
+import MaintenanceImgWhite from '../../assets/404white.svg'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const StyledLink = styled(Link)`
