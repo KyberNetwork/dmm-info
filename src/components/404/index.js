@@ -66,30 +66,25 @@ const Page404 = ({ type, currentChainName, availableChains, redirectLink }) => {
   const [isDarkMode] = useDarkModeManager()
 
   let message, linkMessage
-  if (availableChains?.length) {
-    const availableChainElement = availableChains
-      .map(availableChain => (
-        <Link to={'/' + availableChain.urlKey + '/'} key={availableChain.chainId}>
-          {availableChain.name}
-        </Link>
-      ))
-      .reduce((accu, elem) => (accu ? [elem] : [...accu, ', ', elem]), null) //join with comma
-    message = (
-      <>
-        This {type}’s address is not available on {currentChainName}.
-        {availableChainElement && (
-          <>
-            <br />
-            This address is only available on {availableChains}
-          </>
-        )}
-      </>
-    )
-    linkMessage = <>Or you can go back to {type}s list</>
-  } else {
-    message = <>This {type} is not available.</>
-    linkMessage = <>You can go back to {type}s list</>
-  }
+  const availableChainElement = availableChains
+    ?.map(availableChain => (
+      <Link to={'/' + availableChain.urlKey + '/'} key={availableChain.chainId}>
+        {availableChain.name}
+      </Link>
+    ))
+    .reduce((accu, elem) => (accu ? [elem] : [...accu, ', ', elem]), null) //join with comma
+  message = (
+    <>
+      This {type}’s address is not available on {currentChainName}.
+      {availableChainElement?.length && (
+        <>
+          <br />
+          This address is only available on {availableChains}
+        </>
+      )}
+    </>
+  )
+  linkMessage = <>You can go back to {type}s list</>
 
   return (
     <Wrapper>
