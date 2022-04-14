@@ -39,11 +39,11 @@ const SavedButton = styled(RowBetween)`
 
 const Wrapper = styled.div`
   justify-content: space-between;
-  background-color: #3e4b51;
+  background-color: ${({ theme }) => theme.bg4};
   border-radius: 24px;
   padding: 8px;
   * div {
-    color: #a7b6bd !important;
+    color: ${({ theme }) => theme.text10} !important;
   }
 `
 

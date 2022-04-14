@@ -40,16 +40,16 @@ const Input = styled.input`
   }
 `
 const Wrapper = styled.div`
-  ${({ isWrap }) =>
+  ${({ isWrap, theme }) =>
     isWrap
       ? `
   justify-content: space-between;
-  background-color: #3e4b51;
+  background-color: ${theme.bg4};
   border-radius: 24px;
   padding: 8px;
   `
       : ''}
-  color: #A7B6BD;
+  color: ${({ theme }) => theme.text10};
 `
 
 const AccountLink = styled.span`

@@ -67,7 +67,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
   }, [height, isClient, width]) // Empty array ensures that effect is only run on mount and unmount
 
   // get data for pair, and rates
-  const [pairData] = usePairData(address)
+  const pairData = usePairData(address)
   let chartData = usePairChartData(address)
   const hourlyData = usePairRateData(
     address,

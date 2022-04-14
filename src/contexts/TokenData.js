@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
+import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect, useState } from 'react'
 import merge from 'deepmerge'
 
 import {
@@ -52,7 +52,7 @@ function reducer(state, { type, payload }) {
   switch (type) {
     case UPDATE: {
       const { tokenAddress, data, chainId } = payload
-      if (!data) return merge(state, { [chainId]: { [tokenAddress]: { name: 'error-token' } } })
+      if (!data) return state
       return merge(state, { [chainId]: { [tokenAddress]: data } })
     }
     case UPDATE_TOP_TOKENS: {
@@ -606,34 +606,37 @@ export function Updater() {
 }
 
 export function useTokenData(tokenAddress) {
-  const exchangeSubgraphClient = useExchangeClients()
+  const [exchangeSubgraphClient] = useExchangeClients()
   const [state, { update }] = useTokenDataContext()
-  const [ethPrice, ethPriceOld] = useEthPrice()
-  const [networksInfo] = useNetworksInfo()
-  const tokenData = networksInfo.map(networkInfo => state?.[networkInfo.chainId]?.[tokenAddress])
+  const [[ethPrice], [ethPriceOld]] = useEthPrice()
+  const [[networkInfo]] = useNetworksInfo()
+  const [error, setError] = useState(false)
+  const tokenData = state?.[networkInfo.chainId]?.[tokenAddress]
 
   useEffect(() => {
-    networksInfo.forEach((networkInfo, index) => {
-      if (!tokenData[index] && ethPrice[index] && ethPriceOld[index] && isAddress(tokenAddress)) {
+    setError(false)
+  }, [tokenAddress, networkInfo])
+
+  useEffect(() => {
+    if (!tokenData && !error) {
+      if (!isAddress(tokenAddress)) setError(true)
+      else if (ethPrice && ethPriceOld) {
         memoRequest(
           () =>
-            getTokenData(
-              exchangeSubgraphClient[index],
-              tokenAddress,
-              ethPrice[index],
-              ethPriceOld[index],
-              networksInfo[index]
-            ).then(data => {
-              update(tokenAddress, data, networkInfo.chainId)
-            }),
-          'useTokenData_' + networkInfo.chainId + '_' + ethPrice[index],
+            getTokenData(exchangeSubgraphClient, tokenAddress, ethPrice, ethPriceOld, networkInfo)
+              .then(data => {
+                if (data) update(tokenAddress, data, networkInfo.chainId)
+                else setError(true)
+              })
+              .catch(e => setError(true)),
+          'useTokenData_' + networkInfo.chainId + '_' + ethPrice,
           10000
         )
       }
-    })
-  }, [ethPrice, ethPriceOld, tokenAddress, tokenData, update, exchangeSubgraphClient, networksInfo])
+    }
+  }, [ethPrice, ethPriceOld, tokenAddress, tokenData, update, exchangeSubgraphClient, networkInfo, error])
 
-  return tokenData.map(data => data || {})
+  return error ? { error: true } : tokenData || {}
 }
 
 export function useTokenTransactions(tokenAddress) {
@@ -669,7 +672,7 @@ export function useTokenPairs(tokenAddress) {
   useEffect(() => {
     async function fetchData() {
       let allPairs = await getTokenPairs(exchangeSubgraphClient, tokenAddress)
-      updateAllPairs(tokenAddress, allPairs, networkInfo.chainId)
+      allPairs?.length && updateAllPairs(tokenAddress, allPairs, networkInfo.chainId)
     }
     if (!tokenPairs && isAddress(tokenAddress)) {
       fetchData()
@@ -688,7 +691,7 @@ export function useTokenChartData(tokenAddress) {
     async function checkForChartData() {
       if (!chartData) {
         let data = await getTokenChartData(exchangeSubgraphClient, tokenAddress)
-        updateChartData(tokenAddress, data, networkInfo.chainId)
+        data && updateChartData(tokenAddress, data, networkInfo.chainId)
       }
     }
     checkForChartData()
@@ -737,7 +740,7 @@ export function useTokenPriceData(tokenAddress, timeWindow, interval = 3600) {
 
     async function fetch() {
       let data = await getIntervalTokenData(exchangeSubgraphClient, tokenAddress, startTime, interval, latestBlock, networkInfo)
-      updatePriceData(tokenAddress, data, timeWindow, interval, networkInfo.chainId)
+      data && updatePriceData(tokenAddress, data, timeWindow, interval, networkInfo.chainId)
     }
     if (!chartData) {
       fetch()

@@ -41,6 +41,8 @@ import useTheme from '../hooks/useTheme'
 import { Flex } from 'rebass'
 import { useNetworksInfo } from '../contexts/NetworkInfo'
 import { ChainId } from '../constants/networks'
+import NotFound from '../components/404'
+import LocalLoader from '../components/LocalLoader'
 
 const DashboardWrapper = styled.div`
   width: 100%;
@@ -121,6 +123,7 @@ const WarningGrouping = styled.div`
 
 function PoolPage({ poolAddress, history }) {
   const {
+    error,
     token0,
     token1,
     reserve0,
@@ -225,7 +228,11 @@ function PoolPage({ poolAddress, history }) {
   const listedTokens = useListedTokens()
   const urls = useMemo(() => getEtherScanUrls(networkInfo), [networkInfo])
 
-  return (
+  return error ? (
+    <NotFound type='pool' currentChainName={networkInfo.name} redirectLink={'/' + networkInfo.urlKey + '/pairs'} />
+  ) : !token0 ? (
+    <LocalLoader />
+  ) : (
     <PageWrapper>
       <ThemedBackground backgroundColor={transparentize(0.6, backgroundColor)} />
       <span />

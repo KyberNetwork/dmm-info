@@ -60,7 +60,7 @@ function reducer(state, { type, payload }) {
   switch (type) {
     case UPDATE: {
       const { pairAddress, data, chainId } = payload
-      if (!data) return merge(state, { [chainId]: { [pairAddress]: { name: 'error-pair' } } })
+      if (!data) return state
       return merge(state, { [chainId]: { [pairAddress]: data } })
     }
 
@@ -612,36 +612,40 @@ export function useDataForList(pairList) {
  * Get all the current and 24hr changes for a pair
  */
 export function usePairData(pairAddress) {
-  const exchangeSubgraphClient = useExchangeClients()
+  const [exchangeSubgraphClient] = useExchangeClients()
   const [state, { update }] = usePairDataContext()
-  const [ethPrice] = useEthPrice()
-  const [networksInfo] = useNetworksInfo()
-  const pairData = networksInfo.map(networkInfo => state?.[networkInfo.chainId]?.[pairAddress])
+  const [[ethPrice]] = useEthPrice()
+  const [[networkInfo]] = useNetworksInfo()
+  const [error, setError] = useState(false)
+  const pairData = state?.[networkInfo.chainId]?.[pairAddress]
 
   useEffect(() => {
-    async function fetchData(index) {
-      let data = await getBulkPairData(exchangeSubgraphClient[index], [pairAddress], ethPrice[index], networksInfo[index])
-      data && update(pairAddress, data[0], networksInfo[index].chainId)
+    setError(false)
+  }, [pairAddress, networkInfo])
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        let data = await getBulkPairData(exchangeSubgraphClient, [pairAddress], ethPrice, networkInfo)
+        if (data) update(pairAddress, data[0], networkInfo.chainId)
+        else setError(true)
+      } catch (e) {
+        setError(true)
+      }
     }
 
-    networksInfo.forEach((networkInfo, index) => {
-      if (
-        !pairData[index] &&
-        pairAddress &&
-        ethPrice[index] &&
-        isAddress(pairAddress.split('_')[0]) &&
-        isAddress(pairAddress.split('_')[1])
-      ) {
-        memoRequest(
-          () => fetchData(index),
-          'usePairData_' + networkInfo.chainId + '_' + ethPrice[index] + '_' + pairAddress,
-          10000
-        )
+    if (!pairData && !error) {
+      if (isAddress(pairAddress?.split?.('_')[0]) && isAddress(pairAddress?.split?.('_')[1])) {
+        if (pairAddress && ethPrice) {
+          memoRequest(fetchData, 'usePairData_' + networkInfo.chainId + '_' + ethPrice + '_' + pairAddress, 10000)
+        }
+      } else {
+        setError(true)
       }
-    })
-  }, [pairAddress, pairData, update, ethPrice, exchangeSubgraphClient, networksInfo])
+    }
+  }, [pairAddress, pairData, update, ethPrice, exchangeSubgraphClient, networkInfo, error])
 
-  return pairData.map(pair => pair || {})
+  return error ? { error: true } : pairData || {}
 }
 
 /**
@@ -660,13 +664,11 @@ export function usePairPools(pairAddress) {
         let pools = await getPairPools(exchangeSubgraphClient, pairAddress)
 
         // format as array of addresses
-        const formattedPools = pools.map(pool => {
-          return pool.id
-        })
+        const formattedPools = pools.map(pool => pool.id)
 
         // get data for every pool in list
         let pairPoolsData = await getBulkPoolData(exchangeSubgraphClient, formattedPools, ethPrice, networkInfo)
-        pairPoolsData && updatePairPools(pairAddress, pairPoolsData, networkInfo.chainId)
+        pairPoolsData?.length && updatePairPools(pairAddress, pairPoolsData, networkInfo.chainId)
       }
     }
     ethPrice && checkForPairPools()
@@ -685,7 +687,7 @@ export function usePairChartData(pairAddress) {
     async function checkForChartData() {
       if (!chartData) {
         let data = await getPairChartData(exchangeSubgraphClient, pairAddress)
-        updateChartData(pairAddress, data, networkInfo.chainId)
+        data && updateChartData(pairAddress, data, networkInfo.chainId)
       }
     }
     checkForChartData()

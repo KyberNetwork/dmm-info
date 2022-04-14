@@ -58,7 +58,7 @@ function reducer(state, { type, payload }) {
   switch (type) {
     case UPDATE: {
       const { poolAddress, data, chainId } = payload
-      if (!data) return merge(state, { [chainId]: { [poolAddress]: { name: 'error-pool' } } })
+      if (!data) return state
       return merge(state, { [chainId]: { [poolAddress]: data } })
     }
 
@@ -546,21 +546,32 @@ export function usePoolData(poolAddress) {
   const [state, { update }] = usePoolDataContext()
   const [[ethPrice]] = useEthPrice()
   const [[networkInfo]] = useNetworksInfo()
+  const [error, setError] = useState(false)
   const poolData = state?.[networkInfo.chainId]?.[poolAddress]
 
   useEffect(() => {
+    setError(false)
+  }, [poolAddress, networkInfo])
+
+  useEffect(() => {
     async function fetchData() {
-      if (!poolData && poolAddress) {
+      try {
         let data = await getBulkPoolData(exchangeSubgraphClient, [poolAddress], ethPrice, networkInfo)
-        data && update(poolAddress, data[0], networkInfo.chainId)
+        data?.length ? update(poolAddress, data[0], networkInfo.chainId) : setError(true)
+      } catch (e) {
+        setError(true)
       }
     }
-    if (!poolData && poolAddress && ethPrice && isAddress(poolAddress)) {
-      fetchData()
+    if (!poolData && !error) {
+      if (poolAddress && ethPrice && isAddress(poolAddress)) {
+        fetchData()
+      } else {
+        setError(true)
+      }
     }
-  }, [poolAddress, poolData, update, ethPrice, exchangeSubgraphClient, networkInfo])
+  }, [poolAddress, poolData, update, ethPrice, exchangeSubgraphClient, networkInfo, error])
 
-  return poolData || {}
+  return error ? { error: true } : poolData || {}
 }
 
 /**
@@ -578,7 +589,8 @@ export function usePoolTransactions(poolAddress) {
         transactions.burns?.forEach(burn => (burn.chainId = networkInfo.chainId))
         transactions.mints?.forEach(mint => (mint.chainId = networkInfo.chainId))
         transactions.swaps?.forEach(swap => (swap.chainId = networkInfo.chainId))
-        updatePoolTxns(poolAddress, transactions, networkInfo.chainId)
+        if (transactions.burns?.length || transactions.mints?.length || transactions.swaps?.length)
+          updatePoolTxns(poolAddress, transactions, networkInfo.chainId)
       }
     }
     checkForTxns()
@@ -596,7 +608,7 @@ export function usePoolChartData(poolAddress) {
     async function checkForChartData() {
       if (!chartData) {
         let data = await getPoolChartData(exchangeSubgraphClient, poolAddress)
-        updateChartData(poolAddress, data, networkInfo.chainId)
+        data && updateChartData(poolAddress, data, networkInfo.chainId)
       }
     }
     checkForChartData()

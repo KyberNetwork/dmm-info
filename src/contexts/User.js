@@ -238,7 +238,7 @@ export function useUserPositionChart(position, account) {
     })
 
   // get data needed for calculations
-  const [currentPairData] = usePairData(pairAddress)
+  const currentPairData = usePairData(pairAddress)
   const [currentETHPrice] = useEthPrice()
 
   // formatetd array to return for chart data

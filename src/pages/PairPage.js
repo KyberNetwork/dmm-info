@@ -34,6 +34,8 @@ import bookMarkOutline from '../assets/bookmark_outline.svg'
 import useTheme from '../hooks/useTheme'
 import { useNetworksInfo } from '../contexts/NetworkInfo'
 import { ChainId } from '../constants/networks'
+import LocalLoader from '../components/LocalLoader'
+import NotFound from '../components/404'
 
 const DashboardWrapper = styled.div`
   width: 100%;
@@ -103,6 +105,7 @@ const WarningGrouping = styled.div`
 
 function PairPage({ pairAddress, history }) {
   const {
+    error,
     token0,
     token1,
     reserve0,
@@ -116,7 +119,7 @@ function PairPage({ pairAddress, history }) {
     oneDayFeeUntracked,
     volumeChangeUntracked,
     liquidityChangeUSD,
-  } = usePairData(pairAddress)[0]
+  } = usePairData(pairAddress)
 
   useEffect(() => {
     document.querySelector('body').scrollTo(0, 0)
@@ -129,8 +132,8 @@ function PairPage({ pairAddress, history }) {
   const backgroundColor = theme.primary
 
   // liquidity
-  const formattedLiquidity = reserveUSD ? formattedNum(reserveUSD, true) : formattedNum(trackedReserveUSD, true)
-  const liquidityChange = formattedPercent(liquidityChangeUSD)
+  const formattedLiquidity = !error && reserveUSD ? formattedNum(reserveUSD, true) : formattedNum(trackedReserveUSD, true)
+  const liquidityChange = !error && formattedPercent(liquidityChangeUSD)
 
   // mark if using untracked liquidity
   const [usingTracked, setUsingTracked] = useState(true)
@@ -149,10 +152,10 @@ function PairPage({ pairAddress, history }) {
   // mark if using untracked volume
   const [usingUtVolume, setUsingUtVolume] = useState(false)
   useEffect(() => {
-    setUsingUtVolume(oneDayVolumeUSD === 0 ? true : false)
+    !error && setUsingUtVolume(oneDayVolumeUSD === 0 ? true : false)
   }, [oneDayVolumeUSD])
 
-  const volumeChange = formattedPercent(!usingUtVolume ? volumeChangeUSD : volumeChangeUntracked)
+  const volumeChange = !error && formattedPercent(!usingUtVolume ? volumeChangeUSD : volumeChangeUntracked)
 
   // get fees	  // get fees
   const fees =
@@ -164,12 +167,15 @@ function PairPage({ pairAddress, history }) {
 
   // token data for usd
   const [ethPrice] = useEthPrice()
-  const token0USD = token0?.derivedETH && ethPrice ? formattedNum(parseFloat(token0.derivedETH) * parseFloat(ethPrice), true) : ''
+  const token0USD =
+    !error && token0?.derivedETH && ethPrice ? formattedNum(parseFloat(token0.derivedETH) * parseFloat(ethPrice), true) : ''
 
-  const token1USD = token1?.derivedETH && ethPrice ? formattedNum(parseFloat(token1.derivedETH) * parseFloat(ethPrice), true) : ''
+  const token1USD =
+    !error && token1?.derivedETH && ethPrice ? formattedNum(parseFloat(token1.derivedETH) * parseFloat(ethPrice), true) : ''
 
   // rates
   const token0Rate =
+    !error &&
     token0 &&
     token1 &&
     token0.derivedETH &&
@@ -179,6 +185,7 @@ function PairPage({ pairAddress, history }) {
       ? formattedNum(token0.derivedETH / token1.derivedETH)
       : '-'
   const token1Rate =
+    !error &&
     token0 &&
     token1 &&
     token0.derivedETH &&
@@ -189,8 +196,8 @@ function PairPage({ pairAddress, history }) {
       : '-'
 
   // formatted symbols for overflow
-  const formattedSymbol0 = token0?.symbol.length > 6 ? token0?.symbol.slice(0, 5) + '...' : token0?.symbol
-  const formattedSymbol1 = token1?.symbol.length > 6 ? token1?.symbol.slice(0, 5) + '...' : token1?.symbol
+  const formattedSymbol0 = !error && token0?.symbol.length > 6 ? token0?.symbol.slice(0, 5) + '...' : token0?.symbol
+  const formattedSymbol1 = !error && token1?.symbol.length > 6 ? token1?.symbol.slice(0, 5) + '...' : token1?.symbol
 
   const below1080 = useMedia('(max-width: 1080px)')
   const below900 = useMedia('(max-width: 900px)')
@@ -212,7 +219,11 @@ function PairPage({ pairAddress, history }) {
 
   const listedTokens = useListedTokens()
 
-  return (
+  return error ? (
+    <NotFound type='pair' currentChainName={networkInfo.name} redirectLink={'/' + networkInfo.urlKey + '/pairs'} />
+  ) : !token0 ? (
+    <LocalLoader />
+  ) : (
     <PageWrapper>
       <ThemedBackground backgroundColor={transparentize(0.6, backgroundColor)} />
       <span />

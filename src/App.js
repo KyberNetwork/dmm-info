@@ -204,14 +204,11 @@ function App() {
             if (OVERVIEW_TOKEN_BLACKLIST.includes(match.params.tokenAddress.toLowerCase())) {
               return <Redirect to={`/${match.params.network}/home`} />
             }
-            if (isAddress(match.params.tokenAddress.toLowerCase())) {
-              return (
-                <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
-                  <TokenPage address={match.params.tokenAddress.toLowerCase()} />
-                </LayoutWrapper>
-              )
-            }
-            return <Redirect to={`/${match.params.network}/home`} />
+            return (
+              <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
+                <TokenPage address={match.params.tokenAddress.toLowerCase()} />
+              </LayoutWrapper>
+            )
           }}
         />
 

@@ -100,6 +100,7 @@ const WarningGrouping = styled.div`
 
 function TokenPage({ address, history }) {
   const {
+    error,
     name,
     symbol,
     priceUSD,
@@ -112,7 +113,7 @@ function TokenPage({ address, history }) {
     liquidityChangeUSD,
     oneDayTxns,
     txnChange,
-  } = useTokenData(address)[0]
+  } = useTokenData(address)
   const [[networkInfo]] = useNetworksInfo()
 
   useEffect(() => {
@@ -204,10 +205,10 @@ function TokenPage({ address, history }) {
   }, [])
   const urls = useMemo(() => getEtherScanUrls(networkInfo), [networkInfo])
 
-  return !name ? (
-    <LocalLoader />
-  ) : name === 'error-token' ? (
+  return error ? (
     <NotFound type='token' currentChainName={networkInfo.name} redirectLink={'/' + networkInfo.urlKey + '/tokens'} />
+  ) : !name ? (
+    <LocalLoader />
   ) : (
     <PageWrapper>
       <ThemedBackground backgroundColor={transparentize(0.6, backgroundColor)} />
