@@ -8,6 +8,7 @@ import { OptionButton } from '../ButtonStyled'
 import { getTimeframe } from '../../utils'
 import { TYPE } from '../../Theme'
 import { aggregateChartData, aggregateGlobalData } from '../../utils/aggregateData'
+import { useNetworksInfo } from '../../contexts/NetworkInfo'
 
 const CHART_VIEW = {
   VOLUME: 'Volume',
@@ -25,6 +26,7 @@ const GlobalChart = ({ display }) => {
   // time window and window size for chart
   const timeWindow = timeframeOptions.ALL_TIME
   const [volumeWindow, setVolumeWindow] = useState(VOLUME_WINDOW.DAYS)
+  const [networksInfo] = useNetworksInfo()
 
   // global historical data
   const [dailyDatas, weeklyDatas] = useGlobalChartData()
@@ -75,7 +77,7 @@ const GlobalChart = ({ display }) => {
               data={aggregatedDailyDatas}
               base={totalLiquidityUSD}
               baseChange={liquidityChangeUSD}
-              title='Liquidity'
+              title={(networksInfo[1] ? 'Total ' : '') + 'Liquidity'}
               field='totalLiquidityUSD'
               width={width}
               type={CHART_TYPES.AREA}
@@ -87,7 +89,9 @@ const GlobalChart = ({ display }) => {
               data={chartDataFiltered}
               base={volumeWindow === VOLUME_WINDOW.WEEKLY ? oneWeekVolume : oneDayVolumeUSD}
               baseChange={volumeWindow === VOLUME_WINDOW.WEEKLY ? weeklyVolumeChange : volumeChangeUSD}
-              title={volumeWindow === VOLUME_WINDOW.WEEKLY ? 'Volume (7d)' : 'Volume'}
+              title={
+                (networksInfo[1] ? 'Total ' : '') + 'Trading Volume' + (volumeWindow === VOLUME_WINDOW.WEEKLY ? ' (7d)' : '')
+              }
               field={volumeWindow === VOLUME_WINDOW.WEEKLY ? 'weeklyVolumeUSD' : 'dailyVolumeUSD'}
               width={width}
               type={CHART_TYPES.BAR}
