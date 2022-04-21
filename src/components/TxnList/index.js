@@ -298,6 +298,9 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
         if (valueToCompareA == valueToCompareB) {
           if (a.timestamp == b.timestamp) {
             if (a.amountUSD == b.amountUSD) {
+              if (a.hash == b.hash) {
+                return a.token0Symbol < b.token0Symbol ? 1 : -1
+              }
               return a.hash < b.hash ? 1 : -1
             }
             return a.amountUSD < b.amountUSD ? 1 : -1
@@ -496,8 +499,11 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
         ) : (
           filteredList.map((item, index) => {
             return (
-              <div key={index} style={{ padding: '0 20px' }}>
-                <ListItem key={index} index={index + 1} item={item} />
+              <div
+                key={`${item.hash}_${item.token0Symbol}_${item.token0Amount}_${item.token1Symbol}_${item.token1Amount}`}
+                style={{ padding: '0 20px' }}
+              >
+                <ListItem index={index + 1} item={item} />
                 <Divider />
               </div>
             )
