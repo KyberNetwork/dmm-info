@@ -295,19 +295,20 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
           valueToCompareA = parseFloat(a[sortedColumn])
           valueToCompareB = parseFloat(b[sortedColumn])
         }
-        if (valueToCompareA == valueToCompareB) {
-          if (a.timestamp == b.timestamp) {
-            if (a.amountUSD == b.amountUSD) {
-              if (a.hash == b.hash) {
-                return a.token0Symbol < b.token0Symbol ? 1 : -1
-              }
-              return a.hash < b.hash ? 1 : -1
-            }
-            return a.amountUSD < b.amountUSD ? 1 : -1
-          }
-          return a.timestamp < b.timestamp ? 1 : -1
-        }
-        return valueToCompareA > valueToCompareB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
+        if (valueToCompareA > valueToCompareB) return (sortDirection ? -1 : 1) * 1
+        if (valueToCompareA < valueToCompareB) return (sortDirection ? -1 : 1) * -1
+
+        if (a.timestamp < b.timestamp) return 1
+        if (a.timestamp > b.timestamp) return -1
+
+        if (a.amountUSD < b.amountUSD) return 1
+        if (a.amountUSD > b.amountUSD) return -1
+
+        if (a.hash < b.hash) return 1
+        if (a.hash > b.hash) return -1
+
+        if (a.token0Symbol < b.token0Symbol) return 1
+        if (a.token0Symbol > b.token0Symbol) return -1
       })
       .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
 
