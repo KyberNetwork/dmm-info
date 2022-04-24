@@ -84,6 +84,7 @@ export default function TokenLogo({ address, networkInfo, header = false, size =
           style={{
             boxShadow: '0px 6px 10px rgba(0, 0, 0, 0.075)',
             borderRadius: '24px',
+            backgroundColor: 'white',
           }}
           alt=''
         />
@@ -94,7 +95,7 @@ export default function TokenLogo({ address, networkInfo, header = false, size =
   const formattedAddress = isAddress(address)
   let path
 
-  if (formattedAddress && tokensList?.[networkInfo.chainId]?.[formattedAddress]) {
+  if (formattedAddress && tokensList?.[networkInfo.chainId]?.[formattedAddress]?.logoURI) {
     return getCustomLogo({
       address,
       chainId: networkInfo.chainId,

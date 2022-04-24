@@ -33,7 +33,15 @@ function reducer(state, { type, payload }) {
 
     case UPDATE_TOKENS_LIST: {
       const { chainId, tokensList } = payload
-      state.tokensList[chainId] = tokensList
+      const tokensListMapped = tokensList?.tokens?.reduce(
+        (acc, cur) => ({
+          ...acc,
+          [cur.address]: cur,
+        }),
+        {}
+      )
+
+      state.tokensList[chainId] = tokensListMapped
       return state
     }
 
