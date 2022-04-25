@@ -40,6 +40,10 @@ const StyledNativeTokenLogo = styled.div`
 `
 
 const StyledHelpCircle = styled(HelpCircle)`
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
+  border-radius: ${({ size }) => size};
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   color: ${({ theme }) => theme.text4};
   background-color: ${({ theme }) => theme.white};
 `
@@ -76,8 +80,7 @@ export default function TokenLogo({ address, networkInfo, header = false, size =
   if (error || BAD_IMAGES[networkInfo.chainId]?.[address]) {
     return (
       <Inline>
-        {/* <Image {...rest} alt={''} src={HelpCircle} size={size} /> */}
-        <StyledHelpCircle {...rest} />
+        <StyledHelpCircle size={size} {...rest} />
       </Inline>
     )
   }
