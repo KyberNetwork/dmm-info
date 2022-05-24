@@ -66,8 +66,8 @@ export default function Title() {
               style={{ marginTop: '2px' }}
             />
           </DMMIcon>
-          <Text fontSize='12px' color={theme.subText} textAlign='right' marginTop='-12px'>
-            Analytics
+          <Text fontSize={below1080 ? '10px' : '12px'} color={theme.subText} textAlign='right' marginTop='-12px'>
+            Classic Analytics
           </Text>
         </div>
         {below1080 && (
