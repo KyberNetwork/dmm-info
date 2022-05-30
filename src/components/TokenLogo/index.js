@@ -73,7 +73,8 @@ export default function TokenLogo({ address, networkInfo, header = false, size =
   useEffect(() => {
     setError(false)
     BAD_IMAGES[networkInfo.chainId] && (BAD_IMAGES[networkInfo.chainId][address] = false)
-  }, [address, networkInfo, tokensList])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokensList])
 
   if (!networkInfo) return null
 
