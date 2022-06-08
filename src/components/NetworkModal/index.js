@@ -113,7 +113,7 @@ export default function NetworkModal() {
   const { network: currentNetworkURL } = useParams()
   const [tab, setTab] = useState('Classic')
   const networkListToShow = [...NetworksInfoEnv]
-  if (tab == 'Classic')
+  if (tab === 'Classic')
     //todo namgold: remove above if line
     networkListToShow.unshift({ name: 'All Chains', icon: Kyber })
 
@@ -123,10 +123,10 @@ export default function NetworkModal() {
         <ModalHeader onClose={toggleNetworkModal} title='Select a Network' />
 
         <TabWrapper>
-          <TabItem active={tab == 'Elastic'} role='button' onClick={() => setTab('Elastic')}>
+          <TabItem active={tab === 'Elastic'} role='button' onClick={() => setTab('Elastic')}>
             Elastic Analytics
           </TabItem>
-          <TabItem active={tab == 'Classic'} role='button' onClick={() => setTab('Classic')}>
+          <TabItem active={tab === 'Classic'} role='button' onClick={() => setTab('Classic')}>
             Classic Analytics
           </TabItem>
         </TabWrapper>
@@ -134,7 +134,7 @@ export default function NetworkModal() {
         <NetworkList>
           {networkListToShow.map((network, index) => {
             const selected =
-              (networksInfo[1] && network.name == 'All Chains') ||
+              (networksInfo[1] && network.name === 'All Chains') ||
               (!networksInfo[1] && networksInfo[0].chainId === network.chainId)
 
             let currentUrl = currentNetworkURL
@@ -162,7 +162,7 @@ export default function NetworkModal() {
                 break
             }
             const linkTo = (network.urlKey ? `/${network.urlKey}` : '') + '/' + currentUrl
-            if (tab == 'Classic') {
+            if (tab === 'Classic') {
               return (
                 <Link to={linkTo} key={network.name}>
                   <SelectNetworkButton
@@ -172,7 +172,7 @@ export default function NetworkModal() {
                     }}
                   >
                     <ListItem selected={selected}>
-                      {typeof network.icon == 'string' ? (
+                      {typeof network.icon === 'string' ? (
                         <img src={network.icon} alt='Logo' style={{ width: '2rem', marginRight: '1rem' }} />
                       ) : (
                         <network.icon
@@ -197,7 +197,7 @@ export default function NetworkModal() {
                     }}
                   >
                     <ListItem selected={selected}>
-                      {typeof network.icon == 'string' ? (
+                      {typeof network.icon === 'string' ? (
                         <img src={network.icon} alt='Logo' style={{ width: '2rem', marginRight: '1rem' }} />
                       ) : (
                         <network.icon
