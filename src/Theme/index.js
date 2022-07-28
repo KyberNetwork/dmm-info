@@ -96,7 +96,7 @@ const theme = (darkMode, color) => ({
   evenRow: darkMode ? '#303e46' : '#F9F9F9',
 
   // other
-  red1: '#FF537B',
+  red1: '#ff537b',
   green1: '#31CB9E',
   yellow1: '#FFE270',
   yellow2: '#F3841E',
