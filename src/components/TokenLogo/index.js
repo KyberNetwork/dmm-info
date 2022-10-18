@@ -51,8 +51,8 @@ export default function TokenLogo({ address, networkInfo, header = false, size =
 
   const formattedAddress = isAddress(address)
 
-  const logoURI = whiteListMap?.[formattedAddress]?.logoURI || tokensList?.[formattedAddress]?.logoURI
-
+  const logoURI =
+    whiteListMap?.[address]?.logoURI || whiteListMap?.[formattedAddress]?.logoURI || tokensList?.[formattedAddress]?.logoURI
   useEffect(() => {
     setError(false)
     BAD_IMAGES[networkInfo.chainId] && (BAD_IMAGES[networkInfo.chainId][address] = false)
