@@ -21,7 +21,6 @@ module.exports = {
     'no-extra-boolean-cast': 0,
     'no-inner-declarations': 0,
     'no-constant-condition': 0,
-    'no-async-promise-executor': 0,
   },
   overrides: [
     // typescript

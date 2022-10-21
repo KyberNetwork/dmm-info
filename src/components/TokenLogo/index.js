@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { isAddress } from '../../utils/index.js'
 import { HelpCircle } from 'react-feather'
 
-import { useGlobalData, useWhitelistTokensMap } from '../../contexts/GlobalData'
+import { useWhitelistTokensMap } from '../../contexts/GlobalData'
 import { useTokensList } from '../../contexts/NetworkInfo.js'
 
 const BAD_IMAGES = {}
