@@ -175,7 +175,7 @@ export async function splitQuery(query, localClient, vars, list, skipCount = 100
  * @dev Query speed is optimized by limiting to a 600-second period
  * @param {Int} timestamp in seconds
  */
-export async function getBlockFromTimestampSubgraph(timestamp, networkInfo) {
+async function getBlockFromTimestampSubgraph(timestamp, networkInfo) {
   const run = async () => {
     if (parseInt(timestamp) < networkInfo.defaultStartTime) {
       timestamp = networkInfo.defaultStartTime
@@ -193,18 +193,17 @@ export async function getBlockFromTimestampSubgraph(timestamp, networkInfo) {
   return await memoRequest(run, 'getBlockFromTimestamp_' + timestamp + '_' + networkInfo.chainId, 10000)
 }
 
-export async function getBlocksFromTimestampsBlockService(timestamps, networkInfo) {
+async function getBlocksFromTimestampsBlockService(timestamps, networkInfo) {
   const result = (
     await (
       await fetch(`${BLOCK_SERVICE_API}/${networkInfo.blockServiceRoute}/api/v1/block?timestamps=${timestamps.join(',')}`)
     ).json()
-  ).data
-  console.log({ timestamps, result })
+  ).data.map(block => ({ timestamp: String(block.timestamp), number: String(block.number) }))
   return result
 }
 
 export async function getBlockFromTimestamp(timestamp, networkInfo) {
-  if (networkInfo.isEnableBlockService) return getBlocksFromTimestampsBlockService([timestamp], networkInfo)[0]
+  if (networkInfo.isEnableBlockService) return (await getBlocksFromTimestampsBlockService([timestamp], networkInfo))[0].number
   return getBlockFromTimestampSubgraph(timestamp, networkInfo)
 }
 
@@ -220,7 +219,7 @@ export async function getBlocksFromTimestamps(timestamps, networkInfo, skipCount
  * @dev timestamps are returns as they were provided; not the block time.
  * @param {Array} timestamps
  */
-export async function getBlocksFromTimestampsSubgraph(timestamps, networkInfo, skipCount = 500) {
+async function getBlocksFromTimestampsSubgraph(timestamps, networkInfo, skipCount = 500) {
   if (timestamps?.length === 0) {
     return []
   }
