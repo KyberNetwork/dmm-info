@@ -96,5 +96,8 @@
   "dependencies": {
     "deepmerge": "^4.2.2",
     "swr": "^1.0.1"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   }
 }
