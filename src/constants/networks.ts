@@ -377,7 +377,7 @@ export const NETWORKS_INFO: { [key in ChainId]: NETWORK_INFO } = {
     nativeTokenLogo: EthereumLogo,
     etherscanLinkText: 'LINEA Explorer',
     tokensListUrl: 'https://raw.githubusercontent.com/KyberNetwork/ks-assets/main/tokenLists/linea.tokenlist.json',
-    isEnableBlockService: true,
+    isEnableBlockService: false,
   },
 }
 
