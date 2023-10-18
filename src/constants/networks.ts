@@ -357,8 +357,7 @@ export const NETWORKS_INFO: { [key in ChainId]: NETWORK_INFO } = {
   },
   [ChainId.SCROLL]: {
     chainId: ChainId.SCROLL,
-    icon:
-      'https://file.notion.so/f/s/253723b6-f537-4968-a2e6-f102b893ef4c/Scroll_logo_mark_300300px_RGB.svg?id=2ecfe530-2ce5-48d0-8bed-537a584a92ce&table=block&spaceId=cc12e519-e01d-4277-9573-3fe8e5bdf9ce&expirationTimestamp=1697558400000&signature=-PD15tUbD8xuN5VOSpwW0B1Cl30TILAHe-LsLjqPhlQ&downloadName=Scroll_logo+mark_300*300px_RGB.svg',
+    icon: 'https://storage.googleapis.com/ks-setting-1d682dca/bd00114e-d4a5-4ccd-a80b-e9a1f29b1bc11697613637225.png',
     name: 'Scroll',
     urlKey: 'scroll',
     priceRoute: 'scroll',
